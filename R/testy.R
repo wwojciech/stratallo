@@ -20,7 +20,7 @@ n <- sample(n_feasible, size = 1)
 noptcond_sufficient(d = d, l = m, u = M, n = n)
 rNa_mM(d = d, m = m, M = M, n = n)
 
-# w funcji n, ktore przebiega przez wszystkie n_feasible
+# w funcji n, ktore przebiega przez wszystkie elementy w wektorze n_feasible
 all(
   sapply(n_feasible, function(n_i)
     all.equal(
