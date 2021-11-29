@@ -5,7 +5,7 @@ noptcond_sufficient(
   n = 2000
 )
 
-rNa(
+rNa_mM(
   d = data_mM[, "N"] * data_mM[, "N"],
   m = data_mM[, "m"],
   M = data_mM[, "M"],
@@ -24,7 +24,7 @@ all(sapply(1074:33470, function(n) {
     u = data_mM[, "M"],
     n = 2000
   )
-  rna <- rNa(
+  rna <- rNa_mM(
     d = data_mM[, "N"] * data_mM[, "N"],
     m = data_mM[, "m"],
     M = data_mM[, "M"],
@@ -41,7 +41,7 @@ bench::mark(
     u = data_mM[, "M"],
     n = 2000
   ),
-  rNa(
+  rNa_mM(
     d = data_mM[, "N"] * data_mM[, "N"],
     m = data_mM[, "m"],
     M = data_mM[, "M"],
