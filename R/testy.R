@@ -7,9 +7,9 @@ M <- data_mM[, "M"]
 c(sum(m), sum(M)) # (minimalne, maksymalne) feasible n
 # 1073; 3347
 
-###############
+#################
 # poprawnosc
-###############
+#################
 
 # np. dla n = 2000
 n <- 2000
@@ -27,9 +27,11 @@ all(
   )
 )
 
-###############
+#################
 # czasy obliczen
-###############
+#################
+
+# np. dla n = 2000
 bench::mark(
   noptcond_sufficient(d = d, l = m, u = M, n = n),
   rNa_mM(d = d, m = m, M = M, n = n),
