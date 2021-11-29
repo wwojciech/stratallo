@@ -16,7 +16,6 @@ n <- 2000
 noptcond_sufficient(d = d, l = m, u = M, n = n)
 rNa_mM(d = d, m = m, M = M, n = n)
 
-
 # w funcji n, ktore przebiega od 1074 do 3346
 n <- (sum(m)+1):(sum(M)-1)
 all(
@@ -37,4 +36,3 @@ bench::mark(
   check = TRUE,
   iterations = 10
 )[1:6]
-
