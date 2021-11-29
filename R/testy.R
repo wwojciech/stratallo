@@ -32,6 +32,7 @@ all(
 #################
 
 # np. dla n = 2000
+n <- 2000
 bench::mark(
   noptcond_sufficient(d = d, l = m, u = M, n = n),
   rNa_mM(d = d, m = m, M = M, n = n),
