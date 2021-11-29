@@ -4,9 +4,8 @@
 d <- data_mM[, "N"] * data_mM[, "S"]
 m <- data_mM[, "m"]
 M <- data_mM[, "M"]
-sum(m) # minimalne feasible n
-sum(M) # maksymalne feasible n
-# 1073+1 - 3347-1
+c(sum(m), sum(M)) # (minimalne, maksymalne) feasible n
+# 1073; 3347
 
 # np. dla n = 2000
 n <- 2000
@@ -20,12 +19,13 @@ bench::mark(
   iterations = 10
 )[1:6]
 
-# w funcji n od 1074 do 3346
+# w funcji n, ktore przebiega od 1074 do 3346
+n <- (sum(m)+1):(sum(M)-1)
 all(
-  sapply(1074:3346, function(n)
+  sapply(n, function(n_i)
     all.equal(
-      noptcond_sufficient(d = d, l = m, u = M, n = n),
-      rNa_mM(d = d, m = m, M = M, n = n)
+      noptcond_sufficient(d = d, l = m, u = M, n = n_i),
+      rNa_mM(d = d, m = m, M = M, n = n_i)
     )
   )
 )
