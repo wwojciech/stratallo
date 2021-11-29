@@ -8,7 +8,7 @@ rNa_mM <- function(d, m, M, n, verbose = FALSE) {
   repeat {
     nopt_candidate <- rNa(d[W], M[W], n) # step 1
     A <- which(nopt_candidate <= m[W]) # step 2
-    if (length(A) == 0)
+    if (length(A) == 0) # step 3
       break
     else {
       n <- n - sum(m[W[A]])
