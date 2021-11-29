@@ -7,16 +7,16 @@ rNa_mM <- function(d, m, M, n, verbose = FALSE) {
 
   repeat {
     nopt_candidate <- rNa(d[W], M[W], n) # step 1
-    i <- which(nopt_candidate <= m[W])
+    i <- which(nopt_candidate <= m[W]) # step 2
     if (length(i) == 0)
       break
     else {
       n <- n - sum(m[W[i]])
-      W <- W[-i] # remove strata h from set W
+      W <- W[-i]
     }
   }
 
-  if (length(W) == length(m)) # if else construct used here only to improve the performance, otherwise it could be just the body of the else block
+  if (length(W) == length(m)) # if else construct used here only to improve the performance, otherwise it could be just in the body of the else block
     nopt <- nopt_candidate
   else {
     nopt <- m
