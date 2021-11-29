@@ -9,7 +9,6 @@ d <- data_mM[, "N"] * data_mM[, "S"]
 m <- data_mM[, "m"]
 M <- data_mM[, "M"]
 n_feasible <- (sum(m)+1):(sum(M)-1) # wektor feasible n (z wylaczeniem dwoch trywialnych przypadkow)
-# 1073; 3347
 
 #################
 # poprawnosc
