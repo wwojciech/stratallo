@@ -1,3 +1,6 @@
+# dane data_mM jest w katalogu ./data
+# load(file = "./data/data_mM.Rdata")
+
 d <- data_mM[, "N"] * data_mM[, "S"]
 m <- data_mM[, "m"]
 M <- data_mM[, "M"]
