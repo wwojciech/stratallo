@@ -37,4 +37,3 @@ bench::mark(
   iterations = 10
 )[1:6]
 
-
