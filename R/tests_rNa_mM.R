@@ -123,6 +123,8 @@ testing_alg <- function(seed_from,seed_to,alg="fixedpi",print_f=FALSE)
 testing_alg(1,1000,alg="fixedpi",print_f = FALSE)
 testing_alg(1,1000,alg="rNa_mM",print_f = FALSE)
 
+testing_alg(1000,10000,alg="rNa_mM",print_f = FALSE)
+
 
 microbenchmark(times=1,unit="ms",
                alg_fix=testing_alg(60000,61000,"fixedpi"),
