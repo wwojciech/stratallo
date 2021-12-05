@@ -3,6 +3,11 @@
 # under upper and lower bounds for sample strata sizes.
 
 
+# WW codes
+source("R/nopt_box.R") # new algorithm rNa_mm
+source("R/noptcond_sufficient.R")
+
+
 library(dplyr)
 library(stratification)
 library(microbenchmark)
@@ -14,10 +19,6 @@ source("R/CapacityScaling.R")
 source("R/SimpleGreedy.R")
 source("R/fixedpi.R")
 
-
-# WW codes
-source("R/nopt_box.R") # new algorithm rNa_mm
-source("R/noptcond_sufficient.R")
 
 
 # auxiliary functions
@@ -191,8 +192,7 @@ tab <- NULL
 (N <- sum(Nh))
 
 
-#for (f in seq(0.1,0.8,0.05)) {
-for (f in seq(s1/N,s2/N,0.1)) {
+for (f in seq(s1/N,s2/N,0.05)) {
   print(f)
   N<-sum(Nh)
   n<-round(f*N)
@@ -212,7 +212,7 @@ for (f in seq(s1/N,s2/N,0.1)) {
     tabi <- data.frame(N=N,f=f,n=n,
                        #rv_noptcond=v_noptcond/V0,
                        #rv1_noptcond=v1_noptcond/V0,
-                       rv1_rNa=v1_rNa/V0
+                       rv1_rNa=v1_rNa/V0 # ratio of variances
     )
 
     tab<-bind_rows(tab,tabi)
