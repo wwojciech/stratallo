@@ -28,6 +28,6 @@ Sarndal, C.-E., Swensson, B., and Wretman, J. (1992),
 \emph{Model Assisted Survey Sampling}, New York, NY: Springer.
 }
 \author{
-Wojciech Wojciak \email{wojciech.wojciak@gmail.com}
+Wojciech Wójciak \email{wojciech.wojciak@gmail.com}
 }
 \keyword{package}

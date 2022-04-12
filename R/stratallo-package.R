@@ -4,7 +4,7 @@
 #' @aliases stratallo
 #' @docType package
 #' @title Functions for Optimal Sample Allocation in Stratified Sampling Schemes
-#' @author Wojciech Wojciak \email{wojciech.wojciak@@gmail.com}
+#' @author Wojciech Wójciak \email{wojciech.wojciak@@gmail.com}
 #' @import checkmate
 #' @importFrom lifecycle badge
 #' @keywords package
