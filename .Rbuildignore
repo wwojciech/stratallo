@@ -6,3 +6,4 @@
 ^README\.html$
 ^cran-comments\.md$
 ^\.lintr$
+^CRAN-SUBMISSION$
