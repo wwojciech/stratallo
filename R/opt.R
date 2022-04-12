@@ -169,7 +169,7 @@ dopt <- function(n, a, m = NULL, M = NULL, M_method = "rna") {
 #'   The algorithm used by `nopt()` is described in Wójciak (2022).
 #'   The allocation computed is valid for all stratified sampling schemes
 #'   for which the variance of the stratified pi-estimator is of the form
-#'   \deqn{D(x_1,...,x_H) = a_1/x_1 + ... + a_H/x_H - b,}
+#'   \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
 #'   where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
 #'   strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 #'   \eqn{x_w, w = 1, ..., H}. \cr
@@ -177,7 +177,7 @@ dopt <- function(n, a, m = NULL, M = NULL, M_method = "rna") {
 #' @details The `nopt()` function computes
 #'   \deqn{argmin n(x_1,...,x_H) = x_1 + ... + x_H,}
 #'   under the equality constraint imposed on the variance
-#'   \deqn{a^2_1/x_1 + ... + a^2_1/x_H - b = D.}
+#'   \deqn{a^2_1/x_1 + ... + a^2_H/x_H - b = D.}
 #'   Optionally, the following set of one-sided inequality constraints
 #'   can be added
 #'   \deqn{x_w <= M_w, w = 1,...,H,}

@@ -1,5 +1,9 @@
 # stratallo
 
+# stratallo 2.0.1
+
+* Minor typos corrections in README, vignette, and help pages.
+
 # stratallo 2.0.0
 
 * Added new user function `nopt` for minimization of total sample size under

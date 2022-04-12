@@ -115,10 +115,10 @@ classical optimal allocation, the problem of minimum sample size allocation can
 be complemented by imposing upper bounds constraints on sample sizes in
 strata.
 
-*Stratallo* provides two user functions, `dopt` and `nopt` that solve optimal
-sample allocation problems briefly characterized above. In this context, it is
-assumed that the sampling designs in strata are chosen so that the variance of
-the $\pi$-estimator of the population total is of the following generic form:
+*Stratallo* provides two user functions, `dopt` and `nopt` that solve sample
+allocation problems briefly characterized above. In this context, it is assumed
+that the sampling designs in strata are chosen so that the variance of the
+$\pi$-estimator of the population total is of the following generic form:
 $$
   D^2_{st}(x_w,\, w \in \W) = \sum_{w \in \W}\, \frac{a_w^2}{x_w} - b,
 $$

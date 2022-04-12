@@ -24,18 +24,26 @@ minimum sample size allocation can be complemented by imposing upper
 bounds constraints on sample sizes in strata.
 
 *Stratallo* provides two user functions, `dopt` and `nopt` that solve
-optimal sample allocation problems briefly characterized above. In this
-context, it is assumed that the sampling designs in strata are chosen so
-that the variance of the pi-estimator of the population total is of the
-following generic form:
+sample allocation problems briefly characterized above. In this context,
+it is assumed that the sampling designs in strata are chosen so that the
+variance of the pi-estimator of the population total is of the following
+generic form:
 
-D(x_1,…,x_H) = a^2_1/x_1 + … + a^2_H/x_H - b,
+<center>
+D<sup>2</sup><sub style='position: relative; left: -.5em;'>st</sub>(x<sub>1</sub>,…,x<sub>H</sub>)
+= a<sup>2</sup><sub style='position: relative; left: -.5em;'>1</sub>/
+x<sub>1</sub> + … +
+a<sup>2</sup><sub style='position: relative; left: -.5em;'>H</sub>/
+x<sub>H</sub> - b,
+</center>
 
-where H denotes total number of strata, x_1, …, x_H are the strata
-sample sizes, and b, a_w \> 0 do not depend on x_w, w = 1, …, H.
+where H denotes total number of strata, x<sub>1</sub>,…,x<sub>H</sub>
+are the strata sample sizes, and parameters b and a<sub>w</sub> \> 0 do
+not depend on x<sub>w</sub>, w = 1,…,H.
 
 Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and
-`var_tst_si` functions that compute a value of variance D. The
+`var_tst_si` functions that compute a value of variance
+D<sup>2</sup><sub style='position: relative; left: -.5em;'>st</sub>. The
 `var_tst_si` is a simple wrapper of `var_tst` that is dedicated for the
 case of simple random sampling without replacement design in each
 stratum. Furthermore, the package comes with two predefined, artificial
@@ -66,14 +74,14 @@ library(stratallo)
 ### Function `dopt`
 
 ``` r
-# Define example population
+# Example population.
 N <- c(3000, 4000, 5000, 2000) # Strata sizes.
 S <- c(48, 79, 76, 17) # Standard deviations of a study variable in strata.
 a <- N * S
 ```
 
 ``` r
-M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on the sample sizes in strata.
+M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on sample sizes in strata.
 all(M <= N)
 n <- 190 # Total sample size.
 n < sum(M)
@@ -88,7 +96,7 @@ var_tst_si(opt, N, S)
 ```
 
 ``` r
-m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on the sample sizes in strata.
+m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on sample sizes in strata.
 n > sum(m)
 
 # Optimal allocation under one-sided lower bounds constraints.
