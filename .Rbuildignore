@@ -1,4 +1,8 @@
+^examples$
+^temp_r_files$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^README\.html$
 ^cran-comments\.md$
+^\.lintr$

@@ -1,107 +1,122 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# stratallo
+# Optimum Sample Allocation in Stratified Sampling Schemes with Stratallo Package
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-The goal of stratallo is to provide methods computing solution to
-classical problem in survey methodology - an optimum sample allocation
-problem in stratified sampling scheme with simple random sampling
-without replacement design in each stratum. In this context, the optimal
-allocation is in the classical Tschuprow-Neyman’s sense (Tschuprow 1923;
-Neyman 1934), and it satisfies additional upper bounds restrictions
-imposed on sample sizes in strata. There are four different algorithms
-available to use, and one of them is Neyman optimal allocation applied
-in a recursive way (see Sarndal, Swensson, and Wretman 1992, Remark
-12.7.1, p. 466). All the algorithms are described in detail, including
-proofs in Wojciak (2019).
+Functions in this package provide solution to classical problem in
+survey methodology - an optimum sample allocation in stratified sampling
+schemes. In this context, the optimal allocation is in the classical
+Tschuprov-Neyman’s sense and it satisfies additional either lower or
+upper bounds restrictions imposed on sample sizes in strata. There are
+few different algorithms available to use, and one them is based on
+popular sample allocation method that applies Neyman allocation to
+recursively reduced set of strata.
+
+A minor modification of the classical optimium sample allocation problem
+leads to the minimum sample size allocation. This problems lies in the
+determination of a vector of strata sample sizes that minimizes total
+sample size, under assumed fixed level of the pi-estimator’s variance.
+As in the case of the classical optimal allocation, the problem of
+minimum sample size allocation can be complemented by imposing upper
+bounds constraints on sample sizes in strata.
+
+*Stratallo* provides two user functions, `dopt` and `nopt` that solve
+optimal sample allocation problems briefly characterized above. In this
+context, it is assumed that the sampling designs in strata are chosen so
+that the variance of the pi-estimator of the population total is of the
+following generic form:
+
+D(x_1,…,x_H) = a^2_1/x_1 + … + a^2_H/x_H - b,
+
+where H denotes total number of strata, x_1, …, x_H are the strata
+sample sizes, and b, a_w \> 0 do not depend on x_w, w = 1, …, H.
+
+Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and
+`var_tst_si` functions that compute a value of variance D. The
+`var_tst_si` is a simple wrapper of `var_tst` that is dedicated for the
+case of simple random sampling without replacement design in each
+stratum. Furthermore, the package comes with two predefined, artificial
+populations with 507 and 969 strata. These are stored in `pop507` and
+`pop969` objects respectively.
+
+See package’s vignette for more details.
 
 ## Installation
 
-You can install the released version of stratallo from
+You can install the released version of *stratallo* package from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("stratallo")
 ```
 
-## Example
+## Examples
 
-This is a basic example which shows you how to solve a common problem of
-optimal sample allocation for an example population with 4 strata.
+These are basic examples that show how to use `dopt` and `nopt`
+functions to solve optimal sample allocation problems for an example
+population with 4 strata.
 
 ``` r
 library(stratallo)
-
-N <- c(3000, 4000, 5000, 2000) # strata sizes
-S <- c(48, 79, 76, 17) # standard deviations of a study variable in strata
-M <- c(100, 90, 70, 80) # upper bounds constraints imposed on the sample sizes in strata
-all(M <= N) 
-#> [1] TRUE
-n <- 190 # total sample size
-n <= sum(M)
-#> [1] TRUE
-
-nopt_ <- nopt(n = n, N = N, S = S, M = M)
-nopt_
-#> [1] 34.979757 76.761134 70.000000  8.259109
-sum(nopt_)
-#> [1] 190
-
-# verbose output + variance for a given allocation
-nopt(n = n, N = N, S = S, M = M, verbose = TRUE, variance = TRUE)
-#> $nopt
-#> [1] 34.979757 76.761134 70.000000  8.259109
-#> 
-#> $ksi
-#> [1] 0.000242915
-#> 
-#> $J
-#> [1] 3 2 1 4
-#> 
-#> $J_
-#> [1] 2 1 4
-#> 
-#> $var
-#> [1] 4035156476
 ```
 
-# References
+### Function `dopt`
 
-<div id="refs" class="references">
+``` r
+# Define example population
+N <- c(3000, 4000, 5000, 2000) # Strata sizes.
+S <- c(48, 79, 76, 17) # Standard deviations of a study variable in strata.
+a <- N * S
+```
 
-<div id="ref-Neyman1934">
+``` r
+M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on the sample sizes in strata.
+all(M <= N)
+n <- 190 # Total sample size.
+n < sum(M)
 
-Neyman, Jerzy. 1934. “On the Two Different Aspects of the Representative
-Method: The Method of Stratified Sampling and the Method of Purposive
-Selection.” *Journal of the Royal Statistical Society* 97 (4): 558–606.
+# Optimal allocation under one-sided upper bounds constraints.
+opt <- dopt(n = n, a = a, M = M)
+opt
+sum(opt) # Equals to n.
+all(opt <= M) # Does not violate upper bounds constraints.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
 
-</div>
+``` r
+m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on the sample sizes in strata.
+n > sum(m)
 
-<div id="ref-SarndalSwensson1993">
+# Optimal allocation under one-sided lower bounds constraints.
+opt <- dopt(n = n, a = a, m = m)
+opt
+sum(opt) # Equals to n.
+all(opt >= m) # Does not violate lower bounds constraints.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
 
-Sarndal, Carl-Erik, Bengt Swensson, and Jan Wretman. 1992. *Model
-Assisted Survey Sampling*. Springer.
+``` r
+# Tschuprov-Neyman allocation (no inequality constraints).
+opt <- dopt(n = n, a = a)
+opt
+sum(opt) # Equals to n.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
 
-</div>
+### Function `nopt`
 
-<div id="ref-Tschuprow1923">
+``` r
+a <- c(3000, 4000, 5000, 2000)
+b <- 70000
+M <- c(100, 90, 70, 80)
+D <- 1e6 # Variance constraint.
 
-Tschuprow, Alexander Alexandrovich. 1923. “On the Mathematical
-Expectation of the Moments of Frequency Distributions in the Case of
-Correlated Observations.” *Metron* 2: 461–93, 646–83.
-
-</div>
-
-<div id="ref-wojciak2019">
-
-Wojciak, Wojciech. 2019. “Optimal Allocation in Stratified Sampling
-Schemes.” *Master’s Diploma Thesis*. Warsaw University of Technology.
-<http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf>.
-
-</div>
-
-</div>
+opt <- nopt(D, a, b, M)
+sum(opt)
+```

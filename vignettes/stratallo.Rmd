@@ -1,0 +1,284 @@
+---
+title: "Optimum Sample Allocation in Stratified Sampling Schemes with Stratallo Package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Optimum Sample Allocation in Stratified Sampling Schemes with Stratallo Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+csl: "asa_modified_url.csl"
+references:
+- id: neyman
+  type: article-journal
+  title: "On the Two Different Aspects of the Representative Method: The Method of
+    Stratified Sampling and the Method of Purposive Selection"
+  author:
+  - family: Neyman
+    given: Jerzy
+  container-title: Journal of the Royal Statistical Society
+  volume: 97
+  number: 4
+  page: 558-606
+  issued:
+    year: 1934
+- id: tschuprov
+  type: article-journal
+  title: On the Mathematical Expectation of the Moments of Frequency Distributions
+    in the Case of Correlated Observations
+  author:
+  - family: Tschuprov
+    given: Alexander Alexandrovich
+  container-title: Metron
+  volume: 2
+  number: 4
+  page: 461-493, 646-683
+  issued:
+    year: 1923
+- id: wesolowski2021
+  type: article-journal
+  title: Optimality of the Recursive Neyman Allocation
+  author:
+  - family: Wesołowski
+    given: Jacek
+  - family: Wieczorkowski
+    given: Robert
+  - family: Wójciak
+    given: Wojciech
+  container-title: "Journal of Survey Statistics and Methodology"
+  DOI: 10.1093/jssam/smab018
+  URL: https://arxiv.org/abs/2105.14486
+  issued:
+    year: 2021
+- id: wojciak2022
+  type: article
+  title: Minimum Sample Size Allocation in Stratified Sampling Under Constraints on
+    Variance and Strata Sample Sizes
+  author:
+  - family: Wójciak
+    given: Wojciech
+  DOI: 10.48550/arXiv.2204.04035
+  issued:
+    year: 2022
+- id: wojciak2019
+  type: thesis
+  title: Optimal Allocation in Stratified Sampling Schemes
+  author:
+  - family: Wójciak
+    given: Wojciech
+  container-title: MSc Thesis
+  URL: 'http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf'
+  publisher: Warsaw University of Technology
+  issued:
+    year: 2019
+- id: sarndal
+  type: book
+  title: Model Assisted Survey Sampling
+  author:
+  - family: Sarndal
+    given: Carl-Erik
+  - family: Swensson
+    given: Bengt
+  - family: Wretman
+    given: Jan
+  publisher: Springer
+  issued:
+    year: 1993
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+\def\W{\mathcal W}
+\def\x{\mathbf x}
+\def\n{\mathbf n}
+\def\D{\widetilde D}
+\newcommand{\texteq}{\mathrm}
+
+The goal of *stratallo* package is to provide implementations of the efficient 
+algorithms that solve a classical problem in survey methodology - an optimum
+sample allocation problem in stratified sampling schemes. In this context, the
+classical problem of optimum sample allocation is the Tschuprov-Neyman's sense
+[@tschuprov; @neyman]. It is formulated as determination of a vector of strata
+sample sizes that minimizes the variance of the $\pi$-estimator of the 
+population total of a given study variable, under constraint on total sample
+size. This problem can be further complemented by adding lower or upper bounds
+constraints on sample sizes is strata.
+
+A minor modification of the classical optimium sample allocation problem leads
+to the minimum sample size allocation. This problems lies in the determination
+of a vector of strata sample sizes that minimizes total sample size, under
+assumed fixed level of the $\pi$-estimator's variance. As in the case of the
+classical optimal allocation, the problem of minimum sample size allocation can
+be complemented by imposing upper bounds constraints on sample sizes in
+strata.
+
+*Stratallo* provides two user functions, `dopt` and `nopt` that solve optimal
+sample allocation problems briefly characterized above. In this context, it is
+assumed that the sampling designs in strata are chosen so that the variance of
+the $\pi$-estimator of the population total is of the following generic form:
+$$
+  D^2_{st}(x_w,\, w \in \W) = \sum_{w \in \W}\, \frac{a_w^2}{x_w} - b,
+$$
+where $\W = \{1, \ldots, H\}$ denotes set of strata labels with total number of
+strata equals to $H$, $(x_w)_{w \in \W}$ are the strata sample sizes, and
+parameters $b$, and $a_w > 0,\, w \in \W$, do not depend on the
+$(x_w)_{w \in \W}$. Among the stratified sampling designs that have the
+$\pi$-estimator's variance of the above form is stratified simple random
+sampling without replacement design. Under this design
+$a_w = N_w S_w,\, w \in \W$ and $b = \sum_{w \in \W}\, N_w S_w^2$, where
+$S_w,\, w \in \W$, denote stratum standard deviations of study variable and
+$N_w,\, w \in \W$, are the strata sizes (see e.g. @sarndal, Result 3.7.2, p.
+103).
+
+Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and `var_tst_si`
+functions that compute a value of variance $D^2_{st}$. The `var_tst_si` is a
+simple wrapper of `var_tst` that is dedicated for the case of simple random
+sampling without replacement design in each stratum. Furthermore, the package
+comes with two predefined, artificial populations with 507 and 969 strata. These
+are stored in `pop507` and `pop969` objects respectively.
+
+## Minimization of the variance with `dopt` function
+
+The `dopt` function solves the following two types of the allocation problem, 
+formulated in the language of mathematical optimization.
+
+**Problem 1 (one-sided upper bounds constraints)**   
+Given numbers $a_w > 0,\, M_w > 0,\, w \in \W$ and $b,\, n < \sum_{w \in \W}\, M_w$,
+\begin{align*}
+	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b \\
+	\texteq{subject ~ to} & \quad \sum_{w \in \W} x_w = n \\
+	& \quad x_w \le M_w, \quad \forall w \in \W,
+\end{align*}
+where $\x = (x_w)_{w \in \W}$ is the optimization variable.
+
+**Problem 2 (one-sided lower bounds constraints)**   
+Given numbers $a_w > 0,\, m_w > 0,\, w \in \W$, and $b,\, n > \sum_{w \in \W} m_w$,
+\begin{align*}
+	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b \\
+	\texteq{subject ~ to} & \quad \sum_{w \in \W} x_w = n \\
+	& \quad x_w \geq m_w, \quad \forall w \in \W,
+\end{align*}
+where $\x = (x_w)_{w \in \W}$ is the optimization variable. 
+
+User of `dopt` can choose whether the solution computed will be for 
+**Problem 1** or **Problem 2** This is achieved with the proper use of `m` and
+`M` arguments of the function. In case of **Problem 1**, user provides the
+values of upper bounds with `M` argument, while leaving `m` as `NULL`. 
+Similarly, for **Problem 2**, user provides the values of lower bounds with `m`
+argument, while leaving `M` as `NULL`. If both `m` and `M` are specified as
+`NULL` (default), the `dopt` returns the value of Tschuprov-Neyman allocation
+that minimizes variance $D^2_{st}$ under constraints on total sample size
+$\sum_{w \in \W} x_w = n$, and it is given by
+$$
+  x_w = a_w \frac{n}{\sum_{w \in \W} a_w}, \quad w \in \W
+$$
+There are four different algorithms available to use for **Problem 1**,
+*rNa* (default), *sga*, *sgaplus*, *coma*. All these algorithms, except
+*sgaplus*, are described in detail in @wesolowski2021. The *sgaplus* is defined
+in @wojciak2019 as *Sequential Allocation (version 1)* algorithm.
+
+The optimization **Problem 2** is solved by the *LrNa* that in principle is
+based on the *rNa* and it is introduced in @wojciak2022.
+
+## Minimization of the total sample size `nopt` function
+
+The `nopt` function solves the following minimum sample size allocation problem, 
+formulated in the language of mathematical optimization.
+
+**Problem 3**  
+Given numbers $a_w > 0,\, M_w > 0,\, w \in \W$, and
+$b,\, D > \sum_{w \in \W} \tfrac{a_w^2}{M_w} - b > 0$,
+\begin{align*}
+	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad n(\x) = \sum_{w \in \W} x_w \\
+	\texteq{subject ~ to} & \quad \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b = D \\
+	& \quad x_w \le M_w, \quad \forall w \in \W,
+\end{align*}
+where $\x = (x_w)_{w \in \W}$ is the optimization variable.
+
+The algorithm that solves **Problem 3** is based on the *LrNa* and it is
+described in @wojciak2022.
+
+## Installation
+
+You can install the released version of *stratallo* package from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("stratallo")
+```
+
+## Examples
+
+These are basic examples that show how to use `dopt` and `nopt` functions
+to solve optimal sample allocation problems for an example population with 4
+strata.
+
+```{r load_package}
+library(stratallo)
+```
+
+### Function `dopt`
+
+```{r example_dopt_pop}
+# Define example population
+N <- c(3000, 4000, 5000, 2000) # Strata sizes.
+S <- c(48, 79, 76, 17) # Standard deviations of a study variable in strata.
+a <- N * S
+```
+
+```{r example_dopt_M}
+M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on the sample sizes in strata.
+all(M <= N)
+n <- 190 # Total sample size.
+n < sum(M)
+
+# Solution to Problem 1.
+opt <- dopt(n = n, a = a, M = M)
+opt
+sum(opt) # Equals to n.
+all(opt <= M) # Does not violate upper bounds constraints.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
+
+```{r example_dopt_m}
+
+m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on the sample sizes in strata.
+n > sum(m)
+
+# Solution to Problem 2.
+opt <- dopt(n = n, a = a, m = m)
+opt
+sum(opt) # Equals to n.
+all(opt >= m) # Does not violate lower bounds constraints.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
+
+```{r example_dopt_Neyman}
+
+# Tschuprov-Neyman allocation (no inequality constraints).
+opt <- dopt(n = n, a = a)
+opt
+sum(opt) # Equals to n.
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
+
+### Function `nopt`
+
+```{r example_nopt}
+
+a <- c(3000, 4000, 5000, 2000)
+b <- 70000
+M <- c(100, 90, 70, 80)
+D <- 1e6 # Variance constraint.
+
+opt <- nopt(D, a, b, M)
+sum(opt)
+```
+
+## References

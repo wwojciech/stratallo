@@ -1,19 +1,50 @@
 Package: stratallo
-Title: Optimum Sample Allocation in Stratified Random Sampling Scheme
-Version: 0.1.0
+Title: Optimum Sample Allocation in Stratified Sampling Schemes
+Version: 2.0.0
 Authors@R: c(
   person("Wojciech", "Wojciak", email = "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Wesolowski", email = "j.wesolowski@mini.pw.edu.pl", role = "sad"),
   person("Robert", "Wieczorkowski", email = "R.Wieczorkowski@stat.gov.pl", role = "ctb"))
-Description: Functions in this package provide solution to classical problem in survey methodology - 
-  an optimum sample allocation in stratified sampling scheme with simple random sampling without replacement design in each stratum. 
-  In this context, the optimal allocation is in the classical Tschuprow-Neyman's sense,
-  and it satisfies additional upper bounds restrictions imposed on sample sizes in strata. 
-  There are four different algorithms available to use, and one of them is Neyman optimal allocation applied in a recursive way.
-  All the algorithms are described in detail in "Wojciak W. Optimal allocation in stratified sampling schemes. 
-  Master's diploma thesis, Warsaw University of Technology. 2019", 
-  available on-line at <http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf>.
+Description: Functions in this package provide solution to classical problem in
+  survey methodology - an optimum sample allocation in stratified sampling
+  schemes. In this context, the optimal allocation is in the classical
+  Tschuprov-Neyman's sense and it satisfies additional either lower or upper
+  bounds restrictions imposed on sample sizes in strata. There are few different
+  algorithms available to use, and one them is based on popular sample
+  allocation method that applies Neyman allocation to recursively reduced set of
+  strata.
+  A minor modification of the classical optimium sample allocation problem leads
+  to the minimum sample size allocation. This problems lies in the determination
+  of a vector of strata sample sizes that minimizes total sample size, under
+  assumed fixed level of the pi-estimator's variance. As in the case of the
+  classical optimal allocation, the problem of minimum sample size allocation
+  can be complemented by imposing upper bounds constraints on sample sizes in
+  strata. A function that solves the minimum sample size allocation problem is
+  included in stratallo package.
 License: GPL-2
+URL: https://github.com/wwojciech/stratallo
+BugReports: https://github.com/wwojciech/stratallo/issues
+Copyright: Wojciech Wojciak
+Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+Imports:
+    checkmate,
+    lifecycle
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    rmarkdown,
+    knitr,
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Collate: 
+    'helpers.R'
+    'algorithms_rna.R'
+    'algorithms_upper.R'
+    'opt.R'
+    'pop.R'
+    'stratallo-package.R'
+    'variance.R'
+VignetteBuilder: knitr

@@ -1,0 +1,76 @@
+a <- c(3000, 4000, 5000, 2000)
+M <- c(100, 90, 70, 80)
+
+# pop507 test ----
+
+test_that("sga works well for M, (pop507)", {
+  N <- pop507[, "N"]
+  a <- N * pop507[, "S"]
+  n <- seq(0.01, 0.99, 0.02) * sum(N)
+  result <- sapply(n, sga, a, N)
+  expect_snapshot(result)
+})
+
+# H = 1 ----
+
+## allocation reaching no bounds ----
+
+test_that("sga works well for M (reaching no bound), H = 1", {
+  result <- sga(99, a[1], M[1])
+  expect_equal(result, 99)
+})
+
+## n = M ----
+
+test_that("sga works well for M (reaching 1 bound), H = 1", {
+  result <- sga(M[1], a[1], M[1])
+  expect_equal(result, M[1])
+})
+
+# H = 4 ----
+
+## M with Inf ----
+
+test_that("sga works well for M with Inf, H = 4", {
+  result <- sga(5000, a, c(M[1:3], Inf))
+  expect_equal(result, c(100, 90, 70, 4740))
+})
+
+## allocation reaching no bounds ----
+
+test_that("sga works well for M (reaching no bounds), H = 4", {
+  result <- sga(190, a, M)
+  expected <- c(40.71429, 54.28571, 67.85714, 27.14286)
+  expect_equal(result, expected, tolerance = 1e-7)
+})
+
+## allocation reaching 1 bound ----
+
+test_that("sga works well for M (reaching 1 bound), H = 4", {
+  result <- sga(270, a, M)
+  expected <- c(66.66667, 88.88889, 70, 44.44444)
+  expect_equal(result, expected, tolerance = 1e-7)
+})
+
+## allocation reaching 2 bounds ----
+
+test_that("sga works well for M (reaching 2 bounds), H = 4", {
+  result <- sga(300, a, M)
+  expected <- c(84, 90, 70, 56)
+  expect_equal(result, expected)
+})
+
+## allocation reaching 3 bounds ----
+
+test_that("sga works well for M (reaching 3 bounds), H = 4", {
+  result <- sga(330, a, M)
+  expected <- c(100, 90, 70, 70)
+  expect_equal(result, expected)
+})
+
+## n = sum(M) ----
+
+test_that("sga works well for n = sum(M), H = 4", {
+  result <- sga(340, a, M)
+  expect_equal(result, M)
+})
