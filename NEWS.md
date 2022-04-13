@@ -1,5 +1,9 @@
 # stratallo
 
+# stratallo 2.0.2
+
+* Minor typos corrections in README, vignette.
+
 # stratallo 2.0.1
 
 * Minor typos corrections in README, vignette, and help pages.
