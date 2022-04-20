@@ -100,8 +100,7 @@ rna_one_sided <- function(n, a, bounds = NULL, upper = TRUE) {
   if (length(Ri) == 0L) {
     return(x)
   } else {
-    H <- length(a) # Number of strata.
-    W <- seq_len(H) # Strata native labels. To be shrunk in the repeat loop.
+    W <- seq_along(a) # Strata native labels. To be shrunk in the repeat loop.
     repeat {
       R <- W[Ri] # Set of strata native labels for which x violates bounds.
       W <- W[-Ri] # W = W \ R.
@@ -111,9 +110,8 @@ rna_one_sided <- function(n, a, bounds = NULL, upper = TRUE) {
       Ri <- which_violated(x, bounds[W]) # Indices of W for which x violates bounds.
       if (length(Ri) == 0L) {
         bounds[W] <- x
-        break
+        return(bounds)
       }
     }
   }
-  bounds
 }
