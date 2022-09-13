@@ -9,14 +9,14 @@
 Functions in this package provide solution to classical problem in
 survey methodology - an optimum sample allocation in stratified sampling
 schemes. In this context, the optimal allocation is in the classical
-Tschuprov-Neyman’s sense and it satisfies additional either lower or
-upper bounds restrictions imposed on sample sizes in strata. There are
-few different algorithms available to use, and one them is based on
-popular sample allocation method that applies Neyman allocation to
-recursively reduced set of strata.
+Tschuprov-Neyman’s sense and it satisfies additional lower or upper
+bounds restrictions imposed on sample sizes in strata. There are few
+different algorithms available to use, and one them is based on popular
+sample allocation method that applies Neyman allocation to recursively
+reduced set of strata.
 
 A minor modification of the classical optimium sample allocation problem
-leads to the minimum sample size allocation. This problems lies in the
+leads to the minimum sample size allocation. This problem lies in the
 determination of a vector of strata sample sizes that minimizes total
 sample size, under assumed fixed level of the pi-estimator’s variance.
 As in the case of the classical optimal allocation, the problem of
@@ -74,45 +74,67 @@ library(stratallo)
 ### Function `dopt`
 
 ``` r
-# Example population.
+# Define example population.
 N <- c(3000, 4000, 5000, 2000) # Strata sizes.
 S <- c(48, 79, 76, 17) # Standard deviations of a study variable in strata.
 a <- N * S
+n <- 190 # Total sample size.
 ```
 
+#### Tschuprov-Neyman allocation (no inequality constraints).
+
 ``` r
-M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on sample sizes in strata.
+opt <- dopt(n = n, a = a)
+opt
+sum(opt) == n
+# Variance of the pi-estimator that corresponds to a given optimal allocation.
+var_tst_si(opt, N, S)
+```
+
+#### One-sided upper bounds constraints
+
+``` r
+M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on the sample sizes in strata.
 all(M <= N)
-n <- 190 # Total sample size.
 n < sum(M)
 
-# Optimal allocation under one-sided upper bounds constraints.
+# Solution to Problem 1.
 opt <- dopt(n = n, a = a, M = M)
 opt
-sum(opt) # Equals to n.
+sum(opt) == n
 all(opt <= M) # Does not violate upper bounds constraints.
 # Variance of the pi-estimator that corresponds to a given optimal allocation.
 var_tst_si(opt, N, S)
 ```
 
+#### One-sided lower bounds constraints
+
 ``` r
-m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on sample sizes in strata.
+m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on the sample sizes in strata.
 n > sum(m)
 
-# Optimal allocation under one-sided lower bounds constraints.
+# Solution to Problem 2.
 opt <- dopt(n = n, a = a, m = m)
 opt
-sum(opt) # Equals to n.
+sum(opt) == n
 all(opt >= m) # Does not violate lower bounds constraints.
 # Variance of the pi-estimator that corresponds to a given optimal allocation.
 var_tst_si(opt, N, S)
 ```
 
+#### Box-constraints
+
 ``` r
-# Tschuprov-Neyman allocation (no inequality constraints).
-opt <- dopt(n = n, a = a)
+m <- c(100, 90, 500, 50) # Lower bounds constraints imposed on sample sizes in strata.
+M <- c(300, 400, 800, 90) # Upper bounds constraints imposed on sample sizes in strata.
+n <- 1284
+n > sum(m) && n < sum(M)
+
+# Optimal allocation under box-constraints.
+opt <- dopt(n = n, a = a, m = m, M = M)
 opt
-sum(opt) # Equals to n.
+sum(opt) == n
+all(opt >= m & opt <= M) # Does not violate any lower or upper bounds constraints.
 # Variance of the pi-estimator that corresponds to a given optimal allocation.
 var_tst_si(opt, N, S)
 ```

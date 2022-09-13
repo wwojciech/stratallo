@@ -1,5 +1,6 @@
 ^examples$
-^temp_r_files$
+^other_algorithms$
+^testy_algorytmow$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$

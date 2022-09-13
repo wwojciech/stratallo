@@ -29,8 +29,8 @@ Value of the variance \eqn{D} for a given allocation vector \code{x}.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Compute the variance of the stratified pi-estimator of the population
-total, that is of the following generic form
+Compute the variance of the stratified pi-estimator of the population total,
+that is of the following generic form:
 \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
 where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
 strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
@@ -41,7 +41,7 @@ strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 \item \code{var_tst_si}: computes variance of stratified pi-estimator of the total
 for simple random sampling without replacement design in each stratum.
 Under this design, parameters of the variance function \eqn{D} take the
-following form
+following form:
 \deqn{a_w = N_w * S_w, w = 1, ..., H,}
 and
 \deqn{b = N_1 * S_1^2 + ... + N_H * S_H^2,}

@@ -13,19 +13,19 @@ dopt(n, a, m = NULL, M = NULL, M_method = "rna")
 \eqn{D}. Strictly positive numbers.}
 
 \item{m}{(\code{numeric} or \code{NULL})\cr lower bounds constraints optionally imposed
-on strata sample sizes. If different than \code{NULL}, it is then required that
-\code{n >= sum(m)}. Must be assigned with \code{NULL} (default) if \code{M} is not \code{NULL}.
-Strictly positive numbers.}
+on strata sample sizes. If not \code{NULL}, it is then required that
+\code{n >= sum(m)}. Strictly positive numbers.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds constraints optionally imposed
-on strata sample sizes. If different than \code{NULL}, it is then required that
-\code{n <= sum(M)}. Must be assigned with \code{NULL} (default) if \code{m} is not \code{NULL}.
+on strata sample sizes. If not \code{NULL}, it is then required that
+\code{n <= sum(M)}.
 Strictly positive numbers.}
 
 \item{M_method}{(\code{string})\cr the name of the underlying algorithm to be used
 for computing a sample allocation under one-sided upper bounds constraints
-(Case I). One of the following: \emph{"rna"} (default), \emph{"sga"},
-\emph{"sgaplus"}, \emph{"coma"}.}
+One of the following: \code{rna} (default), \code{sga}, \code{sgaplus}, \code{coma}. This
+parameter is used only in case when \code{m} argument is \code{NULL} and \code{M} is not
+\code{NULL}.}
 }
 \value{
 Numeric vector with optimal sample allocation in strata.
@@ -33,84 +33,92 @@ Numeric vector with optimal sample allocation in strata.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-A classical problem in survey methodology in stratified sampling
-is an optimum sample allocation problem. This problem is formulated as
-determination of a vector of strata sample sizes that minimizes the
-variance of the pi-estimator of the population total of a given study
-variable, under constraint on total sample size.
+A classical problem in survey methodology in stratified sampling is an
+optimum sample allocation problem. This problem is formulated as
+determination of a vector of strata sample sizes that minimizes the variance
+of the pi-estimator of the population total of a given study variable, under
+constraint on total sample size.
 
-The \code{dopt()} function solves the problem of optimum sample allocation
-under either lower or upper bounds constraints, optionally imposed on
-strata sample sizes. The allocation computed is valid for all stratified
-sampling schemes for which the variance of the stratified pi-estimator is
-of the form
+The \code{dopt()} function solves the problem of optimum sample allocation under
+lower or upper bounds constraints, optionally imposed on strata sample sizes.
+The allocation computed is valid for all stratified sampling schemes for
+which the variance of the stratified pi-estimator is of the form:
 \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
 where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
 strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 \eqn{x_w, w = 1, ..., H}. \cr
 
 The \code{dopt()} function makes use of the following allocation algorithms:
-\code{rNa}, \code{sga}, \code{sgaplus}, \code{coma} for optimal sample allocation under upper
-bounds constraints only, and \code{LrNa} for optimal sample allocation under
-lower bounds constraints only. The \code{rNa}, \code{sga}, and \code{coma} are described
-in Wesołowski et al. (2021), the \code{sgaplus} in Wójciak (2019), and the
-\code{LrNa} is introduced in Wójciak (2022).
-If no inequality constraints are added, then no any special
-algorithm is used as the allocation is given as a closed form expression,
-known as Neyman allocation
-\deqn{x_w = a_w * n / (a_1 + ... + a_H), w = 1, ..., H.}\cr
+\code{rna}, \code{sga}, \code{sgaplus}, \code{coma} for optimal sample allocation under one-sided
+upper bounds constraints, and \code{lrna} for optimal sample allocation under
+one-sided lower bounds constraints. For the allocation under box-constraints,
+the \code{rnabox} algorithm is used. The \code{rna}, \code{sga}, and \code{coma} are described in
+Wesołowski et al. (2021), while the \code{sgaplus} is in Wójciak (2019). The
+\code{lrna} is introduced in Wójciak (2022). The \code{rnabox} algorithm is a new
+optimal allocation algorithm that was developed by the authors of this
+package and will be published soon.
 }
 \details{
-The \code{dopt()} function computes
+The \code{dopt()} function computes:
 \deqn{argmin D(x_1,...,x_H),}
-under the equality constraint imposed on total sample size
-\deqn{x_1 + ... + x_H = n.}
-Optionally, one of the following set of one-sided inequality constraints
-can be added
-\deqn{x_w <= M_w, w = 1,...,H, (Case I)}
-or
-\deqn{x_w >= m_w, w = 1,...,H, (Case II)}
-where \eqn{n > 0} denotes overall sample size, \eqn{m_w > 0}, and
-\eqn{M_w > 0, w = 1, ..., H}, are the lower and upper bounds respectively,
-imposed on sample strata sizes.\cr
+under the equality constraint imposed on total sample size:
+\deqn{x_1 + ... + x_H = n,}
+and inequality constraints (optimally) imposed on strata sample size:
+\deqn{m_w <= x_w <= M_w,  w = 1,...,H.}
+Here, \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
+strata sample sizes, and \eqn{n > 0}, \eqn{b},
+\eqn{a_w > 0, w = 1, ..., H}, are given numbers. Furthermore, \eqn{m_w > 0}
+and \eqn{M_w > 0, w = 1, ..., H} are lower and upper bounds respectively,
+optionally imposed on sample sizes in strata. \cr
+
 User of \code{dopt()} can choose whether the inequality constraints will be
 added to the optimization problem or not. This is achieved with the proper
 use of \code{m} and \code{M} arguments of the function. In case of no inequality
 constraints to be added, \code{m} and \code{M} must be both specified as \code{NULL}
-(default). If only upper bounds constraints should be added (Case I), user
-specifies these bounds with \code{M} argument, while leaving \code{m} as \code{NULL}.
-Finally, if only lower bounds constraints should be added (Case II), user
-specifies these bounds with \code{m} argument, while leaving \code{M} as \code{NULL}.
-At the moment, \code{dopt()} function does not allow to add box-constraints
-simultaneously.
+(default). If only upper bounds constraints should be added, it should be
+specified using \code{M} argument, while leaving \code{m} as \code{NULL}. If only lower
+bounds constraints should be added, user must specify it with \code{m} argument,
+while leaving \code{M} as \code{NULL}. Finally, in case of box-constraints, both
+parameters \code{m} and \code{M} must be specified.
 
-For the Case I, there are four different underlying algorithms available
-to use. These are abbreviated as: "rNa" (\code{\link[=rna_one_sided]{rna_one_sided()}}),
-"sga" (\code{\link[=sga]{sga()}}), "sgaplus" (\code{\link[=sgaplus]{sgaplus()}}), "coma" (\code{\link[=coma]{coma()}}). Functions
-names that perform given algorithms are given in the brackets. See its help
-page for more details. For the Case II, the "rNa" (\code{\link[=rna_one_sided]{rna_one_sided()}}) is
-used.
+For the case of one-sided upper bounds constraints only, there are four
+different underlying algorithms available to use. These are abbreviated as:
+"rna" (\code{\link[=rna_onesided]{rna_onesided()}}), "sga" (\code{\link[=sga]{sga()}}), "sgaplus" (\code{\link[=sgaplus]{sgaplus()}}),
+and "coma" (\code{\link[=coma]{coma()}}). Functions names that perform given algorithms are
+given in the brackets. See its help page for more details.
+For the case of one-sided lower bounds constraints only, the
+"rna" (\code{\link[=rna_onesided]{rna_onesided()}}) is used. Finally, for box-constraints, the
+"rnabox" algorithm is used (\code{\link[=rnabox]{rnabox()}}).
 }
 \note{
 For simple random sampling without replacement design in each stratum,
 parameters of the variance function \eqn{D} are
 \eqn{b = N_1 * S_1^2 + ... + N_H * S_H^2}, and \eqn{a_w = N_w * S_w}, where
 \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard deviations of
-a study variable in strata respectively.
+a study variable in strata respectively. \cr
+
+Note that if no inequality constraints are imposed, the optimal allocation
+is given as a closed form expression, known as Neyman allocation:
+\deqn{x_w = a_w * n / (a_1 + ... + a_H), w = 1, ..., H.}
 }
 \examples{
 a <- c(3000, 4000, 5000, 2000)
-bounds <- c(100, 90, 70, 80)
+m <- c(100, 90, 70, 50)
+M <- c(300, 400, 200, 90)
 
 # Only lower bounds.
-dopt(n = 340, a = a, m = bounds)
-dopt(n = 400, a = a, m = bounds)
-dopt(n = 600, a = a, m = bounds)
+dopt(n = 340, a = a, m = m)
+dopt(n = 400, a = a, m = m)
+dopt(n = 700, a = a, m = m)
 
 # Only upper bounds.
-dopt(n = 190, a = a, M = bounds)
-dopt(n = 300, a = a, M = bounds)
-dopt(n = 340, a = a, M = bounds)
+dopt(n = 190, a = a, M = M)
+dopt(n = 700, a = a, M = M)
+
+# Box-constraints.
+dopt(n = 340, a = a, m = m, M = M)
+dopt(n = 500, a = a, m = m, M = M)
+dopt(n = 800, a = a, m = m, M = M)
 
 # Example of execution-time comparison of different algorithms
 # using bench R package.
@@ -154,5 +162,6 @@ Sarndal, C.-E., Swensson, B., and Wretman, J. (1992),
 \emph{Model Assisted Survey Sampling}, New York, NY: Springer.
 }
 \seealso{
-\code{\link[=nopt]{nopt()}}, \code{\link[=rna_one_sided]{rna_one_sided()}}, \code{\link[=sga]{sga()}}, \code{\link[=sgaplus]{sgaplus()}}, \code{\link[=coma]{coma()}}.
+\code{\link[=nopt]{nopt()}}, \code{\link[=rna_onesided]{rna_onesided()}}, \code{\link[=sga]{sga()}}, \code{\link[=sgaplus]{sgaplus()}}, \code{\link[=coma]{coma()}},
+\code{\link[=rnabox]{rnabox()}}.
 }

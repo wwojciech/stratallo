@@ -8,13 +8,13 @@ library(microbenchmark)
 library(stratallo)
 
 # R codes with algorithms
-source("temp_r_files/CapacityScaling.R")
-source("temp_r_files/SimpleGreedy.R")
-source("temp_r_files/fixedpi.R")
+source("other_algorithms/CapacityScaling.R")
+source("other_algorithms/SimpleGreedy.R")
+source("other_algorithms/fixedpi.R")
 
 # WW codes
-source("temp_r_files/rna_box.R") # new algorithm rna_box
-source("temp_r_files/noptcond_sufficient.R")
+source("R/algorithms_twosided.R") # new algorithm rnabox
+source("other_algorithms/noptcond_sufficient.R")
 
 # auxiliary functions
 
@@ -95,10 +95,8 @@ testing_alg <- function(seed_from,
 
         if (alg == "fixedpi") {
           nh <- fixedpi(n, Nh, Sh, mh, Mh, lambda0 = NULL, maxiter = 500)$nh
-        } else if (alg == "rna_box") {
-          nh <- rna_box(n, dh, mh, Mh)
-        } else if (alg == "rna_box_perf") {
-          nh <- rna_box_perf(n, dh, mh, Mh)
+        } else if (alg == "rnabox") {
+          nh <- rnabox(n, dh, mh, Mh)
         } else {
           stop("Bad algorithm for comparison !")
         }
@@ -120,14 +118,14 @@ testing_alg <- function(seed_from,
 
 
 testing_alg(1, 1000, alg = "fixedpi")
-testing_alg(1, 1000, alg = "rna_box_perf")
-testing_alg(1000, 10000, alg = "rna_box_perf")
+testing_alg(1, 1000, alg = "rnabox")
+testing_alg(1000, 10000, alg = "rnabox")
 
-microbenchmark(
+microbenchmark::microbenchmark(
   times = 5,
   unit = "ms",
   alg_fix = testing_alg(60000, 61000, "fixedpi"),
-  alg_rna_box_perf = testing_alg(60000, 61000, "rna_box_perf")
+  alg_rnabox = testing_alg(60000, 61000, "rnabox")
 )
 
 # comparison for larger populations (large number of strata)
@@ -137,7 +135,7 @@ set.seed(652234)
 
 # seed for Nrep=200
 # set.seed(1876)
-source("temp_r_files/gen_population.R")
+source("other_algorithms/gen_population.R")
 pop <- gen_population(Nrep = 100)
 Nh <- pop$Nh
 Sh <- pop$Sh
@@ -187,8 +185,8 @@ for (f in seq(n_min / N, n_max / N, 0.05)) {
     ix <- which(alloc0 == 1)
     nix <- sum(ix)
 
-    nh_rna <- rna_box_perf(n, Nh * Sh, mh, Mh)
-    var_rna <- varal(Nh, Sh, round_oric(nh_rna))
+    nh_rnabox <- rnabox(n, Nh * Sh, mh, Mh)
+    var_rnabox <- varal(Nh, Sh, round_oric(nh_rnabox))
 
     tabi <- data.frame(
       N = N,
@@ -196,7 +194,7 @@ for (f in seq(n_min / N, n_max / N, 0.05)) {
       n = n,
       # rv_noptcond=v_noptcond/V0,
       # rv1_noptcond=v1_noptcond/V0,
-      rna_cs_var_ratio = var_rna / var_cs
+      rna_cs_var_ratio = var_rnabox / var_cs
     )
 
     tab <- bind_rows(tab, tabi)
@@ -225,9 +223,9 @@ for (f in seq(n_min / N, n_max / N, 0.05)) {
     take_min <- sum(alloc0 <= mh)
     take_max <- sum(alloc0 >= Mh)
 
-    al_rna <- round_oric(rna_box_perf(n, dh, mh, Mh))
-    if (any(abs(al_rna - alloc0) > 1)) {
-      stop("Difference in allocation for rna_box_perf !")
+    al_rnabox <- round_oric(rnabox(n, dh, mh, Mh))
+    if (any(abs(al_rnabox - alloc0) > 1)) {
+      stop("Difference in allocation for rnabox !")
     }
 
     al_fpi <- round_oric(fixedpi(n, Nh, Sh, mh, Mh)$nh)
@@ -237,13 +235,13 @@ for (f in seq(n_min / N, n_max / N, 0.05)) {
 
     options(digits = 10)
 
-    ex <- microbenchmark(
+    ex <- microbenchmark::microbenchmark(
       times = 10,
       unit = "ms",
       # CapacityScaling=CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh),
       # noptcond_sufficient = noptcond_sufficient(dh , mh , Mh , n),
       fpi = fixedpi(n, Nh, Sh, mh, Mh)$nh,
-      rna_box_perf = rna_box_perf(n, dh, mh, Mh)
+      rnabox = rnabox(n, dh, mh, Mh)
     )
 
     summary(ex)
@@ -290,7 +288,7 @@ levels(tab2$algorithm)
 
 tab2 <- tab2 %>%
   mutate(
-    Algorithm = relevel(algorithm, c("rna_box_perf"))
+    Algorithm = relevel(algorithm, c("rnabox"))
   ) %>%
   group_by(Algorithm)
 
@@ -315,4 +313,4 @@ p1 <-
   )
 p1
 
-# ggsave("fig_times_rna_box_perf.pdf", p1, device="pdf", dpi=600, width = 8, height = 8/1.618)
+# ggsave("fig_times_rnabox.pdf", p1, device="pdf", dpi=600, width = 8, height = 8/1.618)

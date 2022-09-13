@@ -4,12 +4,12 @@
 #'
 #' @description `r lifecycle::badge("stable")`
 #'
-#'   Compute the variance of the stratified pi-estimator of the population
-#'   total, that is of the following generic form
-#'   \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
-#'   where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
-#'   strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
-#'   \eqn{x_w, w = 1, ..., H}. \cr
+#' Compute the variance of the stratified pi-estimator of the population total,
+#' that is of the following generic form:
+#' \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
+#' where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
+#' strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
+#' \eqn{x_w, w = 1, ..., H}. \cr
 #'
 #' @param x (`numeric`)\cr sample allocations in strata. Strictly positive
 #'   numbers.
@@ -34,7 +34,7 @@ var_tst <- function(x, a, b) {
 #' @describeIn var_tst computes variance of stratified pi-estimator of the total
 #'   for simple random sampling without replacement design in each stratum.
 #'   Under this design, parameters of the variance function \eqn{D} take the
-#'   following form
+#'   following form:
 #'   \deqn{a_w = N_w * S_w, w = 1, ..., H,}
 #'   and
 #'   \deqn{b = N_1 * S_1^2 + ... + N_H * S_H^2,}

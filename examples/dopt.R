@@ -1,15 +1,20 @@
 a <- c(3000, 4000, 5000, 2000)
-bounds <- c(100, 90, 70, 80)
+m <- c(100, 90, 70, 50)
+M <- c(300, 400, 200, 90)
 
 # Only lower bounds.
-dopt(n = 340, a = a, m = bounds)
-dopt(n = 400, a = a, m = bounds)
-dopt(n = 600, a = a, m = bounds)
+dopt(n = 340, a = a, m = m)
+dopt(n = 400, a = a, m = m)
+dopt(n = 700, a = a, m = m)
 
 # Only upper bounds.
-dopt(n = 190, a = a, M = bounds)
-dopt(n = 300, a = a, M = bounds)
-dopt(n = 340, a = a, M = bounds)
+dopt(n = 190, a = a, M = M)
+dopt(n = 700, a = a, M = M)
+
+# Box-constraints.
+dopt(n = 340, a = a, m = m, M = M)
+dopt(n = 500, a = a, m = m, M = M)
+dopt(n = 800, a = a, m = m, M = M)
 
 # Example of execution-time comparison of different algorithms
 # using bench R package.

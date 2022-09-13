@@ -25,28 +25,28 @@ Numeric vector with optimal sample allocation in strata.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-User function that determines fixed strata sample sizes that minimize
-total sample size, under assumed level of the variance of the stratified
+User function that determines fixed strata sample sizes that minimize total
+sample size, under assumed level of the variance of the stratified
 pi-estimator of the total and optional one-sided upper bounds imposed on
 strata sample sizes.
-The algorithm used by \code{nopt()} is described in Wójciak (2022).
-The allocation computed is valid for all stratified sampling schemes
-for which the variance of the stratified pi-estimator is of the form
+The algorithm used by \code{nopt()} is described in Wójciak (2022). The allocation
+computed is valid for all stratified sampling schemes for which the variance
+of the stratified pi-estimator is of the form:
 \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
 where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
 strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 \eqn{x_w, w = 1, ..., H}. \cr
 }
 \details{
-The \code{nopt()} function computes
+The \code{nopt()} function computes:
 \deqn{argmin n(x_1,...,x_H) = x_1 + ... + x_H,}
-under the equality constraint imposed on the variance
+under the equality constraint imposed on the variance:
 \deqn{a^2_1/x_1 + ... + a^2_H/x_H - b = D.}
-Optionally, the following set of one-sided inequality constraints
-can be added
+Optionally, the following set of one-sided inequality constraints can be
+added:
 \deqn{x_w <= M_w, w = 1,...,H,}
 where \eqn{D > 0} is a given number and \eqn{M_w > 0, w = 1, ..., H}, are
-the upper bounds, imposed on sample strata sizes.\cr
+the upper bounds imposed on sample sizes in strata. \cr
 }
 \note{
 For simple random sampling without replacement design in each stratum,
@@ -67,5 +67,5 @@ variance and strata sample sizes,
 \doi{10.48550/arXiv.2204.04035}
 }
 \seealso{
-\code{\link[=rna_one_sided]{rna_one_sided()}}, \code{\link[=dopt]{dopt()}}.
+\code{\link[=rna_onesided]{rna_onesided()}}, \code{\link[=dopt]{dopt()}}.
 }

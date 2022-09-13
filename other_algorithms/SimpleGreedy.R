@@ -9,19 +9,17 @@
 #' @param Mh - upper constraints for sample sizes in strata
 #' @param nh - initial allocation (if not given then nh=mh)
 #'
-#' @return  vector of optimal allocation sizes 
+#' @return  vector of optimal allocation sizes
 #'
 #' @references Ulf Friedrich, Ralf Munnich, Sven de Vries, Matthias Wagner,
 #' Fast integer-valued algorithms for optimal allocations under constraints in stratified sampling,
 #' Computational Statistics and Data Analysis 92 (2015), 1-12
 #'
 #' @export
-
 SimpleGreedy <- function(n, Nh, Sh,
                          mh = rep(1, length(Nh)),
                          Mh = rep(Inf, length(Nh)),
-                         nh = NULL)
-{
+                         nh = NULL) {
   if (is.null(nh)) nh <- mh
 
   if (any(nh > Mh)) {
@@ -31,15 +29,15 @@ SimpleGreedy <- function(n, Nh, Sh,
   r <- 0L
   while (sum(nh) < n) {
     r <- r + 1
-    Vh <- Nh * Sh / sqrt(nh * (nh+1)) * (nh+1 <= Mh)
+    Vh <- Nh * Sh / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
     h <- which.max(Vh)
     nh[h] <- nh[h] + 1
   }
 
   return(nh)
-  
-  #v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  #return(list(nh = nh, v = v))
+
+  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
+  # return(list(nh = nh, v = v))
 }
 
 
@@ -61,37 +59,30 @@ SimpleGreedy <- function(n, Nh, Sh,
 #' Computational Statistics and Data Analysis 92 (2015), 1-12
 #'
 #' @export
-
 SimpleGreedy2 <- function(v0, Nh, Sh,
                           mh = rep(1, length(Nh)),
                           Mh = Nh,
-                          nh = NULL)
-{
+                          nh = NULL) {
   if (is.null(nh)) nh <- mh
-  
+
   if (any(nh > Mh)) {
     stop("There are no feasible solutions")
   }
-  
+
   r <- 0L
   v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  
-  while (v > v0 && sum(nh) < sum(Nh) ) {
+
+  while (v > v0 && sum(nh) < sum(Nh)) {
     r <- r + 1
-    Vh <- Nh * Sh / sqrt(nh * (nh+1)) * (nh+1 <= Mh)
+    Vh <- Nh * Sh / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
     h <- which.max(Vh)
     nh[h] <- nh[h] + 1
     v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
   }
-  
+
   return(nh)
-  
-  
-  #v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  #return(list(nh = nh, v = v))
+
+
+  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
+  # return(list(nh = nh, v = v))
 }
-
-
-
-
-

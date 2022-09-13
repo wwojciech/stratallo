@@ -1,7 +1,12 @@
 # stratallo
 
-# stratallo 2.0.2
+# stratallo 2.1.0
 
+* Added new function `allocation_summary` that summarizes the allocation.
+* Added new function `rnabox` to handle box-constraints case.
+* Updated `rna_onesided` so that it optionally returns take-Neyman, take-min,
+  take-max set of strata indices.
+* Renamed function `rna_one_sided to `rna_onesided`.  
 * Minor typos corrections in README, vignette.
 
 # stratallo 2.0.1

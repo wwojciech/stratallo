@@ -1,6 +1,6 @@
 Package: stratallo
 Title: Optimum Sample Allocation in Stratified Sampling Schemes
-Version: 2.0.2
+Version: 2.1.0
 Authors@R: c(
   person("Wojciech", "Wójciak", email = "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Wesołowski", email = "j.wesolowski@mini.pw.edu.pl", role = "sad"),
@@ -8,8 +8,8 @@ Authors@R: c(
 Description: Functions in this package provide solution to classical problem in
   survey methodology - an optimum sample allocation in stratified sampling
   schemes. In this context, the optimal allocation is in the classical
-  Tschuprov-Neyman's sense and it satisfies additional either lower or upper
-  bounds restrictions imposed on sample sizes in strata. There are few different
+  Tschuprov-Neyman's sense and it satisfies additional lower or upper bounds
+  restrictions imposed on sample sizes in strata. There are few different
   algorithms available to use, and one them is based on popular sample
   allocation method that applies Neyman allocation to recursively reduced set of
   strata.
@@ -31,7 +31,7 @@ Imports:
     checkmate,
     lifecycle
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Suggests: 
     rmarkdown,
     knitr,
@@ -40,8 +40,8 @@ Suggests:
 Config/testthat/edition: 3
 Collate: 
     'helpers.R'
-    'algorithms_rna.R'
-    'algorithms_upper.R'
+    'algorithms_onesided.R'
+    'algorithms_twosided.R'
     'opt.R'
     'pop.R'
     'stratallo-package.R'
