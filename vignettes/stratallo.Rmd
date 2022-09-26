@@ -107,7 +107,7 @@ population total of a given study variable, under constraint on total sample
 size. This problem can be further complemented by adding lower or upper bounds
 constraints on sample sizes is strata.
 
-A minor modification of the classical optimium sample allocation problem leads
+A minor modification of the classical optimum sample allocation problem leads
 to the minimum sample size allocation. This problem lies in the determination of
 a vector of strata sample sizes that minimizes total sample size, under
 assumed fixed level of the $\pi$-estimator's variance. As in the case of the

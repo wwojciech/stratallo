@@ -15,7 +15,7 @@ different algorithms available to use, and one them is based on popular
 sample allocation method that applies Neyman allocation to recursively
 reduced set of strata.
 
-A minor modification of the classical optimium sample allocation problem
+A minor modification of the classical optimum sample allocation problem
 leads to the minimum sample size allocation. This problem lies in the
 determination of a vector of strata sample sizes that minimizes total
 sample size, under assumed fixed level of the pi-estimator’s variance.
@@ -29,26 +29,19 @@ it is assumed that the sampling designs in strata are chosen so that the
 variance of the pi-estimator of the population total is of the following
 generic form:
 
-<center>
-D<sup>2</sup><sub style='position: relative; left: -.5em;'>st</sub>(x<sub>1</sub>,…,x<sub>H</sub>)
-= a<sup>2</sup><sub style='position: relative; left: -.5em;'>1</sub>/
-x<sub>1</sub> + … +
-a<sup>2</sup><sub style='position: relative; left: -.5em;'>H</sub>/
-x<sub>H</sub> - b,
-</center>
+$$D^2_{st}(x_1, \ldots, x_H) = \sum_{w = 1}^{H}, \tfrac{a_w^2}{x_w} - b,$$
 
-where H denotes total number of strata, x<sub>1</sub>,…,x<sub>H</sub>
-are the strata sample sizes, and parameters b and a<sub>w</sub> \> 0 do
-not depend on x<sub>w</sub>, w = 1,…,H.
+where $H$ denotes total number of strata, $x_1, \ldots, x_H$ are the strata
+sample sizes and parameters $b$ and $a_w > 0$ do not depend on
+$x_w,\, w = 1, \ldots, H$.
 
-Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and
-`var_tst_si` functions that compute a value of variance
-D<sup>2</sup><sub style='position: relative; left: -.5em;'>st</sub>. The
-`var_tst_si` is a simple wrapper of `var_tst` that is dedicated for the
-case of simple random sampling without replacement design in each
-stratum. Furthermore, the package comes with two predefined, artificial
-populations with 507 and 969 strata. These are stored in `pop507` and
-`pop969` objects respectively.
+Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and `var_tst_si`
+functions that compute a value of variance $D^2_{st}$. The `var_tst_si` is a
+simple wrapper of `var_tst` that is dedicated for the case of simple random
+sampling without replacement design in each stratum.
+Furthermore, the package comes with two predefined, artificial populations with
+507 and 969 strata. These are stored in `pop507` and `pop969` objects
+respectively.
 
 See package’s vignette for more details.
 
@@ -81,7 +74,7 @@ a <- N * S
 n <- 190 # Total sample size.
 ```
 
-#### Tschuprov-Neyman allocation (no inequality constraints).
+#### Tschuprov-Neyman allocation (no inequality constraints)
 
 ``` r
 opt <- dopt(n = n, a = a)

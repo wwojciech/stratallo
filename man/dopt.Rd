@@ -63,13 +63,15 @@ The \code{dopt()} function computes:
 \deqn{argmin D(x_1,...,x_H),}
 under the equality constraint imposed on total sample size:
 \deqn{x_1 + ... + x_H = n,}
-and inequality constraints (optimally) imposed on strata sample size:
-\deqn{m_w <= x_w <= M_w,  w = 1,...,H.}
+and inequality constraints (optionally) imposed on strata sample size:
+\deqn{x_w >= m_w,  w = 1,...,H,}
+\deqn{x_w <= M_w,  w = 1,...,H.}
 Here, \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
 strata sample sizes, and \eqn{n > 0}, \eqn{b},
 \eqn{a_w > 0, w = 1, ..., H}, are given numbers. Furthermore, \eqn{m_w > 0}
 and \eqn{M_w > 0, w = 1, ..., H} are lower and upper bounds respectively,
-optionally imposed on sample sizes in strata. \cr
+optionally imposed on sample sizes in strata and such that
+\eqn{m_w < M_w, w = 1, ..., H.} \cr
 
 User of \code{dopt()} can choose whether the inequality constraints will be
 added to the optimization problem or not. This is achieved with the proper

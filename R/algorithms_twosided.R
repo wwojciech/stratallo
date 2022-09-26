@@ -15,11 +15,14 @@ NULL
 #' under the equality constraint imposed on total sample size:
 #' \deqn{x_1 + ... + x_H = n,}
 #' and (optionally) the following set of inequality constraints:
-#' \deqn{m_w <= x_w <= M_w,  w = 1,...,H.}
+#' \deqn{x_w >= m_w,  w = 1,...,H,}
+#' \deqn{x_w <= M_w,  w = 1,...,H.}
 #' Here, \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
-#' strata sample sizes, and \eqn{m_w > 0, M_w > 0, w = 1, ..., H} are the lower
-#' and upper bounds respectively, optionally imposed on sample sizes in
-#' strata. \cr
+#' strata sample sizes, and \eqn{n > 0}, \eqn{b},
+#' \eqn{a_w > 0, w = 1, ..., H}, are given numbers. Furthermore, \eqn{m_w > 0}
+#' and \eqn{M_w > 0, w = 1, ..., H} are lower and upper bounds respectively,
+#' optionally imposed on sample sizes in strata and such that
+#' \eqn{m_w < M_w, w = 1, ..., H.} \cr
 #'
 #' User of `rnabox()` can choose which or whether the inequality constraints
 #' will be added to the optimization problem or not. In case of no inequality
@@ -101,6 +104,10 @@ rnabox <- function(n, a, m = NULL, M = NULL) {
     }
     m
   }
+}
+
+sortbox <- function(n, a, m = NULL, M = NULL) {
+  r_order <- order(c(m/a, M/a))
 }
 
 # TESTY ----
