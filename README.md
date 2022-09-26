@@ -33,7 +33,7 @@ $$D^2_{st}(x_1, \ldots, x_H) = \sum_{w = 1}^{H} \tfrac{a_w^2}{x_w} - b,$$
 
 where $H$ denotes total number of strata, $x_1, \ldots, x_H$ are the strata
 sample sizes and parameters $b$ and $a_w > 0$ do not depend on
-$x_w,\, w = 1, \ldots, H$.
+$x_w$, $w = 1, \ldots, H$.
 
 Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and `var_tst_si`
 functions that compute a value of variance $D^2_{st}$. The `var_tst_si` is a
