@@ -29,7 +29,7 @@ it is assumed that the sampling designs in strata are chosen so that the
 variance of the pi-estimator of the population total is of the following
 generic form:
 
-$$D^2_{st}(x_1, \ldots, x_H) = \sum_{w = 1}^{H}, \tfrac{a_w^2}{x_w} - b,$$
+$$D^2_{st}(x_1, \ldots, x_H) = \sum_{w = 1}^{H} \tfrac{a_w^2}{x_w} - b,$$
 
 where $H$ denotes total number of strata, $x_1, \ldots, x_H$ are the strata
 sample sizes and parameters $b$ and $a_w > 0$ do not depend on
