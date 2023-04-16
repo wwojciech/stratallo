@@ -328,12 +328,12 @@ rna_rec <- function(n, a, bounds = NULL, upper = TRUE) {
   x <- (n / sum(a)) * a # Neyman allocation.
   R <- which_violates(x, bounds)
 
-  if (length(R) != 0L) {
+  if (length(R) == 0L) {
+    x
+  } else {
     n <- n - sum(bounds[R])
     bounds[-R] <- rna_rec(n, a[-R], bounds[-R], upper = upper)
     bounds
-  } else {
-    x
   }
 }
 
