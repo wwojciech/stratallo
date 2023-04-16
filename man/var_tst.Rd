@@ -38,7 +38,7 @@ strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 }
 \section{Functions}{
 \itemize{
-\item \code{var_tst_si}: computes variance of stratified pi-estimator of the total
+\item \code{var_tst_si()}: computes variance of stratified pi-estimator of the total
 for simple random sampling without replacement design in each stratum.
 Under this design, parameters of the variance function \eqn{D} take the
 following form:
@@ -47,8 +47,8 @@ and
 \deqn{b = N_1 * S_1^2 + ... + N_H * S_H^2,}
 where \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard
 deviations of a study variable in strata respectively.
-}}
 
+}}
 \examples{
 N <- c(3000, 4000, 5000, 2000)
 S <- rep(1, 4)

@@ -28,8 +28,8 @@ Numeric vector with optimal sample allocations in strata.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 An internal function that implements recursive Neyman optimal allocation
-algorithm, \code{rnabox}. The \code{rnabox()} should not be used
-directly. Instead, user function \code{\link[=dopt]{dopt()}} should be used. \cr
+algorithm, \code{RNABOX}. The \code{rnabox()} should not be used directly. Instead,
+user function \code{\link[=dopt]{dopt()}} should be used. \cr
 
 The \code{rnabox()} function computes:
 \deqn{argmin D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
@@ -59,11 +59,11 @@ parameters of the variance function \eqn{D} are
 \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard deviations of
 a study variable in strata respectively. \cr
 
-The \code{rnabox} is a generalization of a popular recursive
-Neyman allocation procedure that is described in Remark 12.7.1 in Sarndal
-et al. (1992). It is a procedure of optimal sample allocation in stratified
-sampling scheme with simple random sampling without replacement design in
-each stratum while not exceeding strata sizes.
+The \code{RNABOX} is a generalization of a popular recursive Neyman allocation
+procedure that is described in Remark 12.7.1 in Sarndal et al. (1992).
+It is a procedure of optimal sample allocation in stratified sampling
+scheme with simple random sampling without replacement design in each
+stratum while not exceeding strata sizes.
 
 Note that in case when no inequality constraints are added, the allocation
 is given as a closed form expression, known as Neyman allocation:

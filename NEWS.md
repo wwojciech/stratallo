@@ -1,5 +1,9 @@
 # stratallo
 
+# stratallo 2.1.2
+
+* Renamed `rna_onesided` function to `rna`.
+
 # stratallo 2.1.1
 
 * Minor typos corrections in manual pages.

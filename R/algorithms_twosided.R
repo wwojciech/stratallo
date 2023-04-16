@@ -7,8 +7,8 @@ NULL
 #' @description `r lifecycle::badge("stable")`
 #'
 #' An internal function that implements recursive Neyman optimal allocation
-#' algorithm, `rnabox`. The `rnabox()` should not be used
-#' directly. Instead, user function [dopt()] should be used. \cr
+#' algorithm, `RNABOX`. The `rnabox()` should not be used directly. Instead,
+#' user function [dopt()] should be used. \cr
 #'
 #' The `rnabox()` function computes:
 #' \deqn{argmin D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
@@ -37,11 +37,11 @@ NULL
 #'   \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard deviations of
 #'   a study variable in strata respectively. \cr
 #'
-#'   The `rnabox` is a generalization of a popular recursive
-#'   Neyman allocation procedure that is described in Remark 12.7.1 in Sarndal
-#'   et al. (1992). It is a procedure of optimal sample allocation in stratified
-#'   sampling scheme with simple random sampling without replacement design in
-#'   each stratum while not exceeding strata sizes.
+#'   The `RNABOX` is a generalization of a popular recursive Neyman allocation
+#'   procedure that is described in Remark 12.7.1 in Sarndal et al. (1992).
+#'   It is a procedure of optimal sample allocation in stratified sampling
+#'   scheme with simple random sampling without replacement design in each
+#'   stratum while not exceeding strata sizes.
 #'
 #'   Note that in case when no inequality constraints are added, the allocation
 #'   is given as a closed form expression, known as Neyman allocation:
@@ -81,33 +81,29 @@ NULL
 #' n <- 4076
 #' opt_vertex <- rnabox(n, a, m, M)
 rnabox <- function(n, a, m = NULL, M = NULL) {
-  opt1 <- rna_onesided(n, a, M, assignments = TRUE)
-  TN <- opt1$take_neyman # Strata original indices for which allocation is take-Neyman.
-  Lii <- which(opt1$opt[TN] <= m[TN]) # Indices of TN for which x violates lower bounds.
+  optM <- rna(n, a, M, assignments = TRUE)
+  tN <- optM$take_neyman # Strata original indices for which allocation is take-Neyman.
+  L_rel_tN <- which(optM$opt[tN] <= m[tN]) # Indices of tN for which x violates lower bounds.
 
-  if (length(Lii) == 0L) {
-    opt1$opt
+  if (length(L_rel_tN) == 0L) {
+    optM$opt
   } else {
     W <- seq_along(a) # Set of strata original indices. To be shrunk in repeat loop.
-    TNi <- TN
+    tN_rel_W <- tN
     repeat {
-      n <- n - sum(m[TN[Lii]])
-      W <- W[-TNi[Lii]] # W = W \ R (R - original indices for which x violates lower bounds).
-      opt1 <- rna_onesided(n, a[W], M[W], assignments = TRUE)
-      TNi <- opt1$take_neyman # Indices of W for which the allocation is take-Neyman.
-      TN <- W[TNi] # Strata original indices for which allocation is take-Neyman.
-      Lii <- which(opt1$opt[TNi] <= m[TN])
-      if (length(Lii) == 0L) {
-        m[W] <- opt1$opt
+      n <- n - sum(m[tN[L_rel_tN]])
+      W <- W[-tN_rel_W[L_rel_tN]] # W = W \ R (R - original indices for which x violates lower bounds).
+      optM <- rna(n, a[W], M[W], assignments = TRUE)
+      tN_rel_W <- optM$take_neyman # Indices of W for which the allocation is take-Neyman.
+      tN <- W[tN_rel_W] # Strata original indices for which allocation is take-Neyman.
+      L_rel_tN <- which(optM$opt[tN_rel_W] <= m[tN])
+      if (length(L_rel_tN) == 0L) {
+        m[W] <- optM$opt
         break
       }
     }
     m
   }
-}
-
-sortbox <- function(n, a, m = NULL, M = NULL) {
-  r_order <- order(c(m/a, M/a))
 }
 
 # TESTY ----
@@ -116,28 +112,18 @@ sortbox <- function(n, a, m = NULL, M = NULL) {
 # library(stratallo)
 # h_get_which_violates <- stratallo:::h_get_which_violates
 
-## rnabox_debug_summary ----
-
-rnabox_debug_summary <- function(a, m, M, assignments) {
-  d <- lapply(assignments, function(i) {
-    c(length(i$L_cum), length(i$U_rna), i$s0, i$s)
-  })
-  d <- data.frame(do.call(rbind, d))
-  colnames(d) <- c("L_size", "U_size", "s(L, 0)", "s(L, U)")
-  d
-}
-
-## rnabox ----
-
 rnabox_debug <- function(n, a, m, M) {
   W <- seq_along(a)
 
   debug_data <- list()
   L <- NULL
   repeat {
-    x <- rna_onesided_v2(n, a[W], M[W], extended = TRUE) # step 1
+    x <- rna_s(n, a[W], M[W], assignments = TRUE) # step 1
     Li <- which(x$opt <= m[W]) # step 2
-    debug_data <- c(debug_data, list(list(L = L, U = W[x$B], Li = W[Li], s0 = x$s0, s = x$s)))
+    debug_data <- c(
+      debug_data,
+      list(list(L = L, U = W[x$take_bound], Li = W[Li], s0 = x$s0, s = x$s))
+    )
     L <- c(L, W[Li])
     if (length(Li) == 0L) { # step 3
       m[W] <- x$opt
@@ -156,7 +142,7 @@ rnabox_v0 <- function(n, a, m, M) {
   W <- seq_along(a)
 
   repeat {
-    x <- rna_onesided_v2(n, a[W], M[W]) # step 1
+    x <- rna_s(n, a[W], M[W]) # step 1
     L <- which(x <= m[W]) # step 2
     if (length(L) == 0L) { # step 3
       break
@@ -178,7 +164,7 @@ rnabox_v0 <- function(n, a, m, M) {
 # Taka sama logika jak rnabox_v0, sprytniejsze zakodowanie
 # (pierwsza pierwsza iteracja nie jest subsetowana przez W - tak jest szybciej)
 rnabox_v01 <- function(n, a, m, M) {
-  x <- rna_onesided_v2(n, a, M) # step 1
+  x <- rna_s(n, a, M) # step 1
   L <- which(x <= m) # step 2
   if (length(L) == 0L) { # step 3
     x
@@ -187,7 +173,7 @@ rnabox_v01 <- function(n, a, m, M) {
     repeat {
       n <- n - sum(m[W[L]])
       W <- W[-L]
-      x <- rna_onesided_v2(n, a[W], M[W]) # step 1
+      x <- rna_s(n, a[W], M[W]) # step 1
       L <- which(x <= m[W]) # step 2
       if (length(L) == 0L) { # step 3
         m[W] <- x
@@ -203,7 +189,7 @@ rnabox_v1 <- function(n, a, m, M) {
   W <- seq_along(a)
 
   repeat {
-    upper <- rna_onesided_v2(n, a[W], M[W]) # step 1
+    upper <- rna_s(n, a[W], M[W]) # step 1
     Uc_rel_W <- upper$Bc
     Uc <- W[Uc_rel_W] # take-Neyman
 
@@ -229,8 +215,8 @@ rnabox_v1 <- function(n, a, m, M) {
 # (pierwsza iteracja nie jest subsetowana przez W - tak jest szybciej)
 # Ta wersja jest aktualnie w pakiecie stratallo pod nazwa rnabox.
 rnabox_v11 <- function(n, a, m, M) {
-  opt_upper <- rna_onesided_v2(n, a, M, extended = TRUE) # step 1
-  Uc <- opt_upper$Bc # take-Neyman
+  opt_upper <- rna_s(n, a, M, assignments = TRUE) # step 1
+  Uc <- opt_upper$take_neyman # take-Neyman
   L <- which(opt_upper$opt[Uc] <= m[Uc]) # step 2
 
   if (length(L) == 0L) { # step 3
@@ -241,8 +227,8 @@ rnabox_v11 <- function(n, a, m, M) {
     repeat {
       n <- n - sum(m[Uc[L]])
       W <- W[-Uc_rel_W[L]]
-      opt_upper <- rna_onesided_v2(n, a[W], M[W], extended = TRUE) # step 1
-      Uc_rel_W <- opt_upper$Bc
+      opt_upper <- rna_s(n, a[W], M[W], assignments = TRUE) # step 1
+      Uc_rel_W <- opt_upper$take_neyman
       Uc <- W[Uc_rel_W]
       L <- which(opt_upper$opt[Uc_rel_W] <= m[Uc]) # step 2
       if (length(L) == 0L) { # step 3
@@ -255,8 +241,8 @@ rnabox_v11 <- function(n, a, m, M) {
 }
 
 rnabox_v2 <- function(n, a, m, M) {
-  opt_upper <- rna_onesided_v2(n, a, M, extended = TRUE) # step 1
-  Uc <- opt_upper$Bc # take-Neyman
+  opt_upper <- rna_s(n, a, M, assignments = TRUE) # step 1
+  Uc <- opt_upper$take_neyman
   L <- which(opt_upper$opt[Uc] <= m[Uc]) # step 2
   if (length(L) == 0L) { # step 3
     opt_upper$opt
@@ -266,8 +252,8 @@ rnabox_v2 <- function(n, a, m, M) {
     repeat {
       n <- n - sum(m[Uc[L]])
       W <- W[-Uc_rel_W[L]]
-      opt_upper <- rna_onesided_prior(n, a[W], M[W], check = "TODO", extended = TRUE) # step 1
-      Uc_rel_W <- opt_upper$Bc
+      opt_upper <- rna_prior(n, a[W], M[W], check = "TODO", assignments = TRUE) # step 1
+      Uc_rel_W <- opt_upper$take_neyman
       Uc <- W[Uc_rel_W]
       L <- which(opt_upper$opt[Uc_rel_W] <= m[Uc]) # step 2
       if (length(L) == 0L) { # step 3
@@ -279,74 +265,23 @@ rnabox_v2 <- function(n, a, m, M) {
   }
 }
 
-## rna_onesided ----
-
-rna_onesided_v2 <- function(n, a, bounds, upper = TRUE, extended = FALSE) {
-  which_violates <- h_get_which_violates(geq = upper)
-
-  s <- s0 <- n / sum(a)
-  x <- a * s # Neyman allocation.
-  Ri <- which_violates(x, bounds) # Indices in W for which x exceeds bounds.
-
-  if (length(Ri) != 0L) {
-    W <- seq_along(a)
-    repeat {
-      R <- W[Ri] # Original strata indices for which x exceeds bounds.
-      W <- W[-Ri] # W = W \ R.
-      n <- n - sum(bounds[R])
-      s <- n / sum(a[W])
-      x <- s * a[W] # Neyman allocation for W.
-      Ri <- which_violates(x, bounds[W]) # Indices of W for which x exceeds bounds.
-      if (length(Ri) == 0L) {
-        bounds[W] <- x
-        x <- bounds
-        break
-      }
-    }
-    if (extended) {
-      if (length(W) == 0L) {
-        B <- seq_along(a)
-      } else {
-        B <- seq_along(a)[-W]
-      }
-      x <- list(opt = x, B = B, Bc = W, s0 = s0, s = s)
-    }
-  } else if (extended) {
-    x <- list(opt = x, B = numeric(0), Bc = seq_along(a), s0 = s0, s = s)
+rnabox_debug_summary <- function(assignments, a, m, M, s = FALSE) {
+  if (s) {
+    d <- lapply(assignments, function(i) {
+      c(length(i$L), length(i$U), i$s0, i$s)
+    })
+    d <- data.frame(do.call(rbind, d))
+    colnames(d) <- c("L_size", "U_size", "s(L, 0)", "s(L, U)")
+    d
+  } else {
+    d <- lapply(names(assignments), function(iter_name) {
+      i <- assignments[[iter_name]]
+      data.frame(
+        Iteration = as.integer(gsub("^Iteration_", "", iter_name)),
+        W = c(i$L, i$U),
+        Type = c(rep("L", length(i$L)), rep("U", length(i$U)))
+      )
+    })
+    data.frame(do.call(rbind, d))
   }
-  x
-}
-
-rna_onesided_prior <- function(n, a, bounds, upper = TRUE, check = NULL, extended = FALSE) {
-  which_violates <- h_get_which_violates(geq = upper)
-
-  x <- n * (a / sum(a)) # Neyman allocation.
-  Ri <- which_violates(x[check], bounds[check]) # Indices of `check` for which x violates bounds.
-
-  if (length(Ri) != 0L) {
-    W <- seq_along(a)
-    repeat {
-      R <- W[check[Ri]] # Set of strata native labels for which x violates bounds.
-      W <- W[-Ri] # W = W \ R.
-      n <- n - sum(bounds[R])
-      x <- n * (a[W] / sum(a[W])) # Neyman allocation for W.
-      Ri <- which_violates(x, bounds[W]) # Indices of W for which x violates bounds.
-      if (length(Ri) == 0L) {
-        bounds[W] <- x
-        x <- bounds
-        break
-      }
-    }
-    if (extended) {
-      if (length(W) == 0L) {
-        B <- seq_along(a)
-      } else {
-        B <- seq_along(a)[-W]
-      }
-      x <- list(opt = x, B = B, Bc = W)
-    }
-  } else if (extended) {
-    x <- list(opt = x, B = numeric(0), Bc = seq_along(a))
-  }
-  x
 }

@@ -31,5 +31,5 @@ which_violates <- stratallo:::h_get_which_violates(geq = FALSE)
 which_violates(1:3, 3:1)
 }
 \seealso{
-\code{\link[=rna_onesided]{rna_onesided()}}.
+\code{\link[=rna]{rna()}}.
 }

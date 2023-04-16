@@ -46,18 +46,18 @@ directly. Instead, the \code{\link[=dopt]{dopt()}} should be used.
 }
 \section{Functions}{
 \itemize{
-\item \code{sga}: implementation of the Stenger-Gabler type algorithm
+\item \code{sga()}: implementation of the Stenger-Gabler type algorithm
 \code{SGa}, described in Wesołowski et al. (2021) and in Stenger and Gabler
 (2005).
 
-\item \code{sgaplus}: implementation of the modified Stenger-Gabler type
+\item \code{sgaplus()}: implementation of the modified Stenger-Gabler type
 algorithm, described in Wójciak (2019) as
 \verb{Sequential Allocation (version 1)} algorithm.
 
-\item \code{coma}: implementation of the Change of Monotonicity
+\item \code{coma()}: implementation of the Change of Monotonicity
 Algorithm, or \code{coma}, described in Wesołowski et al. (2021).
-}}
 
+}}
 \note{
 For simple random sampling without replacement design in each stratum,
 parameters of the variance function \eqn{D} are
@@ -89,5 +89,5 @@ Wójciak, W. (2019), Optimal allocation in stratified sampling schemes,
 \url{http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf} \cr
 }
 \seealso{
-\code{\link[=dopt]{dopt()}}, \code{\link[=rna_onesided]{rna_onesided()}}.
+\code{\link[=dopt]{dopt()}}, \code{\link[=rna]{rna()}}.
 }

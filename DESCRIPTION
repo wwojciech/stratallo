@@ -1,6 +1,6 @@
 Package: stratallo
 Title: Optimum Sample Allocation in Stratified Sampling Schemes
-Version: 2.1.1
+Version: 2.1.2
 Authors@R: c(
   person("Wojciech", "Wójciak", email = "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Wesołowski", email = "j.wesolowski@mini.pw.edu.pl", role = "sad"),
@@ -31,7 +31,7 @@ Imports:
     checkmate,
     lifecycle
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Suggests: 
     rmarkdown,
     knitr,

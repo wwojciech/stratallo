@@ -49,12 +49,12 @@ strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
 \eqn{x_w, w = 1, ..., H}. \cr
 
 The \code{dopt()} function makes use of the following allocation algorithms:
-\code{rna}, \code{sga}, \code{sgaplus}, \code{coma} for optimal sample allocation under one-sided
-upper bounds constraints, and \code{lrna} for optimal sample allocation under
+\code{RNA}, \code{SGA}, \code{SGAPLUS}, \code{COMA} for optimal sample allocation under one-sided
+upper bounds constraints, and \code{LRNA} for optimal sample allocation under
 one-sided lower bounds constraints. For the allocation under box-constraints,
-the \code{rnabox} algorithm is used. The \code{rna}, \code{sga}, and \code{coma} are described in
-Wesołowski et al. (2021), while the \code{sgaplus} is in Wójciak (2019). The
-\code{lrna} is introduced in Wójciak (2022). The \code{rnabox} algorithm is a new
+the \code{RNABOX} algorithm is used. The \code{RNA}, \code{SGA}, and \code{COMA} are described in
+Wesołowski et al. (2021), while the \code{SGAPLUS} is in Wójciak (2019). The
+\code{LRNA} is introduced in Wójciak (2022). The \code{RNABOX} algorithm is a new
 optimal allocation algorithm that was developed by the authors of this
 package and will be published soon.
 }
@@ -85,11 +85,11 @@ parameters \code{m} and \code{M} must be specified.
 
 For the case of one-sided upper bounds constraints only, there are four
 different underlying algorithms available to use. These are abbreviated as:
-"rna" (\code{\link[=rna_onesided]{rna_onesided()}}), "sga" (\code{\link[=sga]{sga()}}), "sgaplus" (\code{\link[=sgaplus]{sgaplus()}}),
+"rna" (\code{\link[=rna]{rna()}}), "sga" (\code{\link[=sga]{sga()}}), "sgaplus" (\code{\link[=sgaplus]{sgaplus()}}),
 and "coma" (\code{\link[=coma]{coma()}}). Functions names that perform given algorithms are
 given in the brackets. See its help page for more details.
 For the case of one-sided lower bounds constraints only, the
-"rna" (\code{\link[=rna_onesided]{rna_onesided()}}) is used. Finally, for box-constraints, the
+"rna" (\code{\link[=rna]{rna()}}) is used. Finally, for box-constraints, the
 "rnabox" algorithm is used (\code{\link[=rnabox]{rnabox()}}).
 }
 \note{
@@ -164,6 +164,5 @@ Sarndal, C.-E., Swensson, B., and Wretman, J. (1992),
 \emph{Model Assisted Survey Sampling}, New York, NY: Springer.
 }
 \seealso{
-\code{\link[=nopt]{nopt()}}, \code{\link[=rna_onesided]{rna_onesided()}}, \code{\link[=sga]{sga()}}, \code{\link[=sgaplus]{sgaplus()}}, \code{\link[=coma]{coma()}},
-\code{\link[=rnabox]{rnabox()}}.
+\code{\link[=nopt]{nopt()}}, \code{\link[=rna]{rna()}}, \code{\link[=sga]{sga()}}, \code{\link[=sgaplus]{sgaplus()}}, \code{\link[=coma]{coma()}}, \code{\link[=rnabox]{rnabox()}}.
 }

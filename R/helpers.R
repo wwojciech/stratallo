@@ -14,7 +14,7 @@
 #' @return 2-arguments function that checks whether its first argument exceeds
 #'   the second one. Both arguments must be numeric.
 #'
-#' @seealso [rna_onesided()].
+#' @seealso [rna()].
 #'
 #' @examples
 #' which_violates <- stratallo:::h_get_which_violates()
@@ -77,12 +77,9 @@ h_get_which_violates <- function(geq = TRUE) {
 #'
 #' x2 <- dopt(n = 540, a, m, M)
 #' s2 <- allocation_summary(x2, a, m, M)
-allocation_summary <- function(x,
-                               a,
-                               m = NULL,
-                               M = NULL) {
-  H <- length(a)
+allocation_summary <- function(x, a, m = NULL, M = NULL) {
   assert_numeric(a, min.len = 1L)
+  H <- length(a)
   assert_numeric(x, len = H, any.missing = FALSE)
   assert_numeric(m, len = H, null.ok = TRUE)
   assert_numeric(M, len = H, null.ok = TRUE)

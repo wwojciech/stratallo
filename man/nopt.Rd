@@ -67,5 +67,5 @@ variance and strata sample sizes,
 \doi{10.48550/arXiv.2204.04035}
 }
 \seealso{
-\code{\link[=rna_onesided]{rna_onesided()}}, \code{\link[=dopt]{dopt()}}.
+\code{\link[=rna]{rna()}}, \code{\link[=dopt]{dopt()}}.
 }

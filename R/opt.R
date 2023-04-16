@@ -18,12 +18,12 @@
 #' \eqn{x_w, w = 1, ..., H}. \cr
 #'
 #' The `dopt()` function makes use of the following allocation algorithms:
-#' `rna`, `sga`, `sgaplus`, `coma` for optimal sample allocation under one-sided
-#' upper bounds constraints, and `lrna` for optimal sample allocation under
+#' `RNA`, `SGA`, `SGAPLUS`, `COMA` for optimal sample allocation under one-sided
+#' upper bounds constraints, and `LRNA` for optimal sample allocation under
 #' one-sided lower bounds constraints. For the allocation under box-constraints,
-#' the `rnabox` algorithm is used. The `rna`, `sga`, and `coma` are described in
-#' Wesołowski et al. (2021), while the `sgaplus` is in Wójciak (2019). The
-#' `lrna` is introduced in Wójciak (2022). The `rnabox` algorithm is a new
+#' the `RNABOX` algorithm is used. The `RNA`, `SGA`, and `COMA` are described in
+#' Wesołowski et al. (2021), while the `SGAPLUS` is in Wójciak (2019). The
+#' `LRNA` is introduced in Wójciak (2022). The `RNABOX` algorithm is a new
 #' optimal allocation algorithm that was developed by the authors of this
 #' package and will be published soon.
 #'
@@ -53,11 +53,11 @@
 #'
 #'   For the case of one-sided upper bounds constraints only, there are four
 #'   different underlying algorithms available to use. These are abbreviated as:
-#'   "rna" ([rna_onesided()]), "sga" ([sga()]), "sgaplus" ([sgaplus()]),
+#'   "rna" ([rna()]), "sga" ([sga()]), "sgaplus" ([sgaplus()]),
 #'   and "coma" ([coma()]). Functions names that perform given algorithms are
 #'   given in the brackets. See its help page for more details.
 #'   For the case of one-sided lower bounds constraints only, the
-#'   "rna" ([rna_onesided()]) is used. Finally, for box-constraints, the
+#'   "rna" ([rna()]) is used. Finally, for box-constraints, the
 #'   "rnabox" algorithm is used ([rnabox()]).
 #'
 #' @note For simple random sampling without replacement design in each stratum,
@@ -88,8 +88,7 @@
 #'
 #' @return Numeric vector with optimal sample allocation in strata.
 #'
-#' @seealso [nopt()], [rna_onesided()], [sga()], [sgaplus()], [coma()],
-#'   [rnabox()].
+#' @seealso [nopt()], [rna()], [sga()], [sgaplus()], [coma()], [rnabox()].
 #
 #' @references
 #'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021),
@@ -136,10 +135,10 @@ dopt <- function(n, a, m = NULL, M = NULL, M_method = "rna") {
   } else if (lower && upper) {
     rnabox(n = n, a = a, m = m, M = M)
   } else if (lower) {
-    rna_onesided(n = n, a = a, bounds = m, upper = FALSE)
+    rna(n = n, a = a, bounds = m, upper = FALSE)
   } else if (upper) {
     if (M_method == "rna") {
-      rna_onesided(n = n, a = a, bounds = M)
+      rna(n = n, a = a, bounds = M)
     } else {
       do.call(M_method, args = list(n = n, a = a, M = M))
     }
@@ -191,7 +190,7 @@ dopt <- function(n, a, m = NULL, M = NULL, M_method = "rna") {
 #'
 #' @return Numeric vector with optimal sample allocation in strata.
 #'
-#' @seealso [rna_onesided()], [dopt()].
+#' @seealso [rna()], [dopt()].
 #
 #' @references
 #'   Wójciak, W. (2022),
@@ -227,7 +226,7 @@ nopt <- function(D, a, b, M = NULL) {
     if (D == D_min) {
       return(M)
     }
-    opt <- rna_onesided(n = D + b, a = a, bounds = a2 / M, upper = FALSE)
+    opt <- rna(n = D + b, a = a, bounds = a2 / M, upper = FALSE)
     a2 / opt
   } else {
     a * sum(a) / (D + b)

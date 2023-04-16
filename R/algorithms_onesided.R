@@ -8,10 +8,10 @@ NULL
 #'
 #' An internal function that implements the recursive Neyman optimal allocation
 #' algorithms, `rna` and `lrna`, described in Wesołowski et al. (2021) and
-#' Wójciak (2022) respectively. The `rna_onesided()` should not be used
-#' directly. Instead, user function [dopt()] or [nopt()] should be used. \cr
+#' Wójciak (2022) respectively. The `rna()` should not be used directly. Instead,
+#' user function [dopt()] or [nopt()] should be used. \cr
 #'
-#' The `rna_onesided()` function computes:
+#' The `rna()` function computes:
 #' \deqn{argmin D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
 #' under the equality constraint imposed on total sample size:
 #' \deqn{x_1 + ... + x_H = n,}
@@ -24,7 +24,7 @@ NULL
 #' lower and upper bounds respectively, optionally imposed on samples sizes in
 #' strata.
 #'
-#' User of `rna_onesided()` can choose whether the inequality constraints will
+#' User of `rna()` can choose whether the inequality constraints will
 #' be added to the optimization problem or not. This is achieved with the proper
 #' use of `bounds` and `upper` arguments of the function. In case of no
 #' inequality constraints to be added, `bounds` must be specified as `NULL`
@@ -32,9 +32,9 @@ NULL
 #' If any bounds should be imposed on sample strata sizes, user must specify
 #' these with `bounds` argument.
 #' For the Case I of the upper bounds, `upper` flag must be set to `TRUE`
-#' (default) and then the `rna_onesided()` performs the `rna`.
+#' (default) and then the `rna()` performs the `rna`.
 #' For the Case II of lower bounds, `upper` flag must be set to `FALSE` and then
-#' the `rna_onesided()` performs the `lrna` algorithm.
+#' the `rna()` performs the `lrna` algorithm.
 #' The `upper` flag is ignored when `bounds` is `NULL`.
 #'
 #' @note For simple random sampling without replacement design in each stratum,
@@ -92,8 +92,8 @@ NULL
 #' @examples
 #' a <- c(3000, 4000, 5000, 2000)
 #' bounds <- c(100, 90, 70, 80)
-#' rna_onesided(n = 190, a = a, bounds = bounds)
-rna_onesided <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE) {
+#' rna(n = 190, a = a, bounds = bounds)
+rna <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE) {
   which_violates <- h_get_which_violates(geq = upper)
 
   x <- (n / sum(a)) * a # Neyman allocation.
@@ -107,7 +107,7 @@ rna_onesided <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE)
       W <- W[-Ri] # W <- W \ R
       # Neyman allocation for W. Denominator could be accumulated (i.e.
       # denom <- denom - sum(a[R]), where first denom = a1 + a2 + ... + aH),
-      # but resigned from this version due to finite arithmetic precision issues.
+      # but resigned from this version due to finite precision arithmetic issues.
       x <- (n / sum(a[W])) * a[W]
       Ri <- which_violates(x, bounds[W]) # Indices of W for which x violates bounds.
       if (length(Ri) == 0L) {
@@ -116,20 +116,19 @@ rna_onesided <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE)
       }
     }
     if (assignments) {
-      if (length(W) == 0L) { # Vertex allocation.
-        list(opt = bounds, take_neyman = numeric(0), take_bound = seq_along(a))
+      take_bound <- if (length(W) == 0L) {
+        seq_along(a) # Vertex allocation.
       } else {
-        list(opt = bounds, take_neyman = W, take_bound = seq_along(a)[-W])
+        seq_along(a)[-W]
       }
+      list(opt = bounds, take_neyman = W, take_bound = take_bound)
     } else {
       bounds
     }
+  } else if (assignments) {
+    list(opt = x, take_neyman = seq_along(a), take_bound = numeric(0))
   } else {
-    if (assignments) {
-      list(opt = x, take_neyman = seq_along(a), take_bound = numeric(0))
-    } else {
-      x
-    }
+    x
   }
 }
 
@@ -168,7 +167,7 @@ rna_onesided <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE)
 #' @return Numeric vector with optimal sample allocations in strata.
 #'
 #' @name dopt_upper
-#' @seealso [dopt()], [rna_onesided()].
+#' @seealso [dopt()], [rna()].
 #'
 #' @references
 #'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021),
@@ -305,4 +304,131 @@ coma <- function(n, a, M) {
     M[V] <- a[V] * s
     M
   }
+}
+
+#' @title RNA - Recursive Implementation
+#'
+#' @description `r lifecycle::badge("experimental")`
+#' @inheritParams rna
+#'
+#' @note this coded was not extensively tested.
+#'
+#' @export
+#' @examples
+#' a <- c(3000, 4000, 5000, 2000)
+#' bounds <- c(100, 90, 70, 80)
+#' rna_rec(n = 190, a = a, bounds = bounds)
+#' rna_rec(n = 312, a = a, bounds = bounds)
+#' rna_rec(n = 339, a = a, bounds = bounds)
+#' rna_rec(n = 340, a = a, bounds = bounds)
+#'
+rna_rec <- function(n, a, bounds = NULL, upper = TRUE) {
+  which_violates <- h_get_which_violates(geq = upper)
+
+  x <- (n / sum(a)) * a # Neyman allocation.
+  R <- which_violates(x, bounds)
+
+  if (length(R) != 0L) {
+    n <- n - sum(bounds[R])
+    bounds[-R] <- rna_rec(n, a[-R], bounds[-R], upper = upper)
+    bounds
+  } else {
+    x
+  }
+}
+
+#' @title rna version that computes values of set function s
+#'
+#' @description `r lifecycle::badge("experimental")`
+#' @inheritParams rna
+#'
+#' @export
+#' @examples
+#' a <- c(3000, 4000, 5000, 2000)
+#' bounds <- c(100, 90, 70, 80)
+#' rna_s(n = 190, a = a, bounds = bounds)
+#'
+rna_s <- function(n, a, bounds = NULL, upper = TRUE, assignments = FALSE) {
+  which_violates <- h_get_which_violates(geq = upper)
+
+  s <- s0 <- n / sum(a)
+  x <- a * s # Neyman allocation.
+  Ri <- which_violates(x, bounds) # Indices in W for which x exceeds bounds.
+
+  if (length(Ri) != 0L) {
+    W <- seq_along(a) # Set of strata original indices. To be reduced in repeat loop.
+    repeat {
+      n <- n - sum(bounds[W[Ri]])
+      W <- W[-Ri]
+      s <- n / sum(a[W])
+      x <- s * a[W] # Neyman allocation for (reduced) W.
+      Ri <- which_violates(x, bounds[W]) # Indices of W for which x violates bounds.
+      if (length(Ri) == 0L) {
+        bounds[W] <- x
+        break
+      }
+    }
+    if (assignments) {
+      take_bound <- if (length(W) == 0L) {
+        seq_along(a) # Vertex allocation.
+      } else {
+        seq_along(a)[-W]
+      }
+      list(opt = bounds, take_neyman = W, take_bound = take_bound, s0 = s0, s = s)
+    } else {
+      bounds
+    }
+  } else if (assignments) {
+    list(opt = x, take_neyman = seq_along(a), take_bound = numeric(0), s0 = s0, s = s)
+  } else {
+    x
+  }
+}
+
+#' @title rna version that uses prior information about violations
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' This is the version of the RNA that makes use of additional information
+#' about strata for which the allocation can possibly be violated. For all other
+#' strata allocation will not be violated.
+#'
+#' @inheritParams rna
+#' @param check (`integer`)\cr strata indices for which the allocation can possible
+#'   be violated. For other strata allocation cannot be violated.
+#'
+#' @export
+#'
+rna_prior <- function(n, a, bounds, upper = TRUE, check = NULL, assignments = FALSE) {
+  which_violates <- h_get_which_violates(geq = upper)
+
+  x <- n * (a / sum(a)) # Neyman allocation.
+  Ri <- which_violates(x[check], bounds[check]) # Indices of `check` for which x violates bounds.
+
+  if (length(Ri) != 0L) {
+    W <- seq_along(a)
+    repeat {
+      R <- W[check[Ri]] # Set of strata native labels for which x violates bounds.
+      W <- W[-Ri] # W = W \ R.
+      n <- n - sum(bounds[R])
+      x <- n * (a[W] / sum(a[W])) # Neyman allocation for W.
+      Ri <- which_violates(x, bounds[W]) # Indices of W for which x violates bounds.
+      if (length(Ri) == 0L) {
+        bounds[W] <- x
+        x <- bounds
+        break
+      }
+    }
+    if (assignments) {
+      if (length(W) == 0L) {
+        B <- seq_along(a)
+      } else {
+        B <- seq_along(a)[-W]
+      }
+      x <- list(opt = x, B = B, Bc = W)
+    }
+  } else if (assignments) {
+    x <- list(opt = x, B = numeric(0), Bc = seq_along(a))
+  }
+  x
 }

@@ -1,4 +1,4 @@
-# rna_onesided works well for m, (pop507)
+# rna works well for m, (pop507)
 
     Code
       result
@@ -4654,7 +4654,7 @@
       [496]   39   20   24  225 2602  526    4   20 2753 1366  788 2938
       
       [[1]]$take_neyman
-      numeric(0)
+      integer(0)
       
       [[1]]$take_bound
         [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
@@ -11016,7 +11016,7 @@
       
       
 
-# rna_onesided works well for M, (pop507)
+# rna works well for M, (pop507)
 
     Code
       result

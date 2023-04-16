@@ -31,17 +31,17 @@ generic form:
 
 $$D^2_{st}(x_1, \ldots, x_H) = \sum_{w = 1}^{H} \tfrac{a_w^2}{x_w} - b,$$
 
-where $H$ denotes total number of strata, $x_1, \ldots, x_H$ are the strata
-sample sizes and parameters $b$ and $a_w > 0$ do not depend on
+where $H$ denotes total number of strata, $x_1, \ldots, x_H$ are the
+strata sample sizes and parameters $b$ and $a_w > 0$ do not depend on
 $x_w$, $w = 1, \ldots, H$.
 
-Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and `var_tst_si`
-functions that compute a value of variance $D^2_{st}$. The `var_tst_si` is a
-simple wrapper of `var_tst` that is dedicated for the case of simple random
-sampling without replacement design in each stratum.
-Furthermore, the package comes with two predefined, artificial populations with
-507 and 969 strata. These are stored in `pop507` and `pop969` objects
-respectively.
+Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and
+`var_tst_si` functions that compute a value of variance $D^2_{st}$. The
+`var_tst_si` is a simple wrapper of `var_tst` that is dedicated for the
+case of simple random sampling without replacement design in each
+stratum. Furthermore, the package comes with two predefined, artificial
+populations with 507 and 969 strata. These are stored in `pop507` and
+`pop969` objects respectively.
 
 See package’s vignette for more details.
 
@@ -118,6 +118,7 @@ var_tst_si(opt, N, S)
 #### Box-constraints
 
 ``` r
+
 m <- c(100, 90, 500, 50) # Lower bounds constraints imposed on sample sizes in strata.
 M <- c(300, 400, 800, 90) # Upper bounds constraints imposed on sample sizes in strata.
 n <- 1284
@@ -135,6 +136,7 @@ var_tst_si(opt, N, S)
 ### Function `nopt`
 
 ``` r
+
 a <- c(3000, 4000, 5000, 2000)
 b <- 70000
 M <- c(100, 90, 70, 80)
