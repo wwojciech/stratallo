@@ -63,7 +63,7 @@ references:
   - family: Wójciak
     given: Wojciech
   container-title: MSc Thesis
-  URL: 'http://home.elka.pw.edu.pl/~wwojciak/msc_Optimum_allocation.pdf'
+  URL: 'http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf'
   publisher: Warsaw University of Technology
   issued:
     year: 2019
