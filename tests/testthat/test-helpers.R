@@ -1,34 +1,50 @@
-# h_get_which_violates ----
+# ran_round ----
 
-test_that("h_get_which_violates returns a function when geq is TRUE", {
-  which_violated <- h_get_which_violates()
-  expect_function(which_violated, args = c("x", "y"))
+test_that("ran_round works as expected)", {
+  x <- c(4.5, 4.1, 4.9)
+
+  set.seed(5)
+  expect_identical(ran_round(x), c(5L, 4L, 4L))
+
+  set.seed(6)
+  expect_identical(ran_round(x), c(4L, 4L, 5L))
 })
 
-test_that("h_get_which_violates works as expected when geq is TRUE", {
-  which_violated <- h_get_which_violates()
-  result <- which_violated(1:3, 3:1)
-  expect_equal(result, 2:3)
+# round_oric ----
+
+test_that("round_oric works as expected)", {
+  x <- c(4.5, 4.1, 4.9)
+  expect_identical(round_oric(x), c(4L, 4L, 5L))
 })
 
-test_that("h_get_which_violates returns a function when geq is FALSE", {
-  which_violated <- h_get_which_violates(geq = FALSE)
-  expect_function(which_violated, args = c("x", "y"))
+# var_st ----
+
+test_that("var_st works as expected)", {
+  N <- c(300, 400, 500, 200)
+  S <- c(2, 5, 3, 1)
+  x <- c(27, 88, 66, 9)
+  a <- N * S
+  a0 <- sum(N * S^2)
+  result <- var_st(x, a, a0)
+  expect_equal(result, 81423.232)
 })
 
-test_that("h_get_which_violates works as expected when geq is FALSE", {
-  which_violated <- h_get_which_violates(geq = FALSE)
-  result <- which_violated(1:3, 3:1)
-  expect_equal(result, 1:2)
+# var_st_tsi ----
+
+test_that("var_st_tsi works as expected)", {
+  N <- c(300, 400, 500, 200)
+  S <- c(2, 5, 3, 1)
+  x <- c(27, 88, 66, 9)
+  result <- var_st_tsi(x, N, S)
+  expect_equal(result, 81423.232)
 })
 
-# allocation_summary ----
+# asummary ----
 
-test_that("allocation_summary works as expected when no bounds are specified", {
-  a <- c(3000, 4000, 5000, 2000)
+test_that("asummary works as expected when no bounds are specified", {
   x <- c(85, 114, 142, 57)
 
-  result <- allocation_summary(x, a)
+  result <- asummary(x, a)
   expected <- data.frame(
     a = c(a, NA),
     allocation = c(x, sum(x)),
@@ -38,12 +54,11 @@ test_that("allocation_summary works as expected when no bounds are specified", {
   expect_identical(result, expected)
 })
 
-test_that("allocation_summary works as expected when only m is specified", {
-  a <- c(3000, 4000, 5000, 2000)
+test_that("asummary works as expected when only m is specified", {
   m <- c(100, 90, 70, 80)
   x <- c(100, 98, 122, 80)
 
-  result <- allocation_summary(x, a, m)
+  result <- asummary(x, a, m)
   expected <- data.frame(
     a = c(a, NA),
     m = c(m, sum(m)),
@@ -55,12 +70,11 @@ test_that("allocation_summary works as expected when only m is specified", {
   expect_identical(result, expected)
 })
 
-test_that("allocation_summary works as expected when only M is specified", {
-  a <- c(3000, 4000, 5000, 2000)
+test_that("asummary works as expected when only M is specified", {
   M <- c(200, 150, 300, 210)
   x <- c(117, 150, 195, 78)
 
-  result <- allocation_summary(x, a, M = M)
+  result <- asummary(x, a, M = M)
   expected <- data.frame(
     a = c(a, NA),
     M = c(M, sum(M)),
@@ -72,13 +86,12 @@ test_that("allocation_summary works as expected when only M is specified", {
   expect_identical(result, expected)
 })
 
-test_that("allocation_summary works as expected when only M is specified", {
-  a <- c(3000, 4000, 5000, 2000)
+test_that("asummary works as expected when only M is specified", {
   m <- c(100, 90, 70, 80)
   M <- c(200, 150, 300, 210)
   x <- c(117, 150, 194, 80)
 
-  result <- allocation_summary(x, a, m, M)
+  result <- asummary(x, a, m, M)
   expected <- data.frame(
     a = c(a, NA),
     m = c(m, sum(m)),

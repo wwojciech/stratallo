@@ -1,70 +1,164 @@
-#' @title Get Proper Version of `which_violates` Function
+#' Random Rounding of Numbers
 #'
 #' @description `r lifecycle::badge("stable")`
 #'
-#' An internal function that prepares a simple 2-arguments wrapper of
-#' [`base::which()`] that checks whether its first argument exceeds the second
-#' one. Both arguments are numeric. This excess is hard coded in the returned
-#' wrapper function and it is defined either as \eqn{>=} ("greater or equal")
-#' or \eqn{<=} ("lower or equal"), depending on the value of the `geq` flag.
+#' A number \eqn{x} is rounded to integer \eqn{y} according to the following
+#' rule:
+#' \deqn{y = \left\lfloor{x}\right\rfloor + I(u < (x - \left\lfloor{x}\right\rfloor)),}
+#' where function \eqn{I:\{TRUE, FALSE\} \to \{0, 1\}}, is defined as:
+#' \deqn{
+#'  I(x) = \begin{cases}
+#'  0,  & x \text{ is } FALSE \\
+#'  1, & x \text{ is } TRUE,
+#'  \end{cases}
+#' }
+#' and \eqn{u} is number that is generated from `Uniform(0, 1)` distribution.
 #'
-#' @param geq (`flag`) \cr if `TRUE`, then "greater or equal" condition is set.
-#'   Otherwise, "less then or equal" is set.
+#' @importFrom stats runif
 #'
-#' @return 2-arguments function that checks whether its first argument exceeds
-#'   the second one. Both arguments must be numeric.
+#' @param x (`numeric`)\cr a numeric vector.
+#' @return An integer vector.
 #'
-#' @seealso [rna()].
-#'
+#' @export
 #' @examples
-#' which_violates <- stratallo:::h_get_which_violates()
-#' which_violates(1:3, 3:1)
+#' x <- c(4.5, 4.1, 4.9)
+#' set.seed(5)
+#' ran_round(x) # 5 4 4
+#' set.seed(6)
+#' ran_round(x) # 4 4 5
+ran_round <- function(x) {
+  assert_numeric(x)
+  as.integer(floor(x) + (runif(length(x)) < (x - floor(x))))
+}
+
+#' Optimal Rounding under Integer Constraints
 #'
-#' which_violates <- stratallo:::h_get_which_violates(geq = FALSE)
-#' which_violates(1:3, 3:1)
-h_get_which_violates <- function(geq = TRUE) {
-  assert_flag(geq)
-  if (geq) {
-    function(x, y) {
-      which(x >= y)
-    }
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' @param x (`numeric`)\cr a numeric vector.
+#' @return An integer vector.
+#'
+#' @references
+#'   Cont, R., Heidari, M. (2014).
+#'   Optimal rounding under integer constraints.
+#'   \doi{10.48550/arXiv.1501.00014}
+#'
+#' @export
+#' @examples
+#' x <- c(4.5, 4.1, 4.9)
+#' round_oric(x) # 4 4 5
+round_oric <- function(x) {
+  n <- round(sum(x))
+  m <- floor(x)
+  y <- x - m
+  Ix <- sum(y)
+
+  if (Ix == 0) {
+    as.integer(x)
   } else {
-    function(x, y) {
-      which(x <= y)
-    }
+    iy <- order(-y)
+    u <- unique(y[iy])
+    z <- integer(length(x))
+    for (i in 1:length(u)) z[iy] <- z[iy] + (y[iy] == u[i]) * i
+    iy2 <- order(-y, z, -m)
+    # m[iy][iy2][1:Ix] <- ceiling(x[iy][iy2][1:Ix])
+    m[iy2][1:Ix] <- (m[iy2][1:Ix]) + 1
+    as.integer(m)
   }
 }
 
-#' @title Summarizing the Allocation
+#' Variance of the Stratified Estimator
+#'
+#' @name var_st
 #'
 #' @description `r lifecycle::badge("stable")`
 #'
-#' A helper function that creates and returns a simple [`data.frame`] with
-#' summary of the allocation as returned by the [dopt()] or [nopt()]. See the
-#' illustrate example below.
+#' Compute the value of the variance function \eqn{V} of the stratified
+#' estimator, which is of the following generic form:
+#' \deqn{V(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+#' where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are strata
+#' sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, are population
+#' constants.
 #'
-#' @details The summary [`data.frame`] contains the following columns: \cr
-#' (1) the allocation vector, \cr
-#' (2) lower bounds constraints (optional), \cr
-#' (3) upper bounds constraints (optional), \cr
-#' (4) indication whether the allocation for a given stratum is of `take-min`
-#' type, i.e. x == m (optional), \cr
-#' (5) indication whether the allocation for a given stratum is of `take-max`
-#' type, i.e. x == M (optional), \cr
-#' (6) indication whether the allocation for a given stratum is of `take-neyman`
-#' type, i.e. m < x < M. \cr
-#' The last row contains the sum of all of the values from the other rows
-#' (wherever feasible).
+#' @param x (`numeric`)\cr sample allocations \eqn{x_1,\ldots,x_H} in strata.
+#' @param a (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}.
+#' @param a0 (`number`)\cr population constant \eqn{A_0}.
 #'
-#' @param x (`numeric`)\cr the allocation vector.
-#' @param a (`numeric`)\cr parameters \eqn{a_1, ..., a_H} of variance function
-#'   \eqn{D}. See [dopt()] or [nopt()] for more details.
-#' @param m (`numeric` or `NA`)\cr lower bounds constraints imposed on sample
-#'   sizes in strata.
-#' @param M (`numeric` or `NA`)\cr upper bounds constraints imposed on sample
-#'   sizes in strata.
+#' @return Value of the variance \eqn{V} for a given allocation vector
+#'   \eqn{x_1,\ldots,x_H}.
 #'
-#' @return A [`data.frame`] with the allocation summary.
+#' @references
+#'   Särndal, C.-E., Swensson, B. and Wretman, J. (1992).
+#'   *Model Assisted Survey Sampling*,
+#'   Chapter 3.7 *Stratified Sampling*,
+#'   Springer, New York.
+#'
+#' @export
+#'
+var_st <- function(x, a, a0) {
+  sum(a^2 / x) - a0
+}
+
+#' @describeIn var_st computes value of variance \eqn{V} for the case of
+#'   \emph{stratified \eqn{\pi} estimator} of the population total and
+#'   \emph{stratified simple random sampling without replacement} design. This
+#'   particular case yields:
+#'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+#'   \deqn{A_0 = \sum_{h=1}^H N_h S_h^2,}
+#'   where \eqn{N_h} is the size of stratum \eqn{h}, and \eqn{S_h} is stratum
+#'   standard deviation of a study variable, \eqn{h = 1,\ldots,H}.
+#'
+#' @param N (`numeric`)\cr strata sizes \eqn{N_1,\ldots,N_H}.
+#' @param S (`numeric`)\cr strata standard deviations of a given study variable
+#'   \eqn{S_1,\ldots,S_H}.
+#'
+#' @export
+#' @examples
+#' N <- c(3000, 4000, 5000, 2000)
+#' S <- rep(1, 4)
+#' M <- c(100, 90, 70, 80)
+#' opt <- opt(n = 190, a = N * S, M = M)
+#' var_st_tsi(x = opt, N, S) # 1017579
+var_st_tsi <- function(x, N, S) {
+  a <- N * S
+  a0 <- sum(N * S^2)
+  var_st(x, a, a0)
+}
+
+#' Summarizing the Allocation
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A helper function that returns a simple [`data.frame`] with summary of the
+#' allocation as returned by the [opt()] or [optcost()]. See the illustrate
+#' example below.
+#'
+#' @inheritParams var_st
+#' @param m (`numeric` or `NULL`)\cr lower bounds \eqn{m_1,\ldots,m_H},
+#'   optionally imposed on sample sizes in strata.
+#' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
+#'   optionally imposed on sample sizes in strata.
+#'
+#' @return A [`data.frame`] with as many rows as number of strata \eqn{H} + 1,
+#'   and up to 7 variables. A single row corresponds to a given stratum
+#'   \eqn{h \in \{1,\ldots,H\}}, whilst the last row contains sums of all of the
+#'   numerical values from the above rows (wherever feasible).
+#'   Summary table has the following columns (* indicates that the column may
+#'   not be present):
+#' \describe{
+#'   \item{a}{population constant \eqn{A_h}}
+#'   \item{m*}{lower bound imposed on sample size in stratum}
+#'   \item{M*}{upper bound imposed on sample size in stratum}
+#'   \item{allocation}{sample size for a given stratum}
+#'   \item{take_min*}{indication whether the allocation is of `take-min` type,
+#'     i.e. \eqn{x_h = m_h}}
+#'   \item{take_max*}{indication whether the allocation is of `take-max` type,
+#'     i.e. \eqn{x_h = M_h}}
+#'   \item{take_neyman}{indication whether the allocation is of `take-Neyman`
+#'    type, i.e. \eqn{m_h < x_h < M_h}}
+#' }
+#'
+#' @seealso [opt()], [optcost()].
 #'
 #' @export
 #' @examples
@@ -72,12 +166,12 @@ h_get_which_violates <- function(geq = TRUE) {
 #' m <- c(100, 90, 70, 80)
 #' M <- c(200, 150, 300, 210)
 #'
-#' x1 <- dopt(n = 400, a, m)
-#' s1 <- allocation_summary(x1, a, m)
+#' x1 <- opt(n = 400, a, m)
+#' s1 <- asummary(x1, a, m)
 #'
-#' x2 <- dopt(n = 540, a, m, M)
-#' s2 <- allocation_summary(x2, a, m, M)
-allocation_summary <- function(x, a, m = NULL, M = NULL) {
+#' x2 <- opt(n = 540, a, m, M)
+#' s2 <- asummary(x2, a, m, M)
+asummary <- function(x, a, m = NULL, M = NULL) {
   assert_numeric(a, min.len = 1L)
   H <- length(a)
   assert_numeric(x, len = H, any.missing = FALSE)

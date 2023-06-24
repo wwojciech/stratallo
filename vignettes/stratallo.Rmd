@@ -1,8 +1,8 @@
 ---
-title: "Optimum Sample Allocation in Stratified Sampling Schemes with Stratallo Package"
+title: "Optimum Sample Allocation in Stratified Sampling with `stratallo` Package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Optimum Sample Allocation in Stratified Sampling Schemes with Stratallo Package}
+  %\VignetteIndexEntry{Optimum Sample Allocation in Stratified Sampling with `stratallo` Package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 csl: "asa_modified_url.csl"
@@ -35,7 +35,7 @@ references:
     year: 1923
 - id: wesolowski2021
   type: article-journal
-  title: Optimality of the Recursive Neyman Allocation
+  title: Optimumity of the Recursive Neyman Allocation
   author:
   - family: Wesołowski
     given: Jacek
@@ -48,24 +48,22 @@ references:
   URL: https://arxiv.org/abs/2105.14486
   issued:
     year: 2021
-- id: wojciak2022
+- id: wojciak2023
   type: article
-  title: Minimum Sample Size Allocation in Stratified Sampling Under Constraints on
-    Variance and Strata Sample Sizes
+  title: Another Solution of Some Optimum Allocation Problem
   author:
   - family: Wójciak
     given: Wojciech
-  DOI: 10.48550/arXiv.2204.04035
   issued:
-    year: 2022
+    year: 2023
 - id: wojciak2019
   type: thesis
-  title: Optimal Allocation in Stratified Sampling Schemes
+  title: Optimum Allocation in Stratified Sampling Schemes
   author:
   - family: Wójciak
     given: Wojciech
   container-title: MSc Thesis
-  URL: 'http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf'
+  URL: 'http://home.elka.pw.edu.pl/~wwojciak/msc_Optimum_allocation.pdf'
   publisher: Warsaw University of Technology
   issued:
     year: 2019
@@ -91,7 +89,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-\def\W{\mathcal W}
+\def\R{{\mathbb R}}
 \def\x{\mathbf x}
 \def\n{\mathbf n}
 \def\D{\widetilde D}
@@ -99,121 +97,241 @@ knitr::opts_chunk$set(
 
 The goal of *stratallo* package is to provide implementations of the efficient 
 algorithms that solve a classical problem in survey methodology - an optimum
-sample allocation problem in stratified sampling schemes. In this context, the
-classical problem of optimum sample allocation is the Tschuprov-Neyman's sense
+sample allocation in stratified sampling. In this context, the classical problem
+of optimum sample allocation is the Tschuprov-Neyman's sense
 [@tschuprov; @neyman]. It is formulated as determination of a vector of strata
-sample sizes that minimizes the variance of the $\pi$-estimator of the 
-population total of a given study variable, under constraint on total sample
-size. This problem can be further complemented by adding lower or upper bounds
-constraints on sample sizes is strata.
+sample sizes that minimizes the variance of the *stratified $\pi$-estimator* of
+the population total of a given study variable, under constraint on total sample
+size. This problem can be further complemented by imposing lower or upper bounds
+on sample sizes is strata.
 
 A minor modification of the classical optimum sample allocation problem leads
-to the minimum sample size allocation. This problem lies in the determination of
-a vector of strata sample sizes that minimizes total sample size, under
-assumed fixed level of the $\pi$-estimator's variance. As in the case of the
-classical optimal allocation, the problem of minimum sample size allocation can
-be complemented by imposing upper bounds constraints on sample sizes in
-strata.
+to the minimum cost allocation. This problem lies in the determination of a
+vector of strata sample sizes that minimizes total cost of the survey, under
+assumed fixed level of the stratified $\pi$-estimator's variance. As in the case
+of the classical optimum allocation, the problem of minimum cost allocation can
+be complemented by imposing upper bounds on sample sizes in strata.
 
-*Stratallo* provides two user functions, `dopt` and `nopt` that solve sample
-allocation problems briefly characterized above. In this context, it is assumed
-that the sampling designs in strata are chosen so that the variance of the
-$\pi$-estimator of the population total is of the following generic form:
+*stratallo* provides two **user functions**:
+
+* `opt()`
+* `optcost()`
+
+that solve sample allocation problems briefly characterized above. In this
+context, it is assumed that the variance of the stratified estimator is of the
+following generic form:
 $$
-  D^2_{st}(x_w,\, w \in \W) = \sum_{w \in \W}\, \frac{a_w^2}{x_w} - b,
+  V_{st}(\n) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
 $$
-where $\W = \{1, \ldots, H\}$ denotes set of strata labels with total number of
-strata equals to $H$, $(x_w)_{w \in \W}$ are the strata sample sizes, and
-parameters $b$, and $a_w > 0,\, w \in \W$, do not depend on the
-$(x_w)_{w \in \W}$. Among the stratified sampling designs that have the
-$\pi$-estimator's variance of the above form is stratified simple random
-sampling without replacement design. Under this design
-$a_w = N_w S_w,\, w \in \W$ and $b = \sum_{w \in \W}\, N_w S_w^2$, where
-$S_w,\, w \in \W$, denote stratum standard deviations of study variable and
-$N_w,\, w \in \W$, are the strata sizes (see e.g. @sarndal, Result 3.7.2, p.
-103).
+where $H$ denotes total number of strata, $\n = (n_h)_{h \in \{1,\ldots,H\}}$ is
+the allocation vector with strata sample sizes, and population parameters $A_0$,
+and $A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
 
-Apart from `dopt` and `nopt`, *stratallo* provides `var_tst` and `var_tst_si`
-functions that compute a value of variance $D^2_{st}$. The `var_tst_si` is a
-simple wrapper of `var_tst` that is dedicated for the case of simple random
-sampling without replacement design in each stratum. Furthermore, the package
-comes with two predefined, artificial populations with 507 and 969 strata. These
-are stored in `pop507` and `pop969` objects respectively.
+Among stratified estimators and stratified sampling designs that jointly give
+rise to a variance of the above form, is the so called stratified $\pi$
+estimator of the population total with *stratified simple random sampling
+without replacement* design, which is one of the most basic and commonly used
+stratified sampling designs. This case yields
+$A_0 = \sum_{h = 1}^H N_h S_h^2$, $A_h = N_h S_h,\, h = 1,\ldots,H$, where
+$S_h$ denotes stratum standard deviation of study variable and $N_h$ is the
+stratum size (see e.g. @sarndal, Result 3.7.2, p.103).
 
-## Minimization of the variance with `dopt` function
+Apart from `opt()` and `optcost()`, *stratallo* provides the following
+**helpers functions**:
 
-The `dopt` function solves the following three types of the allocation problem, 
-formulated in the language of mathematical optimization.
+* `var_st()`,
+* `var_st_tsi()`,
+* `asummary()`,
+* `ran_round()`,
+* `round_oric()`.
 
-**Problem 1 (one-sided upper bounds constraints)**   
-Given numbers $a_w > 0,\, M_w > 0,\, w \in \W$ and $b,\, n \le \sum_{w \in \W}\, M_w$,
-\begin{align*}
-	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b \\
-	\texteq{subject ~ to} & \quad \sum_{w \in \W} x_w = n \\
-	& \quad x_w \le M_w, \quad \forall w \in \W,
-\end{align*}
-where $\x = (x_w)_{w \in \W}$ is the optimization variable.
+Functions `var_st()` and `var_st_tsi()` compute a value of the variance $V_{st}$.
+The `var_st_tsi()` is a simple wrapper of `var_st()` that is dedicated for the
+case when $A_0 = \sum_{h = 1}^H N_h S_h^2$ and $A_h = N_h S_h,\, h = 1,\ldots,H$.
+`asummary()` creates a `data.frame` object with summary of the allocation.
+Functions `ran_round()` and `round_oric()` are the rounding functions that can
+be used to round non-integers allocations (see section Rounding, below).
+The package comes with three predefined, artificial populations with 10, 507
+and 969 strata. These are stored under `pop10_mM`, pop507` and `pop969` objects,
+respectively.
 
-**Problem 2 (one-sided lower bounds constraints)**   
-Given numbers $a_w > 0,\, m_w > 0,\, w \in \W$, and $b,\, n \ge \sum_{w \in \W} m_w$,
-\begin{align*}
-	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b \\
-	\texteq{subject ~ to} & \quad \sum_{w \in \W} x_w = n \\
-	& \quad x_w \ge m_w, \quad \forall w \in \W,
-\end{align*}
-where $\x = (x_w)_{w \in \W}$ is the optimization variable. 
+## Minimization of the variance with `opt()` function
 
-**Problem 3 (box-constraints)**   
-Given numbers $a_w > 0,\, 0 < m_w < M_w,\, w \in \W$, and $b,\, \sum_{w \in \W} m_w \le n \le \sum_{w \in \W} M_w$,
-\begin{align*}
-	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b \\
-	\texteq{subject ~ to} & \quad \sum_{w \in \W} x_w = n \\
-	& \quad x_w \ge m_w, \quad \forall w \in \W, \\
-	& \quad x_w \le M_w, \quad \forall w \in \W,
-\end{align*}
-where $\x = (x_w)_{w \in \W}$ is the optimization variable. 
-
-User of `dopt` can choose whether the solution computed will be for 
+The `opt()` function solves the following three problems of the optimum sample
+allocation, formulated in the language of mathematical optimization. User of
+`opt()` can choose whether the solution computed will be for 
 **Problem 1**, **Problem 2** or **Problem 3**. This is achieved with the proper
-use of `m` and `M` arguments of the function. In case of **Problem 1**, user
-provides the values of upper bounds with `M` argument, while leaving `m` as `NULL`. 
-Similarly, for **Problem 2**, user provides the values of lower bounds with `m`
-argument, while leaving `M` as `NULL`. In case of **Problem 3**, both arguments
-`m` and `M` must be specified. If both `m` and `M` are `NULL` (default), the
-`dopt` returns the value of Tschuprov-Neyman allocation that minimizes variance
-$D^2_{st}$ under constraints on total sample size
-$\sum_{w \in \W} x_w = n$, and it is given by
-$$
-  x_w = a_w \frac{n}{\sum_{w \in \W} a_w}, \quad w \in \W
-$$
+use of `m` and `M` arguments of the function. Also, if required, the inequality
+constraints can be removed from the optimization problem. For more details, see
+the help page for `opt()` function.
+
+### Problem 1 (one-sided upper bounds constraints)
+Given numbers $n > 0,\, A_h > 0,\, M_h > 0$, such that
+$M_h \leq N_h,\, h = 1,\ldots,H$, and $n \leq \sum_{h=1}^H M_h$, 
+\begin{align*}
+	\underset{\x \in \R_+^H}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{h=1}^H \tfrac{A_h^2}{x_h} \\
+	\texteq{subject ~ to}	& \quad \sum_{h=1}^H x_h = n \\
+	& \quad x_h \leq M_h, \quad{h = 1,\ldots,H,}
+\end{align*}
+where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
+
 There are four different algorithms available to use for **Problem 1**,
 *RNA* (default), *SGA*, *SGAPLUS*, *COMA*. All these algorithms, except
-*sgaplus*, are described in detail in @wesolowski2021. The *SGAPLUS* is defined
+*SGAPLUS*, are described in detail in @wesolowski2021. The *SGAPLUS* is defined
 in @wojciak2019 as *Sequential Allocation (version 1)* algorithm.
 
+#### Examples
+
+```{r load_package}
+library(stratallo)
+```
+
+Define example population
+
+```{r pop}
+N <- c(3000, 4000, 5000, 2000) # Strata sizes.
+S <- c(48, 79, 76, 16) # Standard deviations of a study variable in strata.
+a <- N * S
+n <- 190 # Total sample size.
+```
+
+Tschuprov-Neyman allocation (no inequality constraints).
+
+```{r opt_Neyman}
+opt <- opt(n = n, a = a)
+opt
+sum(opt) == n
+# Variance of the stratified estimator that corresponds to optimum allocation.
+var_st_tsi(opt, N, S)
+```
+
+One-sided upper-bounds constraints.
+
+```{r opt_M}
+M <- c(100, 90, 70, 80) # Upper bounds imposed on the sample sizes in strata.
+all(M <= N)
+n <= sum(M)
+
+# Solution to Problem 1.
+opt <- opt(n = n, a = a, M = M)
+opt
+sum(opt) == n
+all(opt <= M) # Does not violate upper-bounds constraints.
+# Variance of the stratified estimator that corresponds to optimum allocation.
+var_st_tsi(opt, N, S)
+```
+
+### Problem 2 (one-sided lower-bounds constraints)
+Given numbers $n,\, A_h > 0,\, m_h > 0$, such that
+$m_h \leq N_h,\, h = 1,\ldots,H$, and $n \geq \sum_{h=1}^H m_h$, 
+\begin{align*}
+	\underset{\x \in \R_+^H}{\texteq{minimize ~\,}} & \quad f(\x) = \sum_{h=1}^H \tfrac{A_h^2}{x_h} \\
+	\texteq{subject ~ to} & \quad \sum_{h=1}^H x_h = n \\
+	& \quad x_h \geq m_h, \quad{h = 1,\ldots,H,}
+\end{align*}
+where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
+
 The optimization **Problem 2** is solved by the *LRNA* that in principle is
-based on the *RNA* and it is introduced in @wojciak2022.
+based on the *RNA* and it is introduced in @wojciak2023.
+
+#### Examples
+
+```{r opt_m}
+m <- c(50, 120, 1, 2) # Lower bounds imposed on the sample sizes in strata.
+n >= sum(m)
+
+# Solution to Problem 2.
+opt <- opt(n = n, a = a, m = m)
+opt
+sum(opt) == n
+all(opt >= m) # Does not violate lower-bounds constraints.
+# Variance of the stratified estimator that corresponds to optimum allocation.
+var_st_tsi(opt, N, S)
+```
+
+### Problem 3 (box constraints)
+Given numbers $n,\, A_h > 0,\, m_h > 0,\, M_h > 0$, such that
+$m_h < M_h \leq N_h,\, h = 1,\ldots,H$, and $\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h$, 
+\begin{align*}
+	\underset{\x \in \R_+^H}{\texteq{minimize ~\,}}  & \quad f(\x) = \sum_{h=1}^H \tfrac{A_h^2}{x_h} \\
+	\texteq{subject ~ to} & \quad \sum_{h=1}^H x_h = n \\
+	& \quad m_h \leq x_h \leq M_h, \quad{h = 1,\ldots,H,}
+\end{align*}
+where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
 
 The optimization **Problem 3** is solved by the *RNABOX* which is a new algorithm
 proposed by the authors of this package and it will be published soon.
 
-## Minimization of the total sample size `nopt` function
+#### Examples
 
-The `nopt` function solves the following minimum sample size allocation problem, 
-formulated in the language of mathematical optimization.
+```{r opt_box}
+m <- c(100, 90, 500, 50) # Lower bounds imposed on sample sizes in strata.
+M <- c(300, 400, 800, 90) # Upper bounds imposed on sample sizes in strata.
+n <- 1284
+n >= sum(m) && n <= sum(M)
 
-**Problem 4**  
-Given numbers $a_w > 0,\, M_w > 0,\, w \in \W$, and
-$b,\, D > \sum_{w \in \W} \tfrac{a_w^2}{M_w} - b > 0$,
+# Optimum allocation under box constraints.
+opt <- opt(n = n, a = a, m = m, M = M)
+opt
+sum(opt) == n
+all(opt >= m & opt <= M) # Does not violate any lower or upper bounds constraints.
+# Variance of the stratified estimator that corresponds to optimum allocation.
+var_st_tsi(opt, N, S)
+```
+
+## Minimization of the total cost with `optcost()` function
+
+The `optcost()` function solves the following minimum total cost allocation
+problem, formulated in the language of mathematical optimization.
+
+### Problem 4
+Given numbers $A_h > 0,\, c_h > 0,\, M_h > 0$, such that
+$M_h \leq N_h,\, h = 1,\ldots,H$, and $V \geq \sum_{h=1}^H \tfrac{A_h^2}{M_h} - A_0$, 
 \begin{align*}
-	\underset{\x \in (0, +\infty)^{H}}{\texteq{minimize ~\,}} & \quad n(\x) = \sum_{w \in \W} x_w \\
-	\texteq{subject ~ to} & \quad \sum_{w \in \W} \tfrac{a_w^2}{x_w} - b = D \\
-	& \quad x_w \le M_w, \quad \forall w \in \W,
+	\underset{\x \in \R_+^H}{\texteq{minimize ~\,}}  & \quad c(\x) = \sum_{h=1}^H c_h x_h \\
+	\texteq{subject ~ to}	& \quad \sum_{h=1}^H \tfrac{A_h^2}{x_h} - A_0 = V \\
+	& \quad x_h \leq M_h, \quad{h = 1,\ldots,H,}
 \end{align*}
-where $\x = (x_w)_{w \in \W}$ is the optimization variable.
+where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
 
 The algorithm that solves **Problem 4** is based on the *LRNA* and it is
-described in @wojciak2022.
+described in @wojciak2023.
+
+#### Examples
+
+```{r optcost}
+a <- c(3000, 4000, 5000, 2000)
+a0 <- 70000
+unit_costs <- c(0.5, 0.6, 0.6, 0.3) # c_h, h = 1,...4.
+M <- c(100, 90, 70, 80)
+V <- 1e6 # Variance constraint.
+V >= sum(a^2 / M) - a0
+
+opt <- optcost(V = V, a = a, a0 = a0, M = M, unit_costs = unit_costs)
+opt
+sum(a^2 / opt) - a0 == V
+all(opt <= M)
+```
+
+## Rounding
+
+*stratallo* comes with 2 functions: `ran_round()` and `round_oric()` that can
+be used to round non-integer allocations.
+
+#### Examples
+
+```{r rounding}
+m <- c(100, 90, 500, 50)
+M <- c(300, 400, 800, 90)
+n <- 1284
+
+# Optimum, non-integer allocation under box constraints.
+opt <- opt(n = n, a = a, m = m, M = M)
+opt
+
+opt_int <- round_oric(opt)
+opt_int
+```
 
 ## Installation
 
@@ -224,96 +342,32 @@ You can install the released version of *stratallo* package from
 install.packages("stratallo")
 ```
 
-## Examples
+## Note on finite precision arithmetic
 
-These are basic examples that show how to use `dopt` and `nopt` functions
-to solve optimal sample allocation problems for an example population with 4
-strata.
+Consider the following example
 
-```{r load_package}
-library(stratallo)
-```
-
-### Function `dopt`
-
-```{r example_dopt_pop}
-# Define example population.
-N <- c(3000, 4000, 5000, 2000) # Strata sizes.
-S <- c(48, 79, 76, 17) # Standard deviations of a study variable in strata.
+```{r finit_prec1}
+N <- c(3000, 4000, 5000, 2000)
+S <- c(48, 79, 76, 17)
 a <- N * S
-n <- 190 # Total sample size.
-```
-
-#### Tschuprov-Neyman allocation (no inequality constraints)
-
-```{r example_dopt_Neyman}
-opt <- dopt(n = n, a = a)
+n <- 190
+opt <- opt(n = n, a = a) # which after simplification is (n / sum(a)) * a
 opt
-sum(opt) == n
-# Variance of the pi-estimator that corresponds to a given optimal allocation.
-var_tst_si(opt, N, S)
 ```
 
-#### Problem 1 (one-sided upper bounds constraints)
+and note that
 
-```{r example_dopt_M}
-M <- c(100, 90, 70, 80) # Upper bounds constraints imposed on the sample sizes in strata.
-all(M <= N)
-n < sum(M)
-
-# Solution to Problem 1.
-opt <- dopt(n = n, a = a, M = M)
-opt
+```{r finit_prec2}
 sum(opt) == n
-all(opt <= M) # Does not violate upper bounds constraints.
-# Variance of the pi-estimator that corresponds to a given optimal allocation.
-var_tst_si(opt, N, S)
 ```
 
-#### Problem 2 (one-sided lower bounds constraints)
+which results from the fact that
 
-```{r example_dopt_m}
-m <- c(50, 120, 1, 1) # Lower bounds constraints imposed on the sample sizes in strata.
-n > sum(m)
-
-# Solution to Problem 2.
-opt <- dopt(n = n, a = a, m = m)
-opt
-sum(opt) == n
-all(opt >= m) # Does not violate lower bounds constraints.
-# Variance of the pi-estimator that corresponds to a given optimal allocation.
-var_tst_si(opt, N, S)
-```
-
-#### Problem 3 (box-constraints)
-
-```{r example_dopt_mM}
-
-m <- c(100, 90, 500, 50) # Lower bounds constraints imposed on sample sizes in strata.
-M <- c(300, 400, 800, 90) # Upper bounds constraints imposed on sample sizes in strata.
-n <- 1284
-n > sum(m) && n < sum(M)
-
-# Optimal allocation under box-constraints.
-opt <- dopt(n = n, a = a, m = m, M = M)
-opt
-sum(opt) == n
-all(opt >= m & opt <= M) # Does not violate any lower or upper bounds constraints.
-# Variance of the pi-estimator that corresponds to a given optimal allocation.
-var_tst_si(opt, N, S)
-```
-
-### Function `nopt`
-
-```{r example_nopt}
-
-a <- c(3000, 4000, 5000, 2000)
-b <- 70000
-M <- c(100, 90, 70, 80)
-D <- 1e6 # Variance constraint.
-
-opt <- nopt(D, a, b, M)
+```{r finit_prec3}
+options(digits = 22)
 sum(opt)
+
+sum((n / sum(a)) * a) == n # mathematically, it should be TRUE!
 ```
 
 ## References

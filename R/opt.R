@@ -1,234 +1,233 @@
-#' @title Optimum Sample Allocation in Stratified Sampling Schemes
+#' Optimum Sample Allocation in Stratified Sampling
 #'
 #' @description `r lifecycle::badge("stable")`
 #'
-#' A classical problem in survey methodology in stratified sampling is an
-#' optimum sample allocation problem. This problem is formulated as
-#' determination of a vector of strata sample sizes that minimizes the variance
-#' of the pi-estimator of the population total of a given study variable, under
-#' constraint on total sample size.
+#' A classical problem in survey methodology in stratified sampling is optimum
+#' sample allocation. This problem is formulated as determination of strata
+#' sample sizes that minimize the variance of the
+#' \emph{stratified \eqn{\pi} estimator} of the population total (or mean) of a
+#' given study variable, under certain constraints on sample sizes in strata.
 #'
-#' The `dopt()` function solves the problem of optimum sample allocation under
-#' lower or upper bounds constraints, optionally imposed on strata sample sizes.
-#' The allocation computed is valid for all stratified sampling schemes for
-#' which the variance of the stratified pi-estimator is of the form:
-#' \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
-#' where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
-#' strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
-#' \eqn{x_w, w = 1, ..., H}. \cr
+#' The `opt()` user function solves the following optimum sample allocation
+#' problem, formulated below in the language of mathematical optimization.
 #'
-#' The `dopt()` function makes use of the following allocation algorithms:
-#' `RNA`, `SGA`, `SGAPLUS`, `COMA` for optimal sample allocation under one-sided
-#' upper bounds constraints, and `LRNA` for optimal sample allocation under
-#' one-sided lower bounds constraints. For the allocation under box-constraints,
-#' the `RNABOX` algorithm is used. The `RNA`, `SGA`, and `COMA` are described in
-#' Wesołowski et al. (2021), while the `SGAPLUS` is in Wójciak (2019). The
-#' `LRNA` is introduced in Wójciak (2022). The `RNABOX` algorithm is a new
-#' optimal allocation algorithm that was developed by the authors of this
-#' package and will be published soon.
+#' Minimize
+#' \deqn{f(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h}}
+#' subject to
+#' \deqn{\sum_{h=1}^H x_h = n}
+#' \deqn{m_h \leq x_h \leq M_h, \quad h = 1,\ldots,H,}
+#' where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0,\, h = 1, \ldots ,H}, such
+#' that \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h} are given numbers.
+#' The minimization is on \eqn{\mathbb R_+^H}.
 #'
-#' @details The `dopt()` function computes:
-#'   \deqn{argmin D(x_1,...,x_H),}
-#'   under the equality constraint imposed on total sample size:
-#'   \deqn{x_1 + ... + x_H = n,}
-#'   and inequality constraints (optionally) imposed on strata sample size:
-#'   \deqn{x_w >= m_w,  w = 1,...,H,}
-#'   \deqn{x_w <= M_w,  w = 1,...,H.}
-#'   Here, \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
-#'   strata sample sizes, and \eqn{n > 0}, \eqn{b},
-#'   \eqn{a_w > 0, w = 1, ..., H}, are given numbers. Furthermore, \eqn{m_w > 0}
-#'   and \eqn{M_w > 0, w = 1, ..., H} are lower and upper bounds respectively,
-#'   optionally imposed on sample sizes in strata and such that
-#'   \eqn{m_w < M_w, w = 1, ..., H.} \cr
+#' The inequality constraints are optional and user can choose whether and how
+#' they are to be added to the optimization problem. This is achieved by the
+#' proper use of `m` and `M` arguments of this function, according to the
+#' following rules:
+#' * no inequality constraints imposed: both `m` and `M` must be both set to
+#' `NULL` (default).
+#' * one-sided lower bounds \eqn{m_h,\, h = 1,\ldots,H}, imposed:
+#' lower bounds are specified with `m`, while `M` is set to `NULL`.
+#' * one-sided upper bounds \eqn{M_h,\, h = 1,\ldots,H}, imposed:
+#' upper bounds are specified with `M`, while `m` is set to `NULL`.
+#' * box-constraints imposed: lower and upper bounds must be specified with `m`
+#' and `M`, respectively.
 #'
-#'   User of `dopt()` can choose whether the inequality constraints will be
-#'   added to the optimization problem or not. This is achieved with the proper
-#'   use of `m` and `M` arguments of the function. In case of no inequality
-#'   constraints to be added, `m` and `M` must be both specified as `NULL`
-#'   (default). If only upper bounds constraints should be added, it should be
-#'   specified using `M` argument, while leaving `m` as `NULL`. If only lower
-#'   bounds constraints should be added, user must specify it with `m` argument,
-#'   while leaving `M` as `NULL`. Finally, in case of box-constraints, both
-#'   parameters `m` and `M` must be specified.
+#' @details
+#'   The `opt()` function makes use of several allocation algorithms, depending
+#'   on which of the inequality constraints should be taken into account in the
+#'   optimization problem. Each algorithm is implemented in a separate R
+#'   function that in general should not be used directly by the end user.
+#'   The following is the list with the algorithms that are used along with the
+#'   name of the function that implements a given algorithm. See the description
+#'   of a specific function to find out more about the corresponding algorithm.
+#'   * one-sided lower-bounds \eqn{m_h,\, h = 1,\ldots,H}:
+#'      * `LRNA` - [rna()]
+#'  * one-sided upper-bounds \eqn{M_h,\, h = 1,\ldots,H}:
+#'      * `RNA` - [rna()],
+#'      * `SGA` - [sga()],
+#'      * `SGAPLUS` - [sgaplus()],
+#'      * `COMA` - [coma()]
+#'  * box constraints \eqn{m_h, M_h,\, h = 1,\ldots,H}:
+#'      * `RNABOX` - [rnabox()]
 #'
-#'   For the case of one-sided upper bounds constraints only, there are four
-#'   different underlying algorithms available to use. These are abbreviated as:
-#'   "rna" ([rna()]), "sga" ([sga()]), "sgaplus" ([sgaplus()]),
-#'   and "coma" ([coma()]). Functions names that perform given algorithms are
-#'   given in the brackets. See its help page for more details.
-#'   For the case of one-sided lower bounds constraints only, the
-#'   "rna" ([rna()]) is used. Finally, for box-constraints, the
-#'   "rnabox" algorithm is used ([rnabox()]).
+#' @note If no inequality constraints are added, the allocation is given by the
+#'   Neyman allocation as:
+#'   \deqn{x_h = A_h \frac{n}{\sum_{i=1}^H A_i}, \quad h = 1,\ldots,H.}
+#'   For \emph{stratified \eqn{\pi} estimator} of the population total and for
+#'   \emph{stratified simple random sampling without replacement} design, the
+#'   parameters of the objective function \eqn{f} are
+#'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+#'   where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
+#'   standard deviation of a given study variable in stratum \eqn{h}.
 #'
-#' @note For simple random sampling without replacement design in each stratum,
-#'   parameters of the variance function \eqn{D} are
-#'   \eqn{b = N_1 * S_1^2 + ... + N_H * S_H^2}, and \eqn{a_w = N_w * S_w}, where
-#'   \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard deviations of
-#'   a study variable in strata respectively. \cr
+#' @inheritParams rnabox
+#' @param M_algorithm (`string`)\cr the name of the underlying algorithm to be
+#'   used for computing sample allocation under one-sided upper-bounds
+#'   constraints.
+#'   It must be one of the following: `rna` (default), `sga`, `sgaplus`, `coma`.
+#'   This parameter is used only in case when `m` argument is `NULL` and `M` is
+#'   not `NULL` and number of strata \eqn{H > 1} and `n < sum(M)`.
 #'
-#'   Note that if no inequality constraints are imposed, the optimal allocation
-#'   is given as a closed form expression, known as Neyman allocation:
-#'   \deqn{x_w = a_w * n / (a_1 + ... + a_H), w = 1, ..., H.}
+#' @return Numeric vector with optimal sample allocations in strata.
 #'
-#' @param n (`number`)\cr total sample size. A strictly positive scalar.
-#' @param a (`numeric`)\cr parameters \eqn{a_1, ..., a_H} of variance function
-#'   \eqn{D}. Strictly positive numbers.
-#' @param m (`numeric` or `NULL`)\cr lower bounds constraints optionally imposed
-#'   on strata sample sizes. If not `NULL`, it is then required that
-#'   `n >= sum(m)`. Strictly positive numbers.
-#' @param M (`numeric` or `NULL`)\cr upper bounds constraints optionally imposed
-#'   on strata sample sizes. If not `NULL`, it is then required that
-#'   `n <= sum(M)`.
-#'   Strictly positive numbers.
-#' @param M_method (`string`)\cr the name of the underlying algorithm to be used
-#'   for computing a sample allocation under one-sided upper bounds constraints
-#'   One of the following: `rna` (default), `sga`, `sgaplus`, `coma`. This
-#'   parameter is used only in case when `m` argument is `NULL` and `M` is not
-#'   `NULL`.
-#'
-#' @return Numeric vector with optimal sample allocation in strata.
-#'
-#' @seealso [nopt()], [rna()], [sga()], [sgaplus()], [coma()], [rnabox()].
+#' @seealso [optcost()], [rna()], [sga()], [sgaplus()], [coma()], [rnabox()].
 #
 #' @references
-#'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021),
-#'   Optimality of the recursive Neyman allocation,
-#'   *Journal of Survey Statistics and Methodology*,
+#'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021).
+#'   Optimality of the Recursive Neyman Allocation.
+#'   *Journal of Survey Statistics and Methodology*, 10(5), pp. 1263–1275.
 #'   \doi{10.1093/jssam/smab018},
 #'   \doi{10.48550/arXiv.2105.14486} \cr
 #'
-#'   Wójciak, W. (2022),
-#'   Minimum sample size allocation in stratified sampling under constraints on
-#'   variance and strata sample sizes,
-#'   \doi{10.48550/arXiv.2204.04035} \cr
-#'
-#'   Wójciak, W. (2019), Optimal allocation in stratified sampling schemes,
-#'   *MSc Thesis*, Warsaw University of Technology, Warsaw, Poland.
-#'   <http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf> \cr
-#'
-#'   Sarndal, C.-E., Swensson, B., and Wretman, J. (1992),
-#'   *Model Assisted Survey Sampling*, New York, NY: Springer.
+#'   Särndal, C.-E., Swensson, B. and Wretman, J. (1992).
+#'   *Model Assisted Survey Sampling*, Springer, New York.
 #'
 #' @export
-#' @example examples/dopt.R
+#' @example examples/opt.R
 #'
-dopt <- function(n, a, m = NULL, M = NULL, M_method = "rna") {
+opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
   H <- length(a)
-  rmin <- .Machine$double.xmin
-  assert_numeric(a, lower = rmin, finite = TRUE, any.missing = FALSE, min.len = 1L)
-  assert_numeric(m, lower = rmin, finite = TRUE, any.missing = FALSE, len = H, null.ok = TRUE)
-  assert_numeric(M, lower = rmin, any.missing = FALSE, len = H, null.ok = TRUE)
-  assert_subset(M_method, choices = c("rna", "sga", "sgaplus", "coma"), empty.ok = FALSE)
+  assert_number(n, finite = TRUE)
+  assert_numeric(a, finite = TRUE, any.missing = FALSE, min.len = 1L)
+  assert_numeric(m, finite = TRUE, any.missing = FALSE, len = H, null.ok = TRUE)
+  assert_numeric(M, any.missing = FALSE, len = H, null.ok = TRUE)
+  assert_true(all(a > 0))
+  assert_true(all(m > 0))
+  assert_true(all(M > 0))
+  assert_true(all(m < M))
 
-  lower <- !is.null(m)
-  upper <- !is.null(M)
-  m_sum <- sum(m)
-  M_sum <- sum(M)
-  assert_number(n, lower = m_sum, upper = ifelse(upper, M_sum, Inf), finite = TRUE)
+  lwr_imposed <- !is.null(m)
+  upr_imposed <- !is.null(M)
+  if (lwr_imposed) {
+    assert_true(n >= sum(m))
+  }
+  if (upr_imposed) {
+    assert_true(n <= sum(M))
+    if (!lwr_imposed && H > 1L && n < sum(M)) {
+      assert_string(M_algorithm)
+      assert_subset(M_algorithm, choices = c("rna", "sga", "sgaplus", "coma"), empty.ok = FALSE)
+    }
+  }
+  assert_true(n > 0)
 
   if (H == 1L) {
     n
-  } else if (n == m_sum) {
+  } else if (n == sum(m)) {
     m
-  } else if (n == M_sum) {
+  } else if (n == sum(M)) {
     M
-  } else if (lower && upper) {
+  } else if (lwr_imposed && upr_imposed) {
     rnabox(n = n, a = a, m = m, M = M)
-  } else if (lower) {
-    rna(n = n, a = a, bounds = m, upper = FALSE)
-  } else if (upper) {
-    if (M_method == "rna") {
-      rna(n = n, a = a, bounds = M)
+  } else if (lwr_imposed) {
+    rna(total_cost = n, a = a, bounds = m, check_violations = .Primitive("<="))
+  } else if (upr_imposed) {
+    if (M_algorithm == "rna") {
+      rna(total_cost = n, a = a, bounds = M)
     } else {
-      do.call(M_method, args = list(n = n, a = a, M = M))
+      do.call(M_algorithm, args = list(total_cost = n, a = a, M = M))
     }
   } else {
     (n / sum(a)) * a # Neyman allocation.
   }
 }
 
-#' @title Minimum Sample Size Allocation in Stratified Sampling Schemes
+#' Minimum Cost Allocation in Stratified Sampling
 #'
 #' @description `r lifecycle::badge("stable")`
 #'
-#' User function that determines fixed strata sample sizes that minimize total
-#' sample size, under assumed level of the variance of the stratified
-#' pi-estimator of the total and optional one-sided upper bounds imposed on
-#' strata sample sizes.
-#' The algorithm used by `nopt()` is described in Wójciak (2022). The allocation
-#' computed is valid for all stratified sampling schemes for which the variance
-#' of the stratified pi-estimator is of the form:
-#' \deqn{D(x_1,...,x_H) = a^2_1/x_1 + ... + a^2_H/x_H - b,}
-#' where \eqn{H} denotes total number of strata, \eqn{x_1, ..., x_H} are the
-#' strata sample sizes, and \eqn{b}, \eqn{a_w > 0} do not depend on
-#' \eqn{x_w, w = 1, ..., H}. \cr
+#' Function that determines fixed strata sample sizes that minimize total cost
+#' of the survey, under assumed level of the variance of the stratified
+#' estimator and under optional one-sided upper bounds imposed on strata sample
+#' sizes. Namely, the following optimization problem, formulated below in the
+#' language of mathematical optimization, is solved by `optcost()` function.
 #'
-#' @details The `nopt()` function computes:
-#'   \deqn{argmin n(x_1,...,x_H) = x_1 + ... + x_H,}
-#'   under the equality constraint imposed on the variance:
-#'   \deqn{a^2_1/x_1 + ... + a^2_H/x_H - b = D.}
-#'   Optionally, the following set of one-sided inequality constraints can be
-#'   added:
-#'   \deqn{x_w <= M_w, w = 1,...,H,}
-#'   where \eqn{D > 0} is a given number and \eqn{M_w > 0, w = 1, ..., H}, are
-#'   the upper bounds imposed on sample sizes in strata. \cr
+#' Minimize
+#' \deqn{c(x_1,\ldots,x_H) = \sum_{h=1}^H c_h x_h}
+#' subject to
+#' \deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0 = V}
+#' \deqn{x_h \leq M_h, \quad h = 1,\ldots,H,}
+#' where \eqn{A_0,\, A_h > 0,\, c_h > 0,\, M_h > 0,\, h = 1,\ldots,H},
+#' and \eqn{V > \sum_{h=1}^H \frac{A^2_h}{M_h} - A_0} are given numbers. The
+#' minimization is on \eqn{\mathbb R_+^H}.
+#' The upper-bounds constraints \eqn{x_h \leq M_h,\, h = 1,\ldots,H}, are
+#' optional and can be skipped. In such a case, it is only required that
+#' \eqn{V > 0}.
 #'
-#' @note For simple random sampling without replacement design in each stratum,
-#'   parameters of the variance function \eqn{D} are
-#'   \eqn{b = N_1 * S_1^2 + ... + N_H * S_H^2}, and \eqn{a_w = N_w * S_w}, where
-#'   \eqn{N_w, S_w, w = 1, ..., H}, are strata sizes and standard deviations of
-#'   a study variable in strata respectively.
+#' @details The algorithm that is used by `optcost()` is the `LRNA` and it is
+#'   described in Wójciak (2023). The allocation computed is valid for all
+#'   stratified sampling schemes for which the variance of the stratified
+#'   estimator is of the form:
+#'   \deqn{V(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+#'   where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are
+#'   strata sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, do not
+#'   depend on \eqn{x_h,\, h = 1,\ldots,H}.
 #'
-#' @param D (`number`)\cr variance equality constraint value. A strictly
-#'   positive scalar.
-#' @param a (`numeric`)\cr parameters \eqn{a_1, ..., a_H} of variance function
-#'   \eqn{D}. Strictly positive numbers.
-#' @param b (`number`)\cr parameter \eqn{b} of variance function \eqn{D}.
-#' @param M (`numeric` or `NULL`)\cr upper bounds constraints optionally imposed
-#'   on strata sample sizes. If different than `NULL`, it is then required that
-#'   `D >= sum(a/M) - b > 0`. Strictly positive numbers.
+#' @note For \emph{stratified \eqn{\pi} estimator} of the population total and
+#'   for \emph{stratified simple random sampling without replacement} design,
+#'   the population parameters are as follows:
+#'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+#'   where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
+#'   standard deviation of a given study variable in stratum \eqn{h}.
 #'
-#' @return Numeric vector with optimal sample allocation in strata.
+#' @inheritParams opt
+#' @inheritParams rna
+#' @param V (`number`)\cr parameter \eqn{V} of the equality constraint. A
+#'   strictly positive scalar. If `M` is not `NULL`, it is then required that
+#'   `V >= sum(a^2/M) - a0`.
+#' @param a0 (`number`)\cr population constant \eqn{A_0}.
 #'
-#' @seealso [rna()], [dopt()].
+#' @return Numeric vector with optimal sample allocations in strata.
+#'
+#' @seealso [rna()], [opt()].
 #
 #' @references
-#'   Wójciak, W. (2022),
-#'   Minimum sample size allocation in stratified sampling under constraints on
-#'   variance and strata sample sizes,
-#'   \doi{10.48550/arXiv.2204.04035}
+#'   Wójciak, W. (2023).
+#'   Another Solution of Some Optimum Allocation Problem.
+#'   *Statistics in Transition new series* (in press).
+#'   <https://arxiv.org/abs/2204.04035>
 #'
 #' @export
 #' @examples
 #' a <- c(3000, 4000, 5000, 2000)
 #' M <- c(100, 90, 70, 80)
-#' nopt(1017579, a = a, b = 579, M = M)
-nopt <- function(D, a, b, M = NULL) {
+#' optcost(1017579, a = a, a0 = 579, M = M)
+optcost <- function(V, a, a0, M = NULL, unit_costs = 1) {
   H <- length(a)
-  rmin <- .Machine$double.xmin
-  assert_numeric(a, lower = rmin, finite = TRUE, any.missing = FALSE, min.len = 1L)
-  assert_number(b, finite = TRUE)
-  assert_numeric(M, lower = rmin, any.missing = FALSE, len = H, null.ok = TRUE)
-  a2 <- a^2
-  upper <- !is.null(M)
-  if (upper) {
-    D_min <- sum(a2 / M) - b
-    assert_true(D_min > 0)
-  } else {
-    D_min <- 0 + rmin
-  }
-  assert_number(D, lower = D_min, finite = TRUE)
+  assert_number(V, finite = TRUE)
+  assert_numeric(a, finite = TRUE, any.missing = FALSE, min.len = 1L)
+  assert_number(a0, finite = TRUE)
+  assert_numeric(M, any.missing = FALSE, len = H, null.ok = TRUE)
+  assert_numeric(unit_costs, any.missing = FALSE, null.ok = TRUE)
+  assert_true(length(unit_costs) == 1L || length(unit_costs) == length(a))
+  assert_true(all(a > 0))
+  assert_true(all(M > 0))
+  assert_true(all(unit_costs > 0))
 
-  if (H == 1L) {
-    return(a2 / (D + b))
-  }
-  if (upper) {
-    if (D == D_min) {
-      return(M)
-    }
-    opt <- rna(n = D + b, a = a, bounds = a2 / M, upper = FALSE)
-    a2 / opt
+  upr_imposed <- !is.null(M)
+  if (upr_imposed) {
+    assert_true(sum(a^2 / M) - a0 > 0)
+    assert_true(V >= sum(a^2 / M) - a0)
   } else {
-    a * sum(a) / (D + b)
+    assert_true(V > 0)
+  }
+
+  a2 <- a^2
+  if (H == 1L) {
+    a2 / (V + a0)
+  } else if (!upr_imposed) {
+    c_sqrt <- sqrt(unit_costs)
+    (a / c_sqrt) * sum(a * c_sqrt) / (V + a0)
+  } else if (V == sum(a2 / M) - a0) {
+    M
+  } else {
+    y <- rna(
+      total_cost = V + a0,
+      a = a,
+      bounds = a2 / (unit_costs * M),
+      unit_costs = unit_costs,
+      check_violations = .Primitive("<=")
+    )
+    a2 / (unit_costs * y)
   }
 }

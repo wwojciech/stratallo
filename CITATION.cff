@@ -1,0 +1,15 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Wójciak"
+    given-names: "Wojciech"
+    orcid: "https://orcid.org/0000-0002-5042-160X"
+  - family-names: "Wesołowski"
+    given-names: "Jacek"
+    orcid: "https://orcid.org/0000-0001-7615-694X"
+  - family-names: "Wieczorkowski"
+    given-names: "Robert"
+title: "R Package stratallo - source code"
+version: 2.2.0
+date-released: 2023-06-24
+url: "https://github.com/wwojciech/stratallo"

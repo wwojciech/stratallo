@@ -1,11 +1,14 @@
-a <- c(3000, 4000, 5000, 2000)
-M <- c(100, 90, 70, 80)
+# Function ----
+
+test_that("sga is valid function", {
+  expect_function(sga, args = c("total_cost", "a", "M"))
+})
 
 # pop507 test ----
 
 test_that("sga works well for M, (pop507)", {
-  N <- pop507[, "N"]
-  a <- N * pop507[, "S"]
+  N <- N_pop507
+  a <- a_pop507
   n <- seq(0.01, 0.99, 0.02) * sum(N)
   result <- lapply(n, sga, a, N)
   expect_snapshot(result)

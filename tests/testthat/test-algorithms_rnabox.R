@@ -1,9 +1,10 @@
-N_pop507 <- pop507[, "N"] # nolintr
-a_pop507 <- N_pop507 * pop507[, "S"]
-
-a <- c(3000, 4000, 5000, 2000)
-m <- c(100, 90, 70, 50)
 M <- c(300, 400, 200, 90)
+
+# Function ----
+
+test_that("rnabox is valid function", {
+  expect_function(rnabox, args = c("n", "a", "m", "M"))
+})
 
 # NEITHER `m` NOR `M` IS SPECIFIED ----
 
