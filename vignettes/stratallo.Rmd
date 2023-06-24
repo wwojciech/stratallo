@@ -35,7 +35,7 @@ references:
     year: 1923
 - id: wesolowski2021
   type: article-journal
-  title: Optimumity of the Recursive Neyman Allocation
+  title: Optimality of the Recursive Neyman Allocation
   author:
   - family: Wesołowski
     given: Jacek
