@@ -18,10 +18,24 @@ statistical conference very soon.
 ## R CMD check results
 
 There were no ERRORs, WARNINGs. The following 4 NOTEs have been reported by
-`devtools::check_rhub`.
+`devtools::check_rhub`. The surname Tschuprow is correctly spelled. There is
+no any mistake here.
 
 ```
-* checking CRAN incoming feasibility ... [18s] NOTE
+* checking CRAN incoming feasibility ... [13s] NOTE
+Maintainer: 'Wojciech Wójciak <wojciech.wojciak@gmail.com>'
+Days since last update: 1
+
+
+Possibly misspelled words in DESCRIPTION:
+  Tschuprow (10:60)
+
+Found the following (possibly) invalid URLs:
+  URL: https://www.sciencedirect.com/science/article/pii/S0167947315001413
+    From: man/CapacityScaling.Rd
+          man/SimpleGreedy.Rd
+    Status: 403
+    Message: Forbidden
 * checking HTML version of manual ... NOTE
 Skipping checking math rendering: package 'V8' unavailable
 * checking for non-standard things in the check directory ... NOTE

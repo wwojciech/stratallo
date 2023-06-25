@@ -19,8 +19,8 @@ $$
 
 where $H$ denotes total number of strata, $(n_1,\ldots,n_H)$ is the
 allocation vector with strata sample sizes, and population parameters
-$A_0,\, A_h > 0,\, h = 1,\ldots,H$, do not depend on the
-$x_h,\, h = 1,\ldots,H$.
+$A_0$, $A_h > 0$, $h = 1,\ldots,H$, do not depend on the $x_h$,
+$h = 1,\ldots,H$.
 
 A minor modification of the classical optimum sample allocation problem
 leads to the minimum cost allocation. This problem lies in the
@@ -51,7 +51,7 @@ well as the following **helpers functions**:
 Functions `var_st()` and `var_st_tsi()` compute a value of the variance
 $V_{st}$. The `var_st_tsi()` is a simple wrapper of `var_st()` that is
 dedicated for the case when $A_0 = \sum_{h = 1}^H N_h S_h^2$ and
-$A_h = N_h S_h,\, h = 1,\ldots,H$. `asummary()` creates a `data.frame`
+$A_h = N_h S_h$, $h = 1,\ldots,H$. `asummary()` creates a `data.frame`
 object with summary of the allocation. Functions `ran_round()` and
 `round_oric()` are the rounding functions that can be used to round
 non-integers allocations (see section Rounding, below). The package
