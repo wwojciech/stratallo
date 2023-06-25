@@ -115,8 +115,8 @@ The allocation problem mentioned, can be further complemented by imposing lower
 or upper bounds on sample sizes is strata. 
 
 Among stratified estimators and stratified sampling designs that jointly give
-rise to a variance of the above form, is the so called stratified $\pi$
-estimator of the population total with *stratified simple random sampling
+rise to a variance of the above form, is the so called *stratified $\pi$
+estimator* of the population total with *stratified simple random sampling
 without replacement* design, which is one of the most basic and commonly used
 stratified sampling designs. This case yields
 $A_0 = \sum_{h = 1}^H N_h S_h^2$, $A_h = N_h S_h,\, h = 1,\ldots,H$, where

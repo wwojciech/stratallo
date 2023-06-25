@@ -50,14 +50,15 @@ well as the following **helpers functions**:
 
 Functions `var_st()` and `var_st_tsi()` compute a value of the variance
 $V_{st}$. The `var_st_tsi()` is a simple wrapper of `var_st()` that is
-dedicated for the case when $A_0 = \sum_{h=1}^{H} N_h S_h^2$ and
-$A_h = N_h S_h$, $h = 1,\ldots,H$. `asummary()` creates a `data.frame`
-object with summary of the allocation. Functions `ran_round()` and
-`round_oric()` are the rounding functions that can be used to round
-non-integers allocations (see section Rounding, below). The package
-comes with three predefined, artificial populations with 10, 507 and 969
-strata. These are stored under `pop10_mM`, `pop507` and `pop969`
-objects, respectively.
+dedicated for the case of *stratified $\pi$ estimator* of the population
+total with *stratified simple random sampling without replacement*
+design in strata. Helper `asummary()` creates a `data.frame` object with
+summary of the allocation. Functions `ran_round()` and `round_oric()`
+are the rounding functions that can be used to round non-integers
+allocations (see section Rounding, below). The package comes with three
+predefined, artificial populations with 10, 507 and 969 strata. These
+are stored under `pop10_mM`, `pop507` and `pop969` objects,
+respectively.
 
 See package’s vignette for more details.
 
