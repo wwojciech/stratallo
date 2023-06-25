@@ -7,7 +7,7 @@ Authors@R: c(
   person("Robert", "Wieczorkowski", email = "R.Wieczorkowski@stat.gov.pl", role = "ctb"))
 Description: Functions in this package provide solution to classical problem in
   survey methodology - an optimum sample allocation in stratified sampling. In
-  this context, the optimal allocation is in the classical Tchuprov-Neyman's
+  this context, the optimal allocation is in the classical Tschuprow-Neyman's
   sense and it satisfies additional lower or upper bounds restrictions imposed
   on sample sizes in strata. There are few different algorithms available to
   use, and one them is based on popular sample allocation method that applies

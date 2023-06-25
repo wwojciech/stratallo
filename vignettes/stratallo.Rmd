@@ -20,12 +20,12 @@ references:
   page: 558-606
   issued:
     year: 1934
-- id: Tchuprov
+- id: Tschuprow
   type: article-journal
   title: On the Mathematical Expectation of the Moments of Frequency Distributions
     in the Case of Correlated Observations
   author:
-  - family: Tchuprov
+  - family: Tschuprow
     given: Alexander Alexandrovich
   container-title: Metron
   volume: 2
@@ -98,12 +98,30 @@ knitr::opts_chunk$set(
 The goal of *stratallo* package is to provide implementations of the efficient 
 algorithms that solve a classical problem in survey methodology - an optimum
 sample allocation in stratified sampling. In this context, the classical problem
-of optimum sample allocation is the Tchuprov-Neyman's sense [@Tchuprov; @neyman].
+of optimum sample allocation is the Tschuprow-Neyman's sense [@Tschuprow; @neyman].
 It is formulated as determination of a vector of strata sample sizes that
 minimizes the variance of the *stratified $\pi$ estimator* of the population
-total of a given study variable, under constraint on total sample size. This
-problem can be further complemented by imposing lower or upper bounds on sample
-sizes is strata.
+total of a given study variable, under constraint on total sample size. More
+specifically, the algorithms provided in this package are valid given that the
+variance of the stratified estimator is of the following generic form:
+
+$$
+  V_{st}(\n) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
+$$
+where $H$ denotes total number of strata, $\n = (n_h)_{h \in \{1,\ldots,H\}}$ is
+the allocation vector with strata sample sizes, and population parameters
+$A_0,\, A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
+The allocation problem mentioned, can be further complemented by imposing lower
+or upper bounds on sample sizes is strata. 
+
+Among stratified estimators and stratified sampling designs that jointly give
+rise to a variance of the above form, is the so called stratified $\pi$
+estimator of the population total with *stratified simple random sampling
+without replacement* design, which is one of the most basic and commonly used
+stratified sampling designs. This case yields
+$A_0 = \sum_{h = 1}^H N_h S_h^2$, $A_h = N_h S_h,\, h = 1,\ldots,H$, where
+$S_h$ denotes stratum standard deviation of study variable and $N_h$ is the
+stratum size (see e.g. @sarndal, Result 3.7.2, p.103).
 
 A minor modification of the classical optimum sample allocation problem leads
 to the minimum cost allocation. This problem lies in the determination of a
@@ -117,27 +135,8 @@ Package *stratallo* provides two **user functions**:
 * `opt()`
 * `optcost()`
 
-that solve sample allocation problems briefly characterized above. In this
-context, it is assumed that the variance of the stratified estimator is of the
-following generic form:
-$$
-  V_{st}(\n) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
-$$
-where $H$ denotes total number of strata, $\n = (n_h)_{h \in \{1,\ldots,H\}}$ is
-the allocation vector with strata sample sizes, and population parameters
-$A_0,\, A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
-
-Among stratified estimators and stratified sampling designs that jointly give
-rise to a variance of the above form, is the so called stratified $\pi$
-estimator of the population total with *stratified simple random sampling
-without replacement* design, which is one of the most basic and commonly used
-stratified sampling designs. This case yields
-$A_0 = \sum_{h = 1}^H N_h S_h^2$, $A_h = N_h S_h,\, h = 1,\ldots,H$, where
-$S_h$ denotes stratum standard deviation of study variable and $N_h$ is the
-stratum size (see e.g. @sarndal, Result 3.7.2, p.103).
-
-Apart from `opt()` and `optcost()`, *stratallo* provides the following
-**helpers functions**:
+that solve sample allocation problems briefly characterized above as well as the
+following **helpers functions**:
 
 * `var_st()`
 * `var_st_tsi()`
@@ -195,7 +194,7 @@ a <- N * S
 n <- 190 # Total sample size.
 ```
 
-Tchuprov-Neyman allocation (no inequality constraints).
+Tschuprow-Neyman allocation (no inequality constraints).
 
 ```{r opt_Neyman}
 xopt <- opt(n = n, a = a)

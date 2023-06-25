@@ -25,27 +25,10 @@ knitr::opts_chunk$set(
 
 Functions in this package provide solution to classical problem in survey
 methodology - an optimum sample allocation in stratified sampling. In this
-context, the optimal allocation is in the classical Tchuprov-Neyman's sense and
+context, the optimal allocation is in the classical Tschuprow-Neyman's sense and
 it satisfies additional lower or upper bounds restrictions imposed on sample
-sizes in strata. There are few different algorithms available to use, and one
-them is based on popular sample allocation method that applies Neyman allocation
-to recursively reduced set of strata.
-
-A minor modification of the classical optimum sample allocation problem leads
-to the minimum cost allocation. This problem lies in the determination of a
-vector of strata sample sizes that minimizes total cost of the survey, under
-assumed fixed level of the stratified $\pi$ estimator's variance. As in the case
-of the classical optimum allocation, the problem of minimum cost allocation can
-be complemented by imposing upper bounds on sample sizes in strata.
-  
-Package *stratallo* provides two **user functions**:
-
-* `opt()`
-* `optcost()`
-
-that solve sample allocation problems briefly characterized above. In this
-context, it is assumed that the variance of the stratified estimator is of the
-following generic form:
+sizes in strata. In particular, it is assumed that the variance of the
+stratified estimator is of the following generic form:
 
 $$
   V_{st}(n_1,\ldots,n_H) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
@@ -55,8 +38,24 @@ where $H$ denotes total number of strata, $(n_1,\ldots,n_H)$ is the allocation
 vector with strata sample sizes, and population parameters
 $A_0,\, A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
 
-Apart from `opt()` and `optcost()`, *stratallo* provides the following
-**helpers functions**:
+A minor modification of the classical optimum sample allocation problem leads
+to the minimum cost allocation. This problem lies in the determination of a
+vector of strata sample sizes that minimizes total cost of the survey, under
+assumed fixed level of the stratified $\pi$ estimator's variance. As in the case
+of the classical optimum allocation, the problem of minimum cost allocation can
+be complemented by imposing upper bounds on sample sizes in strata.
+
+There are few different algorithms available to use, and one them is based on
+a popular sample allocation method that applies Neyman allocation to recursively
+reduced set of strata.
+  
+Package *stratallo* provides two **user functions**:
+
+* `opt()`
+* `optcost()`
+
+that solve sample allocation problems briefly characterized above as well as the
+following **helpers functions**:
 
 * `var_st()`
 * `var_st_tsi()`
@@ -104,7 +103,7 @@ a <- N * S
 n <- 190 # Total sample size.
 ```
 
-Tchuprov-Neyman allocation (no inequality constraints).
+Tschuprow-Neyman allocation (no inequality constraints).
 
 ```{r opt_Neyman}
 xopt <- opt(n = n, a = a)
