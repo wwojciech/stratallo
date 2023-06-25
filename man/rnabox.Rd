@@ -45,7 +45,7 @@ where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0}, such that
 The minimization is on \eqn{\mathbb R_+^H}.
 Inequality constraints are optional and can be skipped.
 
-`rnabox() function should not be called directly by the user. Use \code{\link[=opt]{opt()}}
+\code{rnabox()} function should not be called directly by the user. Use \code{\link[=opt]{opt()}}
 instead.
 }
 \examples{

@@ -42,11 +42,11 @@ NULL
 #' the name of the function that implements a given algorithm. See the
 #' description of a specific function to find out more about the corresponding
 #' algorithm.
-#' * \emph{RNA} - `rna()`,
-#' * \emph{LRNA}- `rna()`,
-#' * \emph{SGA}- `sga()`,
-#' * \emph{SGAPLUS} - `sgaplus()`,
-#' * \emph{COMA} - `coma()`.
+#' * \emph{RNA} - `rna()`
+#' * \emph{LRNA}- `rna()`
+#' * \emph{SGA}- `sga()`
+#' * \emph{SGAPLUS} - `sgaplus()`
+#' * \emph{COMA} - `coma()`
 #'
 #' Functions in this family should not be called directly by the user. Use
 #' [opt()] or [optcost()] instead.

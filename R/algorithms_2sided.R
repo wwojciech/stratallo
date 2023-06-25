@@ -20,7 +20,7 @@ NULL
 #' The minimization is on \eqn{\mathbb R_+^H}.
 #' Inequality constraints are optional and can be skipped.
 #'
-#' `rnabox() function should not be called directly by the user. Use [opt()]
+#' `rnabox()` function should not be called directly by the user. Use [opt()]
 #' instead.
 #'
 #' @param n (`number`)\cr total sample size. A strictly positive scalar.

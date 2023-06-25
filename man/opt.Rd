@@ -86,9 +86,9 @@ of a specific function to find out more about the corresponding algorithm.
 }
 \item one-sided upper-bounds \eqn{M_h,\, h = 1,\ldots,H}:
 \itemize{
-\item \code{RNA} - \code{\link[=rna]{rna()}},
-\item \code{SGA} - \code{\link[=sga]{sga()}},
-\item \code{SGAPLUS} - \code{\link[=sgaplus]{sgaplus()}},
+\item \code{RNA} - \code{\link[=rna]{rna()}}
+\item \code{SGA} - \code{\link[=sga]{sga()}}
+\item \code{SGAPLUS} - \code{\link[=sgaplus]{sgaplus()}}
 \item \code{COMA} - \code{\link[=coma]{coma()}}
 }
 \item box constraints \eqn{m_h, M_h,\, h = 1,\ldots,H}:

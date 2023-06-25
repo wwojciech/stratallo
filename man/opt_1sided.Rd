@@ -111,11 +111,11 @@ the name of the function that implements a given algorithm. See the
 description of a specific function to find out more about the corresponding
 algorithm.
 \itemize{
-\item \emph{RNA} - \code{rna()},
-\item \emph{LRNA}- \code{rna()},
-\item \emph{SGA}- \code{sga()},
-\item \emph{SGAPLUS} - \code{sgaplus()},
-\item \emph{COMA} - \code{coma()}.
+\item \emph{RNA} - \code{rna()}
+\item \emph{LRNA}- \code{rna()}
+\item \emph{SGA}- \code{sga()}
+\item \emph{SGAPLUS} - \code{sgaplus()}
+\item \emph{COMA} - \code{coma()}
 }
 
 Functions in this family should not be called directly by the user. Use

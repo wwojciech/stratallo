@@ -45,9 +45,9 @@
 #'   * one-sided lower-bounds \eqn{m_h,\, h = 1,\ldots,H}:
 #'      * `LRNA` - [rna()]
 #'  * one-sided upper-bounds \eqn{M_h,\, h = 1,\ldots,H}:
-#'      * `RNA` - [rna()],
-#'      * `SGA` - [sga()],
-#'      * `SGAPLUS` - [sgaplus()],
+#'      * `RNA` - [rna()]
+#'      * `SGA` - [sga()]
+#'      * `SGAPLUS` - [sgaplus()]
 #'      * `COMA` - [coma()]
 #'  * box constraints \eqn{m_h, M_h,\, h = 1,\ldots,H}:
 #'      * `RNABOX` - [rnabox()]
