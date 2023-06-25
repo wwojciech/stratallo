@@ -1,9 +1,10 @@
 ## Resubmission
 
-This is a re-submission. In this version I have updated and extended some existing
-algorithms and significantly updated help pages. In particular, I extended the
-`rna()` function so that it now supports specification of the unit costs.
-Also, two helpers functions for rounding were added.
+This is a quick re-submission of the previous major release. Please accept it
+even though it is the next submission after yesterday's version, but it contains
+some major typo corrections which I would like to get corrected. This is 
+particularly important as I will present this package on international 
+statistical conference very soon.
 
 ## Test environments
 

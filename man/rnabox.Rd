@@ -8,19 +8,21 @@ rnabox(n, a, m = NULL, M = NULL)
 }
 \arguments{
 \item{n}{(\code{number})\cr total sample size. A strictly positive scalar.
-If \code{m} is not \code{NULL}, it is then is required that \code{n >= sum(m)}.
-If \code{M} is not \code{NULL}, it is then is required that \code{n <= sum(m)}.}
+If \code{m} is not \code{NULL}, it is then required that \code{n >= sum(m)}.
+If \code{M} is not \code{NULL}, it is then required that \code{n <= sum(m)}.}
 
 \item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{m}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
 optionally imposed on sample sizes in strata. If no lower bounds should be
-imposed, then \code{m} must be set to \code{NULL}.}
+imposed, then \code{m} must be set to \code{NULL}. If \code{M} is not \code{NULL}, it is then
+required that \code{m < M}.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
 optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}.}
+imposed, then \code{M} must be set to \code{NULL}. If \code{m} is not \code{NULL}, it is then
+required that \code{m < M}.}
 }
 \value{
 Numeric vector with optimal sample allocations in strata.
@@ -37,8 +39,9 @@ Minimize
 subject to
 \deqn{\sum_{h=1}^H x_h = n}
 \deqn{m_h \leq x_h \leq M_h, \quad h = 1,\ldots,H,}
-where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0,\, h = 1, \ldots ,H}, such
-that \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h} are given numbers.
+where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0}, such that
+\eqn{m_h < M_h,\, h = 1,\ldots,H}, and
+\eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h}, are given numbers.
 The minimization is on \eqn{\mathbb R_+^H}.
 Inequality constraints are optional and can be skipped.
 

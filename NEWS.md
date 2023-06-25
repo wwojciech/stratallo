@@ -1,5 +1,9 @@
 # stratallo
 
+# stratallo 2.2.1
+
+* Minor help and vignette updates, corrected typos from previous release.
+
 # stratallo 2.2.0
 
 * Added new user functions: `ran_round()` and `round_oric()` for rounding of

@@ -18,7 +18,8 @@ positive numbers.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
 optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}.}
+imposed, then \code{M} must be set to \code{NULL}. If \code{m} is not \code{NULL}, it is then
+required that \code{m < M}.}
 
 \item{unit_costs}{(\code{numeric})\cr costs \eqn{c_1,\ldots,c_H}, of surveying one
 element in stratum. A strictly positive numbers. Can be also of length 1,
@@ -70,7 +71,8 @@ standard deviation of a given study variable in stratum \eqn{h}.
 \examples{
 a <- c(3000, 4000, 5000, 2000)
 M <- c(100, 90, 70, 80)
-optcost(1017579, a = a, a0 = 579, M = M)
+xopt <- optcost(1017579, a = a, a0 = 579, M = M)
+xopt
 }
 \references{
 Wójciak, W. (2023).

@@ -8,19 +8,21 @@ opt(n, a, m = NULL, M = NULL, M_algorithm = "rna")
 }
 \arguments{
 \item{n}{(\code{number})\cr total sample size. A strictly positive scalar.
-If \code{m} is not \code{NULL}, it is then is required that \code{n >= sum(m)}.
-If \code{M} is not \code{NULL}, it is then is required that \code{n <= sum(m)}.}
+If \code{m} is not \code{NULL}, it is then required that \code{n >= sum(m)}.
+If \code{M} is not \code{NULL}, it is then required that \code{n <= sum(m)}.}
 
 \item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{m}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
 optionally imposed on sample sizes in strata. If no lower bounds should be
-imposed, then \code{m} must be set to \code{NULL}.}
+imposed, then \code{m} must be set to \code{NULL}. If \code{M} is not \code{NULL}, it is then
+required that \code{m < M}.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
 optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}.}
+imposed, then \code{M} must be set to \code{NULL}. If \code{m} is not \code{NULL}, it is then
+required that \code{m < M}.}
 
 \item{M_algorithm}{(\code{string})\cr the name of the underlying algorithm to be
 used for computing sample allocation under one-sided upper-bounds
@@ -49,8 +51,9 @@ Minimize
 subject to
 \deqn{\sum_{h=1}^H x_h = n}
 \deqn{m_h \leq x_h \leq M_h, \quad h = 1,\ldots,H,}
-where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0,\, h = 1, \ldots ,H}, such
-that \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h} are given numbers.
+where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0}, such that
+\eqn{m_h < M_h,\, h = 1,\ldots,H}, and
+\eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h}, are given numbers.
 The minimization is on \eqn{\mathbb R_+^H}.
 
 The inequality constraints are optional and user can choose whether and how
@@ -122,11 +125,11 @@ opt(n = 700, a = a, M = M)
 # Box-constraints.
 opt(n = 340, a = a, m = m, M = M)
 opt(n = 500, a = a, m = m, M = M)
-x <- opt(n = 800, a = a, m = m, M = M)
-x
-var_st(x = x, a = a, a0 = 45000) # Value of the variance for allocation x.
+xopt <- opt(n = 800, a = a, m = m, M = M)
+xopt
+var_st(x = xopt, a = a, a0 = 45000) # Value of the variance for allocation xopt.
 
-# Execution-time comparisons of different algorithms with `microbenchmark` R package.
+# Execution-time comparisons of different algorithms with R package microbenchmark.
 \dontrun{
 N <- pop969[, "N"]
 S <- pop969[, "S"]
@@ -149,12 +152,6 @@ lapply(
 }
 }
 \references{
-Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021).
-Optimality of the Recursive Neyman Allocation.
-\emph{Journal of Survey Statistics and Methodology}, 10(5), pp. 1263–1275.
-\doi{10.1093/jssam/smab018},
-\doi{10.48550/arXiv.2105.14486} \cr
-
 Särndal, C.-E., Swensson, B. and Wretman, J. (1992).
 \emph{Model Assisted Survey Sampling}, Springer, New York.
 }

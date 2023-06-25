@@ -49,11 +49,11 @@ a <- c(3000, 4000, 5000, 2000)
 m <- c(100, 90, 70, 80)
 M <- c(200, 150, 300, 210)
 
-x1 <- opt(n = 400, a, m)
-s1 <- asummary(x1, a, m)
+xopt_1 <- opt(n = 400, a, m)
+asummary(xopt_1, a, m)
 
-x2 <- opt(n = 540, a, m, M)
-s2 <- asummary(x2, a, m, M)
+xopt_2 <- opt(n = 540, a, m, M)
+asummary(xopt_2, a, m, M)
 }
 \seealso{
 \code{\link[=opt]{opt()}}, \code{\link[=optcost]{optcost()}}.

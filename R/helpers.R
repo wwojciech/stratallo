@@ -117,8 +117,8 @@ var_st <- function(x, a, a0) {
 #' N <- c(3000, 4000, 5000, 2000)
 #' S <- rep(1, 4)
 #' M <- c(100, 90, 70, 80)
-#' opt <- opt(n = 190, a = N * S, M = M)
-#' var_st_tsi(x = opt, N, S) # 1017579
+#' xopt <- opt(n = 190, a = N * S, M = M)
+#' var_st_tsi(x = xopt, N, S) # 1017579
 var_st_tsi <- function(x, N, S) {
   a <- N * S
   a0 <- sum(N * S^2)
@@ -166,11 +166,11 @@ var_st_tsi <- function(x, N, S) {
 #' m <- c(100, 90, 70, 80)
 #' M <- c(200, 150, 300, 210)
 #'
-#' x1 <- opt(n = 400, a, m)
-#' s1 <- asummary(x1, a, m)
+#' xopt_1 <- opt(n = 400, a, m)
+#' asummary(xopt_1, a, m)
 #'
-#' x2 <- opt(n = 540, a, m, M)
-#' s2 <- asummary(x2, a, m, M)
+#' xopt_2 <- opt(n = 540, a, m, M)
+#' asummary(xopt_2, a, m, M)
 asummary <- function(x, a, m = NULL, M = NULL) {
   assert_numeric(a, min.len = 1L)
   H <- length(a)

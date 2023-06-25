@@ -14,11 +14,11 @@ opt(n = 700, a = a, M = M)
 # Box-constraints.
 opt(n = 340, a = a, m = m, M = M)
 opt(n = 500, a = a, m = m, M = M)
-x <- opt(n = 800, a = a, m = m, M = M)
-x
-var_st(x = x, a = a, a0 = 45000) # Value of the variance for allocation x.
+xopt <- opt(n = 800, a = a, m = m, M = M)
+xopt
+var_st(x = xopt, a = a, a0 = 45000) # Value of the variance for allocation xopt.
 
-# Execution-time comparisons of different algorithms with `microbenchmark` R package.
+# Execution-time comparisons of different algorithms with R package microbenchmark.
 \dontrun{
 N <- pop969[, "N"]
 S <- pop969[, "S"]

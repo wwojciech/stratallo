@@ -1,13 +1,13 @@
 Package: stratallo
-Title: Optimum Sample Allocation in Stratified Sampling Schemes
-Version: 2.2.0
+Title: Optimum Sample Allocation in Stratified Sampling
+Version: 2.2.1
 Authors@R: c(
   person("Wojciech", "Wójciak", email = "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
-  person("Jacek", "Wesołowski", email = "j.wesolowski@mini.pw.edu.pl", role = "sad"),
+  person("Jacek", "Wesołowski", email = "jacek.wesolowski@pw.edu.pl", role = "sad"),
   person("Robert", "Wieczorkowski", email = "R.Wieczorkowski@stat.gov.pl", role = "ctb"))
 Description: Functions in this package provide solution to classical problem in
   survey methodology - an optimum sample allocation in stratified sampling. In
-  this context, the optimal allocation is in the classical Tschuprov-Neyman's
+  this context, the optimal allocation is in the classical Tchuprov-Neyman's
   sense and it satisfies additional lower or upper bounds restrictions imposed
   on sample sizes in strata. There are few different algorithms available to
   use, and one them is based on popular sample allocation method that applies

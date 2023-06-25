@@ -16,8 +16,9 @@
 #' subject to
 #' \deqn{\sum_{h=1}^H x_h = n}
 #' \deqn{m_h \leq x_h \leq M_h, \quad h = 1,\ldots,H,}
-#' where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0,\, h = 1, \ldots ,H}, such
-#' that \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h} are given numbers.
+#' where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0}, such that
+#' \eqn{m_h < M_h,\, h = 1,\ldots,H}, and
+#' \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h}, are given numbers.
 #' The minimization is on \eqn{\mathbb R_+^H}.
 #'
 #' The inequality constraints are optional and user can choose whether and how
@@ -74,12 +75,6 @@
 #' @seealso [optcost()], [rna()], [sga()], [sgaplus()], [coma()], [rnabox()].
 #
 #' @references
-#'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021).
-#'   Optimality of the Recursive Neyman Allocation.
-#'   *Journal of Survey Statistics and Methodology*, 10(5), pp. 1263–1275.
-#'   \doi{10.1093/jssam/smab018},
-#'   \doi{10.48550/arXiv.2105.14486} \cr
-#'
 #'   Särndal, C.-E., Swensson, B. and Wretman, J. (1992).
 #'   *Model Assisted Survey Sampling*, Springer, New York.
 #'
@@ -191,7 +186,8 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #' @examples
 #' a <- c(3000, 4000, 5000, 2000)
 #' M <- c(100, 90, 70, 80)
-#' optcost(1017579, a = a, a0 = 579, M = M)
+#' xopt <- optcost(1017579, a = a, a0 = 579, M = M)
+#' xopt
 optcost <- function(V, a, a0, M = NULL, unit_costs = 1) {
   H <- length(a)
   assert_number(V, finite = TRUE)

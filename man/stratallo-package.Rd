@@ -37,7 +37,7 @@ Another Solution of Some Optimum Allocation Problem.
 \emph{Statistics in Transition new series} (in press).
 \url{https://arxiv.org/abs/2204.04035} \cr
 
-Wójciak, W. (2019). Optimal allocation in stratified sampling schemes.
+Wójciak, W. (2019). Optimal Allocation in Stratified Sampling Schemes.
 \emph{MSc Thesis}, Warsaw University of Technology, Warsaw, Poland.
 \url{http://home.elka.pw.edu.pl/~wwojciak/msc_optimal_allocation.pdf}
 }

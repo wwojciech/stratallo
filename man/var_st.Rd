@@ -51,8 +51,8 @@ standard deviation of a study variable, \eqn{h = 1,\ldots,H}.
 N <- c(3000, 4000, 5000, 2000)
 S <- rep(1, 4)
 M <- c(100, 90, 70, 80)
-opt <- opt(n = 190, a = N * S, M = M)
-var_st_tsi(x = opt, N, S) # 1017579
+xopt <- opt(n = 190, a = N * S, M = M)
+var_st_tsi(x = xopt, N, S) # 1017579
 }
 \references{
 Särndal, C.-E., Swensson, B. and Wretman, J. (1992).

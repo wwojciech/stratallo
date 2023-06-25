@@ -10,6 +10,6 @@ authors:
   - family-names: "Wieczorkowski"
     given-names: "Robert"
 title: "R Package stratallo - source code"
-version: 2.2.0
+version: 2.2.1
 date-released: 2023-06-24
 url: "https://github.com/wwojciech/stratallo"

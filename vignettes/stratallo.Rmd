@@ -1,8 +1,8 @@
 ---
-title: "Optimum Sample Allocation in Stratified Sampling with `stratallo` Package"
+title: "Optimum Sample Allocation in Stratified Sampling with `stratallo`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Optimum Sample Allocation in Stratified Sampling with `stratallo` Package}
+  %\VignetteIndexEntry{Optimum Sample Allocation in Stratified Sampling with `stratallo`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 csl: "asa_modified_url.csl"
@@ -20,17 +20,17 @@ references:
   page: 558-606
   issued:
     year: 1934
-- id: tschuprov
+- id: Tchuprov
   type: article-journal
   title: On the Mathematical Expectation of the Moments of Frequency Distributions
     in the Case of Correlated Observations
   author:
-  - family: Tschuprov
+  - family: Tchuprov
     given: Alexander Alexandrovich
   container-title: Metron
   volume: 2
   number: 4
-  page: 461-493, 646-683
+  page: 461-493, 636-680
   issued:
     year: 1923
 - id: wesolowski2021
@@ -56,9 +56,10 @@ references:
     given: Wojciech
   issued:
     year: 2023
+  URL: https://arxiv.org/abs/2204.04035
 - id: wojciak2019
   type: thesis
-  title: Optimum Allocation in Stratified Sampling Schemes
+  title: Optimal Allocation in Stratified Sampling Schemes
   author:
   - family: Wójciak
     given: Wojciech
@@ -71,7 +72,7 @@ references:
   type: book
   title: Model Assisted Survey Sampling
   author:
-  - family: Sarndal
+  - family: Särndal
     given: Carl-Erik
   - family: Swensson
     given: Bengt
@@ -92,27 +93,26 @@ knitr::opts_chunk$set(
 \def\R{{\mathbb R}}
 \def\x{\mathbf x}
 \def\n{\mathbf n}
-\def\D{\widetilde D}
 \newcommand{\texteq}{\mathrm}
 
 The goal of *stratallo* package is to provide implementations of the efficient 
 algorithms that solve a classical problem in survey methodology - an optimum
 sample allocation in stratified sampling. In this context, the classical problem
-of optimum sample allocation is the Tschuprov-Neyman's sense
-[@tschuprov; @neyman]. It is formulated as determination of a vector of strata
-sample sizes that minimizes the variance of the *stratified $\pi$-estimator* of
-the population total of a given study variable, under constraint on total sample
-size. This problem can be further complemented by imposing lower or upper bounds
-on sample sizes is strata.
+of optimum sample allocation is the Tchuprov-Neyman's sense [@Tchuprov; @neyman].
+It is formulated as determination of a vector of strata sample sizes that
+minimizes the variance of the *stratified $\pi$ estimator* of the population
+total of a given study variable, under constraint on total sample size. This
+problem can be further complemented by imposing lower or upper bounds on sample
+sizes is strata.
 
 A minor modification of the classical optimum sample allocation problem leads
 to the minimum cost allocation. This problem lies in the determination of a
 vector of strata sample sizes that minimizes total cost of the survey, under
-assumed fixed level of the stratified $\pi$-estimator's variance. As in the case
+assumed fixed level of the stratified $\pi$ estimator's variance. As in the case
 of the classical optimum allocation, the problem of minimum cost allocation can
 be complemented by imposing upper bounds on sample sizes in strata.
 
-*stratallo* provides two **user functions**:
+Package *stratallo* provides two **user functions**:
 
 * `opt()`
 * `optcost()`
@@ -124,8 +124,8 @@ $$
   V_{st}(\n) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
 $$
 where $H$ denotes total number of strata, $\n = (n_h)_{h \in \{1,\ldots,H\}}$ is
-the allocation vector with strata sample sizes, and population parameters $A_0$,
-and $A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
+the allocation vector with strata sample sizes, and population parameters
+$A_0,\, A_h > 0,\, h = 1,\ldots,H$, do not depend on the $x_h,\, h = 1,\ldots,H$.
 
 Among stratified estimators and stratified sampling designs that jointly give
 rise to a variance of the above form, is the so called stratified $\pi$
@@ -139,10 +139,10 @@ stratum size (see e.g. @sarndal, Result 3.7.2, p.103).
 Apart from `opt()` and `optcost()`, *stratallo* provides the following
 **helpers functions**:
 
-* `var_st()`,
-* `var_st_tsi()`,
-* `asummary()`,
-* `ran_round()`,
+* `var_st()`
+* `var_st_tsi()`
+* `asummary()`
+* `ran_round()`
 * `round_oric()`.
 
 Functions `var_st()` and `var_st_tsi()` compute a value of the variance $V_{st}$.
@@ -152,8 +152,8 @@ case when $A_0 = \sum_{h = 1}^H N_h S_h^2$ and $A_h = N_h S_h,\, h = 1,\ldots,H$
 Functions `ran_round()` and `round_oric()` are the rounding functions that can
 be used to round non-integers allocations (see section Rounding, below).
 The package comes with three predefined, artificial populations with 10, 507
-and 969 strata. These are stored under `pop10_mM`, pop507` and `pop969` objects,
-respectively.
+and 969 strata. These are stored under `pop10_mM`, `pop507` and `pop969`
+objects, respectively.
 
 ## Minimization of the variance with `opt()` function
 
@@ -165,7 +165,7 @@ use of `m` and `M` arguments of the function. Also, if required, the inequality
 constraints can be removed from the optimization problem. For more details, see
 the help page for `opt()` function.
 
-### Problem 1 (one-sided upper bounds constraints)
+### Problem 1 (one-sided upper bounds)
 Given numbers $n > 0,\, A_h > 0,\, M_h > 0$, such that
 $M_h \leq N_h,\, h = 1,\ldots,H$, and $n \leq \sum_{h=1}^H M_h$, 
 \begin{align*}
@@ -186,7 +186,7 @@ in @wojciak2019 as *Sequential Allocation (version 1)* algorithm.
 library(stratallo)
 ```
 
-Define example population
+Define example population.
 
 ```{r pop}
 N <- c(3000, 4000, 5000, 2000) # Strata sizes.
@@ -195,17 +195,17 @@ a <- N * S
 n <- 190 # Total sample size.
 ```
 
-Tschuprov-Neyman allocation (no inequality constraints).
+Tchuprov-Neyman allocation (no inequality constraints).
 
 ```{r opt_Neyman}
-opt <- opt(n = n, a = a)
-opt
-sum(opt) == n
-# Variance of the stratified estimator that corresponds to optimum allocation.
-var_st_tsi(opt, N, S)
+xopt <- opt(n = n, a = a)
+xopt
+sum(xopt) == n
+# Variance of the st. estimator that corresponds to the optimum allocation.
+var_st_tsi(xopt, N, S)
 ```
 
-One-sided upper-bounds constraints.
+One-sided upper bounds.
 
 ```{r opt_M}
 M <- c(100, 90, 70, 80) # Upper bounds imposed on the sample sizes in strata.
@@ -213,15 +213,15 @@ all(M <= N)
 n <= sum(M)
 
 # Solution to Problem 1.
-opt <- opt(n = n, a = a, M = M)
-opt
-sum(opt) == n
-all(opt <= M) # Does not violate upper-bounds constraints.
-# Variance of the stratified estimator that corresponds to optimum allocation.
-var_st_tsi(opt, N, S)
+xopt <- opt(n = n, a = a, M = M)
+xopt
+sum(xopt) == n
+all(xopt <= M) # Does not violate upper-bounds constraints.
+# Variance of the st. estimator that corresponds to the optimum allocation.
+var_st_tsi(xopt, N, S)
 ```
 
-### Problem 2 (one-sided lower-bounds constraints)
+### Problem 2 (one-sided lower bounds)
 Given numbers $n,\, A_h > 0,\, m_h > 0$, such that
 $m_h \leq N_h,\, h = 1,\ldots,H$, and $n \geq \sum_{h=1}^H m_h$, 
 \begin{align*}
@@ -241,12 +241,12 @@ m <- c(50, 120, 1, 2) # Lower bounds imposed on the sample sizes in strata.
 n >= sum(m)
 
 # Solution to Problem 2.
-opt <- opt(n = n, a = a, m = m)
-opt
-sum(opt) == n
-all(opt >= m) # Does not violate lower-bounds constraints.
-# Variance of the stratified estimator that corresponds to optimum allocation.
-var_st_tsi(opt, N, S)
+xopt <- opt(n = n, a = a, m = m)
+xopt
+sum(xopt) == n
+all(xopt >= m) # Does not violate lower-bounds constraints.
+# Variance of the st. estimator that corresponds to the optimum allocation.
+var_st_tsi(xopt, N, S)
 ```
 
 ### Problem 3 (box constraints)
@@ -271,12 +271,12 @@ n <- 1284
 n >= sum(m) && n <= sum(M)
 
 # Optimum allocation under box constraints.
-opt <- opt(n = n, a = a, m = m, M = M)
-opt
-sum(opt) == n
-all(opt >= m & opt <= M) # Does not violate any lower or upper bounds constraints.
-# Variance of the stratified estimator that corresponds to optimum allocation.
-var_st_tsi(opt, N, S)
+xopt <- opt(n = n, a = a, m = m, M = M)
+xopt
+sum(xopt) == n
+all(xopt >= m & xopt <= M) # Does not violate any lower or upper bounds constraints.
+# Variance of the st. estimator that corresponds to the optimum allocation.
+var_st_tsi(xopt, N, S)
 ```
 
 ## Minimization of the total cost with `optcost()` function
@@ -307,10 +307,10 @@ M <- c(100, 90, 70, 80)
 V <- 1e6 # Variance constraint.
 V >= sum(a^2 / M) - a0
 
-opt <- optcost(V = V, a = a, a0 = a0, M = M, unit_costs = unit_costs)
-opt
-sum(a^2 / opt) - a0 == V
-all(opt <= M)
+xopt <- optcost(V = V, a = a, a0 = a0, M = M, unit_costs = unit_costs)
+xopt
+sum(a^2 / xopt) - a0 == V
+all(xopt <= M)
 ```
 
 ## Rounding
@@ -326,11 +326,11 @@ M <- c(300, 400, 800, 90)
 n <- 1284
 
 # Optimum, non-integer allocation under box constraints.
-opt <- opt(n = n, a = a, m = m, M = M)
-opt
+xopt <- opt(n = n, a = a, m = m, M = M)
+xopt
 
-opt_int <- round_oric(opt)
-opt_int
+xopt_int <- round_oric(xopt)
+xopt_int
 ```
 
 ## Installation
@@ -351,21 +351,21 @@ N <- c(3000, 4000, 5000, 2000)
 S <- c(48, 79, 76, 17)
 a <- N * S
 n <- 190
-opt <- opt(n = n, a = a) # which after simplification is (n / sum(a)) * a
-opt
+xopt <- opt(n = n, a = a) # which after simplification is (n / sum(a)) * a
+xopt
 ```
 
 and note that
 
 ```{r finit_prec2}
-sum(opt) == n
+sum(xopt) == n
 ```
 
 which results from the fact that
 
 ```{r finit_prec3}
 options(digits = 22)
-sum(opt)
+sum(xopt)
 
 sum((n / sum(a)) * a) == n # mathematically, it should be TRUE!
 ```

@@ -14,8 +14,9 @@ NULL
 #' subject to
 #' \deqn{\sum_{h=1}^H x_h = n}
 #' \deqn{m_h \leq x_h \leq M_h, \quad h = 1,\ldots,H,}
-#' where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0,\, h = 1, \ldots ,H}, such
-#' that \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h} are given numbers.
+#' where \eqn{n > 0,\, A_h > 0,\, m_h > 0,\, M_h > 0}, such that
+#' \eqn{m_h < M_h,\, h = 1,\ldots,H}, and
+#' \eqn{\sum_{h=1}^H m_h \leq n \leq \sum_{h=1}^H M_h}, are given numbers.
 #' The minimization is on \eqn{\mathbb R_+^H}.
 #' Inequality constraints are optional and can be skipped.
 #'
@@ -23,16 +24,18 @@ NULL
 #' instead.
 #'
 #' @param n (`number`)\cr total sample size. A strictly positive scalar.
-#'   If `m` is not `NULL`, it is then is required that `n >= sum(m)`.
-#'   If `M` is not `NULL`, it is then is required that `n <= sum(m)`.
+#'   If `m` is not `NULL`, it is then required that `n >= sum(m)`.
+#'   If `M` is not `NULL`, it is then required that `n <= sum(m)`.
 #' @param a (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 #'   positive numbers.
 #' @param m (`numeric` or `NULL`)\cr lower bounds \eqn{m_1,\ldots,m_H},
 #'   optionally imposed on sample sizes in strata. If no lower bounds should be
-#'   imposed, then `m` must be set to `NULL`.
+#'   imposed, then `m` must be set to `NULL`. If `M` is not `NULL`, it is then
+#'   required that `m < M`.
 #' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
 #'   optionally imposed on sample sizes in strata. If no upper bounds should be
-#'   imposed, then `M` must be set to `NULL`.
+#'   imposed, then `M` must be set to `NULL`. If `m` is not `NULL`, it is then
+#'   required that `m < M`.
 #'
 #' @return Numeric vector with optimal sample allocations in strata.
 #'
