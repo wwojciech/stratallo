@@ -63,6 +63,14 @@
 #'   standard deviation of a given study variable in stratum \eqn{h}.
 #'
 #' @inheritParams rnabox
+#' @param m (`numeric` or `NULL`)\cr lower bounds \eqn{m_1,\ldots,m_H},
+#'   optionally imposed on sample sizes in strata. If no lower bounds should be
+#'   imposed, then `m` must be set to `NULL`. If `M` is not `NULL`, it is then
+#'   required that `m < M`.
+#' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
+#'   optionally imposed on sample sizes in strata. If no upper bounds should be
+#'   imposed, then `M` must be set to `NULL`. If `m` is not `NULL`, it is then
+#'   required that `m < M`.
 #' @param M_algorithm (`string`)\cr the name of the underlying algorithm to be
 #'   used for computing sample allocation under one-sided upper-bounds
 #'   constraints.
@@ -113,7 +121,7 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
   } else if (n == sum(M)) {
     M
   } else if (lwr_imposed && upr_imposed) {
-    rnabox(n = n, a = a, m = m, M = M)
+    rnabox(n = n, a = a, bounds1 = M, bounds2 = m)
   } else if (lwr_imposed) {
     rna(total_cost = n, a = a, bounds = m, check_violations = .Primitive("<="))
   } else if (upr_imposed) {

@@ -95,13 +95,13 @@ test_that("rna works well when no bounds, H = 4, non-def cost vec)", {
 test_that("rna works well for m, (pop507)", {
   frac <- c(1, 1.05, 1.1, seq(1.3, 2, .3), seq(2.1, 2.9, 0.5), seq(3, 300, 50), seq(301, 10000, 1500), 15000, 25000)
   n <- frac * sum(N_pop507)
-  result <- lapply(n, rna, a_pop507, N_pop507, check_violations = .Primitive("<="))
+  result <- lapply(n, rna, a_pop507, N_pop507, check_violations = leq)
   expect_snapshot(result)
 
   # Check details.
   result_details <- lapply(
     n, rna, a_pop507, N_pop507,
-    check_violations = .Primitive("<="), details = TRUE
+    check_violations = leq, details = TRUE
   )
   expect_snapshot(result_details)
 })
@@ -110,13 +110,13 @@ test_that("rna works well for m, (pop507), non-def cost", {
   frac <- c(1, 1.05, 1.1, seq(1.3, 2, .3), seq(2.1, 2.9, 0.5), seq(3, 300, 50), seq(301, 10000, 1500), 15000, 25000)
   tcost <- frac * sum(ucosts_pop507[1] * N_pop507)
   result <- lapply(
-    tcost, rna, a_pop507, N_pop507, ucosts_pop507[1], .Primitive("<=")
+    tcost, rna, a_pop507, N_pop507, ucosts_pop507[1], leq
   )
   expect_snapshot(result)
 
   # Check details.
   result_details <- lapply(
-    tcost, rna, a_pop507, N_pop507, ucosts_pop507[1], .Primitive("<="),
+    tcost, rna, a_pop507, N_pop507, ucosts_pop507[1], leq,
     details = TRUE
   )
   expect_snapshot(result_details)
@@ -127,13 +127,13 @@ test_that("rna works well for m, (pop507), non-def cost vec", {
   tcost <- frac * sum(ucosts_pop507 * N_pop507)
   result <- lapply(
     tcost, rna, a_pop507, N_pop507,
-    unit_costs = ucosts_pop507, check_violations = .Primitive("<=")
+    unit_costs = ucosts_pop507, check_violations = leq
   )
   expect_snapshot(result)
 
   # Check details.
   result_details <- lapply(
-    tcost, rna, a_pop507, N_pop507, ucosts_pop507, .Primitive("<="), TRUE
+    tcost, rna, a_pop507, N_pop507, ucosts_pop507, leq, TRUE
   )
   expect_snapshot(result_details)
 })
@@ -144,11 +144,11 @@ test_that("rna works well for m, (pop507), non-def cost vec", {
 
 test_that("rna works well for m (alloc: no bound), H = 1", {
   n <- 101
-  result <- rna(n, a[1], bounds[1], check_violations = .Primitive("<="))
+  result <- rna(n, a[1], bounds[1], check_violations = leq)
   expect_equal(result, n) # 100.99999999999999
 
   # Check details.
-  result_details <- rna(n, a[1], bounds[1], check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a[1], bounds[1], check_violations = leq, details = TRUE)
   s <- n / a[1]
   expected_details <- list(
     opt = n, take_neyman = 1L, take_bound = integer(0), s0 = s, s = s, iter = 1L
@@ -158,12 +158,12 @@ test_that("rna works well for m (alloc: no bound), H = 1", {
 
 test_that("rna works well for m (alloc: no bound), H = 1, non-def cost", {
   tcost <- 101
-  result <- rna(tcost, a[1], bounds[1], ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a[1], bounds[1], ucosts[1], leq)
   expected <- tcost / ucosts[1]
   expect_equal(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a[1], bounds[1], ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a[1], bounds[1], ucosts[1], leq, TRUE)
   s <- sfun(tcost, a[1], ucosts = ucosts[1])
   expected_details <- list(
     opt = expected, take_neyman = 1L, take_bound = integer(0), s0 = s, s = s, iter = 1L
@@ -175,11 +175,11 @@ test_that("rna works well for m (alloc: no bound), H = 1, non-def cost", {
 
 test_that("rna works well for m (alloc: 1 bound), H = 1", {
   n <- bounds[1]
-  result <- rna(n, a[1], bounds[1], check_violations = .Primitive("<="))
+  result <- rna(n, a[1], bounds[1], check_violations = leq)
   expect_identical(result, n)
 
   # Check details.
-  result_details <- rna(n, a[1], bounds[1], check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a[1], bounds[1], check_violations = leq, details = TRUE)
   expected_details <- list(
     opt = n, take_neyman = integer(0), take_bound = 1L, s0 = n / a[1], s = NaN, iter = 2L
   )
@@ -188,11 +188,11 @@ test_that("rna works well for m (alloc: 1 bound), H = 1", {
 
 test_that("rna works well for m (alloc: 1 bound), H = 1, non-def cost", {
   tcost <- ucosts[1] * bounds[1]
-  result <- rna(tcost, a[1], bounds[1], ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a[1], bounds[1], ucosts[1], leq)
   expect_identical(result, bounds[1])
 
   # Check details.
-  result_details <- rna(tcost, a[1], bounds[1], ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a[1], bounds[1], ucosts[1], leq, TRUE)
   s0 <- sfun(tcost, a[1], ucosts = ucosts[1])
   expected_details <- list(
     opt = bounds[1], take_neyman = integer(0), take_bound = 1L, s0 = s0, s = NaN, iter = 2L
@@ -206,14 +206,14 @@ test_that("rna works well for m (alloc: 1 bound), H = 1, non-def cost", {
 
 test_that("rna works well for m (alloc: no bounds), H = 4", {
   n <- 600
-  result <- rna(n, a, bounds, check_violations = .Primitive("<="))
+  result <- rna(n, a, bounds, check_violations = leq)
 
   s <- n / sum(a)
   expected <- a * s
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(n, a, bounds, check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a, bounds, check_violations = leq, details = TRUE)
   expected_details <- list(
     opt = expected, take_neyman = 1:4, take_bound = integer(0), s0 = s, s = s, iter = 1L
   )
@@ -222,14 +222,14 @@ test_that("rna works well for m (alloc: no bounds), H = 4", {
 
 test_that("rna works well for m (alloc: no bounds), H = 4, non-def cost", {
   tcost <- 600
-  result <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[1], leq)
 
   s <- sfun(tcost, a, ucosts = ucosts[1])
   expected <- a / sqrt(ucosts[1]) * s
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[1], leq, TRUE)
   expected_details <- list(
     opt = expected, take_neyman = 1:4, take_bound = integer(0), s0 = s, s = s, iter = 1L
   )
@@ -238,14 +238,14 @@ test_that("rna works well for m (alloc: no bounds), H = 4, non-def cost", {
 
 test_that("rna works well for m (alloc: no bounds), H = 4, non-def cost vec", {
   tcost <- 3000
-  result <- rna(tcost, a, bounds, ucosts, .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts, leq)
 
   s <- sfun(tcost, a, ucosts = ucosts)
   expected <- a / sqrt(ucosts) * s
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts, .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts, leq, TRUE)
   expected_details <- list(
     opt = expected, take_neyman = 1:4, take_bound = integer(0), s0 = s, s = s, iter = 1L
   )
@@ -256,7 +256,7 @@ test_that("rna works well for m (alloc: no bounds), H = 4, non-def cost vec", {
 
 test_that("rna works well for m (alloc: 1 bound), H = 4", {
   n <- 500
-  result <- rna(n, a, bounds, check_violations = .Primitive("<="))
+  result <- rna(n, a, bounds, check_violations = leq)
 
   L <- 4L
   Lc <- 1:3
@@ -266,7 +266,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(n, a, bounds, check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a, bounds, check_violations = leq, details = TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 2L
@@ -276,7 +276,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4", {
 
 test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost", {
   tcost <- 350
-  result <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[1], leq)
 
   L <- 4L
   Lc <- 1:3
@@ -286,7 +286,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[1], leq, TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 2L
@@ -296,7 +296,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost", {
 
 test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost vec", {
   tcost <- 2400
-  result <- rna(tcost, a, bounds, ucosts, .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts, leq)
 
   L <- 2L
   Lc <- c(1L, 3L, 4L)
@@ -306,7 +306,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost vec", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts, .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts, leq, TRUE)
   expected_details <- list(
     opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 2L
   )
@@ -317,7 +317,7 @@ test_that("rna works well for m (alloc: 1 bound), H = 4, non-def cost vec", {
 
 test_that("rna works well for m (alloc: 2 bounds), H = 4", {
   n <- 420
-  result <- rna(n, a, bounds, check_violations = .Primitive("<="))
+  result <- rna(n, a, bounds, check_violations = leq)
 
   L <- c(1L, 4L)
   Lc <- 2:3
@@ -327,7 +327,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(n, a, bounds, check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a, bounds, check_violations = leq, details = TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 2L
@@ -337,7 +337,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4", {
 
 test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost", {
   tcost <- 300
-  result <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[1], leq)
 
   L <- c(1L, 4L)
   Lc <- c(2L, 3L)
@@ -347,7 +347,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[1], leq, TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 2L
@@ -357,7 +357,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost", {
 
 test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost vec", {
   tcost <- 2000
-  result <- rna(tcost, a, bounds, ucosts, .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts, leq)
 
   L <- c(2L, 4L)
   Lc <- c(1L, 3L)
@@ -367,7 +367,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost vec", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, unit_costs = ucosts, .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, unit_costs = ucosts, leq, TRUE)
   expected_details <- list(
     opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 3L
   )
@@ -378,7 +378,7 @@ test_that("rna works well for m (alloc: 2 bounds), H = 4, non-def cost vec", {
 
 test_that("rna works well for m (alloc: 3 bounds), H = 4", {
   n <- 370
-  result <- rna(n, a, bounds, check_violations = .Primitive("<="))
+  result <- rna(n, a, bounds, check_violations = leq)
 
   L <- c(1L, 2L, 4L)
   Lc <- 3L
@@ -388,7 +388,7 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(n, a, bounds, check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a, bounds, check_violations = leq, details = TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 3L
@@ -398,7 +398,7 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4", {
 
 test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost", {
   tcost <- 250
-  result <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[1], leq)
 
   L <- c(1L, 2L, 4L)
   Lc <- 3L
@@ -408,7 +408,7 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost", {
   expect_equal(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[1], leq, TRUE)
   s0 <-
     expected_details <- list(
       opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 3L
@@ -418,7 +418,7 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost", {
 
 test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost vec", {
   tcost <- 1850
-  result <- rna(tcost, a, bounds, ucosts, .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts, leq)
 
   L <- c(1L, 2L, 4L)
   Lc <- 3L
@@ -428,7 +428,7 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost vec", {
   expect_identical(result, expected)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts, .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts, leq, TRUE)
   expected_details <- list(
     opt = expected, take_neyman = Lc, take_bound = L, s0 = s0, s = s, iter = 3L
   )
@@ -439,11 +439,11 @@ test_that("rna works well for m (alloc: 3 bounds), H = 4, non-def cost vec", {
 
 test_that("rna works well for n = sum(m), H = 4", {
   n <- sum(bounds)
-  result <- rna(n, a, bounds, check_violations = .Primitive("<="))
+  result <- rna(n, a, bounds, check_violations = leq)
   expect_identical(result, bounds)
 
   # Check details.
-  result_details <- rna(n, a, bounds, check_violations = .Primitive("<="), details = TRUE)
+  result_details <- rna(n, a, bounds, check_violations = leq, details = TRUE)
   expected_details <- list(
     opt = bounds, take_neyman = integer(0), take_bound = 1:4, s0 = n / sum(a), s = NaN, iter = 4L
   )
@@ -452,11 +452,11 @@ test_that("rna works well for n = sum(m), H = 4", {
 
 test_that("rna works well for n = sum(c*m), H = 4, non-def cost", {
   tcost <- sum(bounds * ucosts[2])
-  result <- rna(tcost, a, bounds, ucosts[2], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[2], leq)
   expect_identical(result, bounds)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts[2], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[2], leq, TRUE)
   s0 <- sfun(tcost, a, ucosts = ucosts[2])
   expected_details <- list(
     opt = bounds, take_neyman = integer(0), take_bound = 1:4, s0 = s0, s = NaN, iter = 4L
@@ -466,11 +466,11 @@ test_that("rna works well for n = sum(c*m), H = 4, non-def cost", {
 
 test_that("rna works well for n = sum(c*m), H = 4, non-def cost vec", {
   tcost <- sum(bounds * ucosts)
-  result <- rna(tcost, a, bounds, ucosts, .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts, leq)
   expect_identical(result, bounds)
 
   # Check details.
-  result_details <- rna(tcost, a, bounds, ucosts, .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts, leq, TRUE)
   s0 <- sfun(tcost, a, ucosts = ucosts)
   expected_details <- list(
     opt = bounds, take_neyman = integer(0), take_bound = 1:4, s0 = s0, s = NaN, iter = 4L
@@ -480,7 +480,7 @@ test_that("rna works well for n = sum(c*m), H = 4, non-def cost vec", {
 
 test_that("rna works well for n = sum(c*m), H = 4, non-def cost (finite prec. issue)", {
   tcost <- sum(bounds * ucosts[1])
-  result <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="))
+  result <- rna(tcost, a, bounds, ucosts[1], leq)
   expected <- c(bounds[1:2], 70.00000000000001421085, bounds[4])
   expect_identical(result, expected)
   # note: x_3 != 70 due to c_3 = ucosts[1] = 0.7 stored as 0.6999999999999999555911
@@ -491,7 +491,7 @@ test_that("rna works well for n = sum(c*m), H = 4, non-def cost (finite prec. is
   s0 <- sfun(tcost, a, ucosts = ucosts[1])
   s <- sfun(tcost, a, bounds, ucosts[1], L)
   # 0.01171324037147705721118
-  result_details <- rna(tcost, a, bounds, ucosts[1], .Primitive("<="), TRUE)
+  result_details <- rna(tcost, a, bounds, ucosts[1], leq, TRUE)
   expected_details <- list(
     opt = expected,
     take_neyman = Lc,

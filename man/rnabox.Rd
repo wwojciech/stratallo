@@ -4,25 +4,68 @@
 \alias{rnabox}
 \title{Recursive Neyman Algorithm for Optimal Sample Allocation Under Box Constraints}
 \usage{
-rnabox(n, a, m = NULL, M = NULL)
+rnabox(
+  n,
+  a,
+  bounds1 = NULL,
+  bounds2 = NULL,
+  check_violations1 = .Primitive(">="),
+  check_violations2 = .Primitive("<=")
+)
 }
 \arguments{
 \item{n}{(\code{number})\cr total sample size. A strictly positive scalar.
-If \code{m} is not \code{NULL}, it is then required that \code{n >= sum(m)}.
-If \code{M} is not \code{NULL}, it is then required that \code{n <= sum(m)}.}
+If \code{bounds1} is not \code{NULL}, it is then required that \code{n >= sum(bounds1)}
+(given that \code{bounds1} are treated as lower bounds) or \code{n <= sum(bounds1)}
+(given that \code{bounds1} are treated as upper bounds).
+If \code{bounds2} is not \code{NULL}, it is then required that \code{n >= sum(bounds2)}
+(given that \code{bounds2} are treated as lower bounds) or \code{n <= sum(bounds2)}
+(given that \code{bounds2} are treated as upper bounds).}
 
 \item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
-\item{m}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
-optionally imposed on sample sizes in strata. If no lower bounds should be
-imposed, then \code{m} must be set to \code{NULL}. If \code{M} is not \code{NULL}, it is then
-required that \code{m < M}.}
+\item{bounds1}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
+or upper bounds \eqn{M_1,\ldots,M_H} optionally imposed on sample sizes in
+strata. The interpretation of \code{bounds1} depends on the value of
+\code{check_violations1}. If no one-sided bounds 1 should be imposed, then
+\code{bounds1} must be set to \code{NULL}. If \code{bounds2} is not \code{NULL}, it is then
+required that either \code{bounds1 < bounds2} (in case when \code{bounds1} is treated
+as lower bounds) or \code{bounds1 > bounds2} (in the opposite case).}
 
-\item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
-optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}. If \code{m} is not \code{NULL}, it is then
-required that \code{m < M}.}
+\item{bounds2}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
+or upper bounds \eqn{M_1,\ldots,M_H} optionally imposed on sample sizes in
+strata. The interpretation of \code{bounds2} depends on the value of
+\code{check_violations2}. If no one-sided bounds 2 should be imposed, then
+\code{bounds2} must be set to \code{NULL}. If \code{bounds2} is not \code{NULL}, it is then
+required that either \code{bounds1 < bounds2} (in case when \code{bounds1} is treated
+as lower bounds) or \code{bounds1 > bounds2} (in the opposite case).}
+
+\item{check_violations1}{(\code{function}) \cr 2-arguments binary operator function
+that allows the comparison of values in atomic vectors. It must either be
+set to \code{.Primitive("<=")} or \code{.Primitive(">=")}.
+The first of these choices causes that \code{bounds1} are treated as lower
+bounds and the \code{rnabox()} uses the \emph{LRNA} algorithm as in interim
+algorithm for the allocation problem with one-sided lower bounds \code{bounds1}.
+The latter option causes that \code{bounds1} are treated as upper bounds and the
+\code{rnabox()} uses the \emph{RNA} algorithm as in interim algorithm for the
+allocation problem with one-sided upper bounds \code{bounds1}.
+This parameter is correlated with \code{check_violations2}. That is, these
+arguments must be set against each other.
+\code{check_violations1} is ignored when \code{bounds1} is set to \code{NULL}.}
+
+\item{check_violations2}{(\code{function}) \cr 2-arguments binary operator function
+that allows the comparison of values in atomic vectors. It must either be
+set to \code{.Primitive("<=")} or \code{.Primitive(">=")}.
+The first of these choices causes that \code{bounds2} are treated as lower
+bounds and the \code{rnabox()} uses the \emph{LRNA} algorithm as in interim
+algorithm for the allocation problem with one-sided lower bounds \code{bounds2}.
+The latter option causes that \code{bounds2} are treated as upper bounds and the
+\code{rnabox()} uses the \emph{RNA} algorithm as in interim algorithm for the
+allocation problem with one-sided upper bounds \code{bounds2}.
+This parameter is correlated with \code{check_violations1}. That is, these
+arguments must be set against each other.
+\code{check_violations2} is ignored when \code{bounds2} is set to \code{NULL}.}
 }
 \value{
 Numeric vector with optimal sample allocations in strata.
@@ -57,11 +100,11 @@ M <- N # upper bounds
 
 # An example of a regular allocation.
 n <- 6000
-opt_regular <- rnabox(n, a, m, M)
+opt_regular <- rnabox(n, a, M, m)
 
 # An example of a vertex allocation.
 n <- 4076
-opt_vertex <- rnabox(n, a, m, M)
+opt_vertex <- rnabox(n, a, M, m)
 }
 \references{
 To be added soon.

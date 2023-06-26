@@ -8,8 +8,12 @@ opt(n, a, m = NULL, M = NULL, M_algorithm = "rna")
 }
 \arguments{
 \item{n}{(\code{number})\cr total sample size. A strictly positive scalar.
-If \code{m} is not \code{NULL}, it is then required that \code{n >= sum(m)}.
-If \code{M} is not \code{NULL}, it is then required that \code{n <= sum(m)}.}
+If \code{bounds1} is not \code{NULL}, it is then required that \code{n >= sum(bounds1)}
+(given that \code{bounds1} are treated as lower bounds) or \code{n <= sum(bounds1)}
+(given that \code{bounds1} are treated as upper bounds).
+If \code{bounds2} is not \code{NULL}, it is then required that \code{n >= sum(bounds2)}
+(given that \code{bounds2} are treated as lower bounds) or \code{n <= sum(bounds2)}
+(given that \code{bounds2} are treated as upper bounds).}
 
 \item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}

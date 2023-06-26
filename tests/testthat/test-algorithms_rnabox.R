@@ -3,7 +3,10 @@ M <- c(300, 400, 200, 90)
 # Function ----
 
 test_that("rnabox is valid function", {
-  expect_function(rnabox, args = c("n", "a", "m", "M"))
+  expect_function(
+    rnabox,
+    args = c("n", "a", "bounds1", "bounds2", "check_violations1", "check_violations2")
+  )
 })
 
 # NEITHER `m` NOR `M` IS SPECIFIED ----
@@ -30,7 +33,9 @@ test_that("rnabox works well when no bounds, H = 4)", {
 test_that("rnabox works well for m and M, (pop507)", {
   m <- ceiling(0.3 * N_pop507)
   n_M50 <- ceiling(seq(0.3, 0.99, 0.02) * sum(N_pop507)) # nolintr
-  result <- lapply(n_M50, rnabox, a_pop507, m, N_pop507)
+  result <- lapply(n_M50, rnabox, a_pop507, N_pop507, m)
+  result_twin <- lapply(n_M50, rnabox, a_pop507, m, N_pop507, leq, geq)
+  expect_identical(result, result_twin)
   expect_snapshot(result)
 })
 
@@ -39,21 +44,27 @@ test_that("rnabox works well for m and M, (pop507)", {
 ### alloc: no bound ----
 
 test_that("rnabox works well for m and M (alloc: no bound), H = 1", {
-  result <- rnabox(150, a[1], m = m[1], M = M[1])
+  result <- rnabox(150, a[1], M[1], m[1])
+  result_twin <- rnabox(150, a[1], m[1], M[1], leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, 150)
 })
 
 ### alloc: 1 bound m (n = m) ----
 
 test_that("rnabox works well for m and M (alloc: 1 bound m), H = 1", {
-  result <- rnabox(m[1], a[1], m = m[1], M = M[1])
+  result <- rnabox(m[1], a[1], M[1], m[1])
+  result_twin <- rnabox(m[1], a[1], m[1], M[1], leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, m[1])
 })
 
 ### alloc: 1 bound M (n = M) ----
 
 test_that("rnabox works well for m and M (alloc: 1 bound M), H = 1", {
-  result <- rnabox(M[1], a[1], m = m[1], M = M[1])
+  result <- rnabox(M[1], a[1], M[1], m[1])
+  result_twin <- rnabox(M[1], a[1], m[1], M[1], leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, M[1])
 })
 
@@ -64,46 +75,60 @@ test_that("rnabox works well for m and M (alloc: 1 bound M), H = 1", {
 test_that("rnabox works well for m and M (some population)", {
   S <- c(10.4, 1.8, 0.3, 0.9)
   N <- c(100, 100, 100, 100)
-  result <- rnabox(80, N * S, m = c(10, 10, 10, 10), M = c(30, 30, 30, 30))
+  m <- c(10, 10, 10, 10)
+  M <- c(30, 30, 30, 30)
+  result <- rnabox(80, N * S, M, m)
+  result_twin <- rnabox(80, N * S, m, M, leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, c(30, 26.6667, 10, 13.3333), tolerance = 10 - 9)
 })
 
 ### M with Inf ----
 
 test_that("rnabox works well for m and M with Inf, H = 4", {
-  result <- rnabox(5000, a, m = m, M = c(M[1:3], Inf))
+  result <- rnabox(5000, a, c(M[1:3], Inf), m)
+  result_twin <- rnabox(5000, a, m, c(M[1:3], Inf), leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, c(M[1:3], 4100))
 })
 
 ### alloc: no bounds ----
 
 test_that("rnabox works well for m and M (alloc: no bounds), H = 4", {
-  result <- rnabox(553, a, m, M)
+  result <- rnabox(553, a, M, m)
+  result_twin <- rnabox(553, a, m, M, leq, geq)
   expected <- c(118.5, 158, 197.5, 79)
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 1 bound m ----
 
 test_that("rnabox works well for m and M (alloc: 1 bound m), H = 4", {
-  result <- rnabox(463, a, m, M)
+  result <- rnabox(463, a, M, m)
+  result_twin <- rnabox(463, a, m, M, leq, geq)
   expected <- c(m[1], 132, 165, 66)
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 1 bound M ----
 
 test_that("rnabox works well for m and M (alloc: 1 bound M), H = 4", {
-  result <- rnabox(596, a, m, M)
+  result <- rnabox(596, a, M, m)
+  result_twin <- rnabox(596, a, m, M, leq, geq)
   expected <- c(132, 176, M[3], 88)
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 2 bounds mm ----
 
 test_that("rnabox works well for m and M (alloc: 2 bounds mm), H = 4", {
-  result <- rnabox(366, a, m, M)
+  result <- rnabox(366, a, M, m)
+  result_twin <- rnabox(366, a, m, M, leq, geq)
   expected <- c(m[1], 96, 120, m[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -112,16 +137,20 @@ test_that("rnabox works well for m and M (alloc: 2 bounds mm), H = 4", {
 test_that("rnabox works well for m and M (alloc: 2 bounds mM), H = 4", {
   m[3] <- 500
   M[3] <- 800
-  result <- rnabox(1283, a, m, M)
+  result <- rnabox(1283, a, M, m)
+  result_twin <- rnabox(1283, a, m, M, leq, geq)
   expected <- c(297, 396, m[3], M[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 2 bounds MM ----
 
 test_that("rnabox works well for m and M (alloc: 2 bounds MM), H = 4", {
-  result <- rnabox(976, a, m, M)
+  result <- rnabox(976, a, M, m)
+  result_twin <- rnabox(976, a, m, M, leq, geq)
   expected <- c(294, 392, M[3:4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -130,8 +159,10 @@ test_that("rnabox works well for m and M (alloc: 2 bounds MM), H = 4", {
 test_that("rnabox works well for m and M (alloc: 3 bounds mmm), H = 4", {
   m[3] <- 500
   M[3] <- 800
-  result <- rnabox(748, a, m, M)
+  result <- rnabox(748, a, M, m)
+  result_twin <- rnabox(748, a, m, M, leq, geq)
   expected <- c(m[1], 98, m[3:4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -139,8 +170,10 @@ test_that("rnabox works well for m and M (alloc: 3 bounds mmm), H = 4", {
 
 test_that("rnabox works well for m and M (alloc: 3 bounds mmM), H = 4", {
   a[4] <- 7000
-  result <- rnabox(384, a, m, M)
+  result <- rnabox(384, a, M, m)
+  result_twin <- rnabox(384, a, m, M, leq, geq)
   expected <- c(m[1:2], 104, M[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -149,8 +182,10 @@ test_that("rnabox works well for m and M (alloc: 3 bounds mmM), H = 4", {
 test_that("rnabox works well for m and M (alloc: 3 bounds mMM), H = 4", {
   m[3] <- 700
   M[2:3] <- c(100, 900)
-  result <- rnabox(1174, a, m, M)
+  result <- rnabox(1174, a, M, m)
+  result_twin <- rnabox(1174, a, m, M, leq, geq)
   expected <- c(284, M[2], m[3], M[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -159,22 +194,28 @@ test_that("rnabox works well for m and M (alloc: 3 bounds mMM), H = 4", {
 test_that("rnabox works well for m and M (alloc: 3 bounds MMM), H = 4", {
   m[3] <- 700
   M[2:3] <- c(100, 900)
-  result <- rnabox(1284, a, m, M)
+  result <- rnabox(1284, a, M, m)
+  result_twin <- rnabox(1284, a, m, M, leq, geq)
   expected <- c(M[1:2], 794, M[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 4 bounds mmmm (n = sum(m))----
 
 test_that("rnabox works well for m and M (alloc: 4 bounds mmmm), H = 4", {
-  result <- rnabox(310, a, m, M)
+  result <- rnabox(310, a, M, m)
+  result_twin <- rnabox(310, a, m, M, leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, m)
 })
 
 ### alloc: 4 bounds MMMM (n = sum(M)) ----
 
 test_that("rnabox works well for m and M (alloc: 4 bounds MMMM), H = 4", {
-  result <- rnabox(990, a, m, M)
+  result <- rnabox(990, a, M, m)
+  result_twin <- rnabox(990, a, m, M, leq, geq)
+  expect_identical(result, result_twin)
   expect_equal(result, M)
 })
 
@@ -183,8 +224,10 @@ test_that("rnabox works well for m and M (alloc: 4 bounds MMMM), H = 4", {
 test_that("rnabox works well for m and M (vertex mmmM), H = 4", {
   m[3] <- 700
   M[2:3] <- c(100, 900)
-  result <- rnabox(950, a, m, M)
+  result <- rnabox(950, a, M, m)
+  result_twin <- rnabox(950, a, m, M, leq, geq)
   expected <- c(m[1], M[2], m[3:4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -199,8 +242,10 @@ test_that("rnabox works well for m and M, H = 10 (vertex)", {
   m <- c(322, 3, 57, 207, 715, 121, 9, 1246, 1095, 294)
   M <- N
 
-  result <- rnabox(4076, a, m, M)
+  result <- rnabox(4076, a, M, m)
+  result_twin <- rnabox(4076, a, m, M, leq, geq)
   expected <- c(m[1], M[2], m[3:10])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -210,7 +255,12 @@ test_that("rnabox works well for m and M, H = 10 (vertex)", {
 
 test_that("rnabox works well for m, (pop507)", {
   n_m51 <- seq(1, 2, 0.02) * sum(N_pop507)
-  result <- lapply(n_m51, rnabox, a_pop507, N_pop507)
+  result <- lapply(n_m51, rnabox, a_pop507, bounds2 = N_pop507)
+  result_twin <- lapply(
+    n_m51, rnabox, a_pop507, N_pop507,
+    check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_snapshot(result)
 })
 
@@ -219,14 +269,24 @@ test_that("rnabox works well for m, (pop507)", {
 ### alloc: no bound ----
 
 test_that("rnabox works well for m (alloc: no bound), H = 1", {
-  result <- rnabox(101, a[1], m[1])
+  result <- rnabox(101, a[1], bounds2 = m[1])
+  result_twin <- rnabox(
+    101, a[1], m[1],
+    check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, 101)
 })
 
 ### alloc: 1 bound (n = m) ----
 
 test_that("rnabox works well for m (alloc: 1 bound), H = 1", {
-  result <- rnabox(m[1], a[1], m[1])
+  result <- rnabox(m[1], a[1], bounds2 = m[1])
+  result_twin <- rnabox(
+    m[1], a[1], m[1],
+    check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, m[1])
 })
 
@@ -235,39 +295,64 @@ test_that("rnabox works well for m (alloc: 1 bound), H = 1", {
 ### alloc: no bounds ----
 
 test_that("rnabox works well for m (alloc: no bounds), H = 4", {
-  result <- rnabox(600, a, m)
+  result <- rnabox(600, a, bounds2 = m)
+  result_twin <- rnabox(
+    600, a, m,
+    check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(128.57143, 171.42857, 214.28571, 85.71429)
+  expect_identical(result, result_twin)
   expect_equal(result, expected, tolerance = 1e-7)
 })
 
 ### alloc: 1 bound ----
 
 test_that("rnabox works well for m (alloc: 1 bound), H = 4", {
-  result <- rnabox(463, a, m)
+  result <- rnabox(463, a, bounds2 = m)
+  result_twin <- rnabox(
+    463, a, m,
+    check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(m[1], 132, 165, 66)
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 2 bounds----
 
 test_that("rnabox works well for m (alloc: 2 bounds), H = 4", {
-  result <- rnabox(375, a, m)
+  result <- rnabox(375, a, bounds2 = m)
+  result_twin <- rnabox(
+    375, a, m,
+    check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(m[1], 100, 125, m[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected, tolerance = 1e-6)
 })
 
 ### alloc: 3 bounds----
 
 test_that("rnabox works well for m (alloc: 3 bounds), H = 4", {
-  result <- rnabox(338, a, m)
+  result <- rnabox(338, a, bounds2 = m)
+  result_twin <- rnabox(
+    338, a, m,
+    check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(m[1:2], 98, m[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 4 bounds (n = sum(m))----
 
 test_that("rnabox works well for n = sum(m), H = 4", {
-  result <- rnabox(310, a, m)
+  result <- rnabox(310, a, bounds2 = m)
+  result_twin <- rnabox(
+    310, a, m,
+    check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, m)
 })
 
@@ -277,7 +362,12 @@ test_that("rnabox works well for n = sum(m), H = 4", {
 
 test_that("rnabox works well for M, (pop507)", {
   n_M50 <- seq(0.01, 0.99, 0.02) * sum(N_pop507) # nolintr
-  result <- lapply(n_M50, rnabox, a_pop507, M = N_pop507)
+  result <- lapply(n_M50, rnabox, a_pop507, N_pop507)
+  result_twin <- lapply(
+    n_M50, rnabox, a_pop507,
+    bounds2 = N_pop507, check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_snapshot(result)
 })
 
@@ -286,14 +376,24 @@ test_that("rnabox works well for M, (pop507)", {
 ### alloc: no bound ----
 
 test_that("rnabox works well for M (alloc: no bound), H = 1", {
-  result <- rnabox(99, a[1], M = M[1])
+  result <- rnabox(99, a[1], M[1])
+  result_twin <- rnabox(
+    99, a[1],
+    bounds2 = M[1], check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, 99)
 })
 
 ### alloc: 1 bound (n = M) ----
 
 test_that("rnabox works well for M (alloc: 1 bound), H = 1", {
-  result <- rnabox(M[1], a[1], M = M[1])
+  result <- rnabox(M[1], a[1], M[1])
+  result_twin <- rnabox(
+    M[1], a[1],
+    bounds2 = M[1], check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, M[1])
 })
 
@@ -302,31 +402,51 @@ test_that("rnabox works well for M (alloc: 1 bound), H = 1", {
 ### M with Inf ----
 
 test_that("rnabox works well for M with Inf, H = 4", {
-  result <- rnabox(5000, a, M = c(M[1:3], Inf))
+  result <- rnabox(5000, a, c(M[1:3], Inf))
+  result_twin <- rnabox(
+    5000, a,
+    bounds2 = c(M[1:3], Inf), check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, c(M[1:3], 4100))
 })
 
 ### alloc: no bounds ----
 
 test_that("rnabox works well for M (alloc: no bounds), H = 4", {
-  result <- rnabox(190, a, M = M)
+  result <- rnabox(190, a, M)
+  result_twin <- rnabox(
+    190, a,
+    bounds2 = M, check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(40.71429, 54.28571, 67.85714, 27.14286)
+  expect_identical(result, result_twin)
   expect_equal(result, expected, tolerance = 1e-7)
 })
 
 ### alloc: 1 bound ----
 
 test_that("rnabox works well for M (alloc: 1 bound), H = 4", {
-  result <- rnabox(596, a, M = M)
+  result <- rnabox(596, a, M)
+  result_twin <- rnabox(
+    596, a,
+    bounds2 = M, check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(132, 176, M[3], 88)
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 2 bounds ----
 
 test_that("rnabox works well for M (alloc: 2 bounds), H = 4", {
-  result <- rnabox(962, a, M = M)
+  result <- rnabox(962, a, M)
+  result_twin <- rnabox(
+    962, a,
+    bounds2 = M, check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(288, 384, M[3:4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
@@ -335,14 +455,24 @@ test_that("rnabox works well for M (alloc: 2 bounds), H = 4", {
 test_that("rnabox works well for M (alloc: 3 bounds), H = 4", {
   m[3] <- 700
   M[2:3] <- c(100, 900)
-  result <- rnabox(1200, a, M = M)
+  result <- rnabox(1200, a, M)
+  result_twin <- rnabox(
+    1200, a,
+    bounds2 = M, check_violations1 = leq, check_violations2 = geq
+  )
   expected <- c(M[1:2], 710, M[4])
+  expect_identical(result, result_twin)
   expect_equal(result, expected)
 })
 
 ### alloc: 4 bounds (n = sum(M)) ----
 
 test_that("rnabox works well for n = sum(M), H = 4", {
-  result <- rnabox(990, a, M = M)
+  result <- rnabox(990, a, M)
+  result_twin <- rnabox(
+    990, a,
+    bounds2 = M, check_violations1 = leq, check_violations2 = geq
+  )
+  expect_identical(result, result_twin)
   expect_equal(result, M)
 })

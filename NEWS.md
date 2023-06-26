@@ -2,6 +2,9 @@
 
 # stratallo 2.2.1
 
+* Updated `rnabox()` so that it can perform both versions of the RNABOX
+  algorithm, i.e.: step 1 handles one-sided upper bounds whilst step 2 handles
+  one-sided lower bounds, or conversely, depending on the user preferences.
 * Minor help and vignette updates, corrected typos from previous release.
 
 # stratallo 2.2.0

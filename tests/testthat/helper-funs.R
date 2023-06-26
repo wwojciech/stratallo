@@ -12,3 +12,6 @@ sfun <- function(n, a, bounds = NULL, ucosts = 1, R = NULL) {
     (n - sum((ucosts * bounds)[R])) / sum((a * sqrt(ucosts))[Rc])
   }
 }
+
+leq <- .Primitive("<=")
+geq <- .Primitive(">=")

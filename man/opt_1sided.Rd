@@ -54,7 +54,7 @@ set to \code{.Primitive("<=")} or \code{.Primitive(">=")}. The first of these ch
 causes that \code{bounds} are treated as lower bounds and then \code{rna()} function
 performs the \emph{LRNA} algorithm. The latter option causes that \code{bounds}
 are treated as upper bounds, and then \code{rna()} function performs the
-\emph{RNA} algorithm.  This flag is ignored when \code{bounds} is set to \code{NULL}.}
+\emph{RNA} algorithm. This argument is ignored when \code{bounds} is set to \code{NULL}.}
 
 \item{details}{(\code{flag}) \cr should detailed information about strata
 assignments (either to take-Neyman or take-bound), values of set function

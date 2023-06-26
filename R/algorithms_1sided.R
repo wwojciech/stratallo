@@ -135,7 +135,7 @@ NULL
 #'   causes that `bounds` are treated as lower bounds and then `rna()` function
 #'   performs the \emph{LRNA} algorithm. The latter option causes that `bounds`
 #'   are treated as upper bounds, and then `rna()` function performs the
-#'   \emph{RNA} algorithm.  This flag is ignored when `bounds` is set to `NULL`.
+#'   \emph{RNA} algorithm. This argument is ignored when `bounds` is set to `NULL`.
 #' @param details (`flag`) \cr should detailed information about strata
 #'   assignments (either to take-Neyman or take-bound), values of set function
 #'   \eqn{s} and number of iterations be added to the output?
