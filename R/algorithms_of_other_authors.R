@@ -205,8 +205,8 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100, tol = .Machine$double.eps * 1000) {
   H <- seq_along(Nh)
   Ah <- Sh * Nh
-  Ah2mh2 <- (dh / mh)^2
-  Ah2Mh2 <- (dh / Mh)^2
+  Ah2mh2 <- (Ah / mh)^2
+  Ah2Mh2 <- (Ah / Mh)^2
 
   lambda <- if (is.null(lambda0)) {
     (sum(Ah) / n)^2 # according to article MSW
