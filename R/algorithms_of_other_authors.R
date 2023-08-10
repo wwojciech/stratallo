@@ -139,8 +139,8 @@ CapacityScaling2 <- function(v0, Nh, Sh,
     stop("There are no feasible solutions")
   }
 
-  dh <- Nh * Sh
-  ah <- dh / sum(dh)
+  Ah <- Nh * Sh
+  ah <- Ah / sum(dh)
   n <- sum((Sh / ah) * Sh * Nh * Nh) / (v0 + sum(Nh * Sh * Sh))
   n <- round(n)
 
@@ -170,7 +170,7 @@ CapacityScaling2 <- function(v0, Nh, Sh,
     s <- ceiling(s / 2)
   }
 
-  SimpleGreedy2(v0, Nh, Sh, mh, Mh, nh)$nh
+  SimpleGreedy2(v0, Nh, Sh, mh, Mh, nh)
   # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
   # return(list(nh = nh, v = v))
 }
@@ -204,15 +204,15 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 #'
 fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100, tol = .Machine$double.eps * 1000) {
   H <- seq_along(Nh)
-  dh <- Sh * Nh
-  dh2mh2 <- (dh / mh)^2
-  dh2Mh2 <- (dh / Mh)^2
+  Ah <- Sh * Nh
+  Ah2mh2 <- (dh / mh)^2
+  Ah2Mh2 <- (dh / Mh)^2
 
   lambda <- if (is.null(lambda0)) {
-    (sum(dh) / n)^2 # according to article MSW
+    (sum(Ah) / n)^2 # according to article MSW
 
     # # initial interval for searching 'lambda' - according to J.Wesolowski
-    # r <- c(dh / mh, dh / Mh)
+    # r <- c(Ah / mh, Ah / Mh)
     # a <- min(r)^2
     # b <- max(r)^2
     # lambda <- uniroot(
@@ -226,11 +226,11 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
   iter <- 0
   while (1) {
     iter <- iter + 1
-    L <- which(dh2mh2 <= lambda)
-    U <- which(dh2Mh2 >= lambda)
+    L <- which(Ah2mh2 <= lambda)
+    U <- which(Ah2Mh2 >= lambda)
     Hc <- H[-c(L, U)]
 
-    lambda_n <- (sum(dh[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2
+    lambda_n <- (sum(Ah[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2
     if (iter > maxiter || abs(lambda_n - lambda) < tol || is.nan(lambda_n)) {
       break
     }
@@ -238,7 +238,7 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
     # cat("iteracja ",iter," lambda ",lambda,"\n")
   }
 
-  nh <- dh / sqrt(lambda)
+  nh <- Ah / sqrt(lambda)
   nh[L] <- mh[L]
   nh[U] <- Mh[U]
 
@@ -250,12 +250,12 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
 
 glambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   H <- seq_along(Nh)
-  dh <- Sh * Nh
+  Ah <- Sh * Nh
 
-  L <- which((dh / mh)^2 <= lambda)
-  U <- which((dh / Mh)^2 >= lambda)
+  L <- which((Ah / mh)^2 <= lambda)
+  U <- which((Ah / Mh)^2 >= lambda)
 
-  nh <- dh / sqrt(lambda)
+  nh <- Ah / sqrt(lambda)
   nh[L] <- mh[L]
   nh[U] <- Mh[U]
 
@@ -264,12 +264,34 @@ glambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
 
 philambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   H <- seq_along(Nh)
-  dh <- Sh * Nh
+  Ah <- Sh * Nh
 
-  L <- which((dh / mh)^2 <= lambda)
-  U <- which((dh / Mh)^2 >= lambda)
+  L <- which((Ah / mh)^2 <= lambda)
+  U <- which((Ah / Mh)^2 >= lambda)
   Hc <- H[-c(L, U)]
 
   # cat("L: ",L," U: ",U,"\n")
-  (sum(dh[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2 # lambda_n
+  (sum(Ah[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2 # lambda_n
 }
+
+
+#' @describeIn fpia
+#'
+#' @param v0 - upper limit for value of variance which must be attained for
+#'   computed optimal allocation.
+#'
+fpia2 <- function(v0, Nh, Sh, mh=NULL, Mh=NULL, lambda0=NULL, maxiter=100)
+{
+  Sh[Sh==0] <- 1e-8
+  #if (is.null(lambda0)) lambda0 <- 1e-6
+  Ah <- Sh*Nh
+  nh <- fpia(v0+sum(Nh*Sh*Sh), Nh, Sh, Ah*Ah/Mh, Ah*Ah/mh, lambda0=lambda0,maxiter=maxiter)$nh
+
+  nh <- (Ah^2)/nh
+  #v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
+  
+  return(nh)
+  #return(list(nh = nh, v = v))
+
+}
+
