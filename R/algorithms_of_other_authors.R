@@ -140,7 +140,7 @@ CapacityScaling2 <- function(v0, Nh, Sh,
   }
 
   Ah <- Nh * Sh
-  ah <- Ah / sum(dh)
+  ah <- Ah / sum(Ah)
   n <- sum((Sh / ah) * Sh * Nh * Nh) / (v0 + sum(Nh * Sh * Sh))
   n <- round(n)
 
