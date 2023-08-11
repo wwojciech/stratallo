@@ -6,7 +6,7 @@
 \title{Integer-valued Optimal Univariate Allocation Under Constraints for Stratified
 Sampling}
 \usage{
-CapacityScaling(n, Nh, Sh, mh = rep(1, length(Nh)), Mh = rep(Inf, length(Nh)))
+CapacityScaling(n, Ah, mh = rep(1, length(Ah)), Mh = rep(Inf, length(Ah)))
 
 CapacityScaling2(
   v0,
@@ -21,12 +21,8 @@ CapacityScaling2(
 \item target sample size for allocation.
 }}
 
-\item{Nh}{\itemize{
-\item population sizes in strata.
-}}
-
-\item{Sh}{\itemize{
-\item standard deviations for given variable in strata.
+\item{Ah}{\itemize{
+\item population strata sizes * standard deviations of a given variable in strata.
 }}
 
 \item{mh}{\itemize{
@@ -40,6 +36,14 @@ CapacityScaling2(
 \item{v0}{\itemize{
 \item upper limit for value of variance which must be attained for
 computed optimal allocation.
+}}
+
+\item{Nh}{\itemize{
+\item population strata sizes.
+}}
+
+\item{Sh}{\itemize{
+\item standard deviations of a given variable in strata.
 }}
 }
 \value{

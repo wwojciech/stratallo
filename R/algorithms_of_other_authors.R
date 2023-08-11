@@ -7,8 +7,7 @@
 #' optimal allocation in stratified sampling.
 #'
 #' @param n -  target sample size for allocation.
-#' @param Nh - population sizes in strata.
-#' @param Sh - standard deviations for given variable in strata.
+#' @param Ah - population strata sizes * standard deviations of a given variable in strata.
 #' @param mh - lower constraints for sample sizes in strata.
 #' @param Mh - upper constraints for sample sizes in strata.
 #' @param nh - initial allocation (if not given then nh=mh).
@@ -22,42 +21,37 @@
 #'   *Computational Statistics and Data Analysis*, 92, pp. 1–12.
 #'   \url{https://www.sciencedirect.com/science/article/pii/S0167947315001413}
 #'
-SimpleGreedy <- function(n, Nh, Sh,
-                         mh = rep(1, length(Nh)),
-                         Mh = rep(Inf, length(Nh)),
-                         nh = NULL) {
-  if (is.null(nh)) nh <- mh
-
-  if (any(nh > Mh)) {
+SimpleGreedy <- function(n, Ah,
+                         mh = rep(1, length(Ah)),
+                         Mh = rep(Inf, length(Ah)),
+                         nh = mh) {
+  if (any(nh > Mh) || any(mh > Mh)) {
     stop("There are no feasible solutions")
   }
 
   r <- 0L
   while (sum(nh) < n) {
     r <- r + 1
-    Vh <- Nh * Sh / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
+    Vh <- Ah / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
     h <- which.max(Vh)
     nh[h] <- nh[h] + 1
   }
 
-  return(nh)
-
-  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  # return(list(nh = nh, v = v))
+  nh
 }
 
 #' @describeIn SimpleGreedy
 #'
+#' @param Nh - population strata sizes.
+#' @param Sh - standard deviations of a given variable in strata.
 #' @param v0 - upper limit for value of variance which must be attained for
 #'   computed optimal allocation.
 #'
 SimpleGreedy2 <- function(v0, Nh, Sh,
                           mh = rep(1, length(Nh)),
                           Mh = Nh,
-                          nh = NULL) {
-  if (is.null(nh)) nh <- mh
-
-  if (any(nh > Mh)) {
+                          nh = mh) {
+  if (any(nh > Mh) || any(mh > Mh)) {
     stop("There are no feasible solutions")
   }
 
@@ -71,11 +65,7 @@ SimpleGreedy2 <- function(v0, Nh, Sh,
     nh[h] <- nh[h] + 1
     v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
   }
-
-  return(nh)
-
-  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  # return(list(nh = nh, v = v))
+  nh
 }
 
 #' Integer-valued Optimal Univariate Allocation Under Constraints for Stratified
@@ -89,23 +79,23 @@ SimpleGreedy2 <- function(v0, Nh, Sh,
 #' @inheritParams SimpleGreedy
 #' @inherit SimpleGreedy return references
 #'
-CapacityScaling <- function(n, Nh, Sh,
-                            mh = rep(1, length(Nh)),
-                            Mh = rep(Inf, length(Nh))) {
-  nh <- mh
-
-  if (any(nh > Mh)) {
+CapacityScaling <- function(n, Ah,
+                            mh = rep(1, length(Ah)),
+                            Mh = rep(Inf, length(Ah))) {
+  if (any(mh > Mh)) {
     stop("There are no feasible solutions")
+  } else {
+    nh <- mh
   }
 
-  H <- length(Nh)
+  H <- length(Ah)
   s <- ceiling(n / (2 * H))
 
   while (s > 1) {
     r <- 0L
     while (sum(nh) < n) {
       r <- r + 1
-      Vh <- Nh * Sh / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
+      Vh <- Ah / sqrt(nh * (nh + 1)) * (nh + 1 <= Mh)
       h <- which.max(Vh)
       if (nh[h] + 1 <= Mh[h]) {
         if (nh[h] + s <= Mh[h]) {
@@ -120,37 +110,32 @@ CapacityScaling <- function(n, Nh, Sh,
     s <- ceiling(s / 2)
   }
 
-  SimpleGreedy(n, Nh, Sh, mh, Mh, nh)
-  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  # return(list(nh = nh, v = v))
+  SimpleGreedy(n, Ah, mh, Mh, nh)
 }
 
 #' @describeIn CapacityScaling
 #'
-#' @param v0 - upper limit for value of variance which must be attained for
-#'   computed optimal allocation.
+#' @inheritParams SimpleGreedy2
 #'
 CapacityScaling2 <- function(v0, Nh, Sh,
                              mh = rep(1, length(Nh)),
                              Mh = rep(Inf, length(Nh))) {
-  nh <- mh
-
-  if (any(nh > Mh)) {
+  if (any(mh > Mh)) {
     stop("There are no feasible solutions")
+  } else {
+    nh <- mh
   }
 
   Ah <- Nh * Sh
-  ah <- Ah / sum(Ah)
-  n <- sum((Sh / ah) * Sh * Nh * Nh) / (v0 + sum(Nh * Sh * Sh))
+  n <- sum(Ah)^2 / (v0 + sum(Ah * Sh))
   n <- round(n)
 
-  H <- length(Nh)
-  s <- ceiling(n / (2 * H))
-  # cat("n s",n,s,"\n")
+  s <- ceiling(n / (2 * length(Ah)))
+  # cat("n s", n, s, "\n")
 
   while (!is.na(s) && s > 1) {
     r <- 0L
-    v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
+    v <- sum(Ah * Sh * (Nh - nh) / nh)
 
     while (v > v0 && sum(nh) < sum(Nh)) {
       r <- r + 1
@@ -163,7 +148,7 @@ CapacityScaling2 <- function(v0, Nh, Sh,
           nh[h] <- nh[h] + 1
         }
       }
-      v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
+      v <- sum(Ah * Sh * (Nh - nh) / nh)
     }
 
     nh <- pmax(nh - s, mh)
@@ -171,8 +156,6 @@ CapacityScaling2 <- function(v0, Nh, Sh,
   }
 
   SimpleGreedy2(v0, Nh, Sh, mh, Mh, nh)
-  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  # return(list(nh = nh, v = v))
 }
 
 
@@ -184,11 +167,7 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 #' Algorithm for optimal allocation in stratified sampling with lower and upper
 #' constraints based on fixed point iteration.
 #'
-#' @param n - target sample size for allocation.
-#' @param Nh - population sizes in strata.
-#' @param Sh - standard deviations for given variable in strata.
-#' @param mh - lower constraints for sample sizes in strata.
-#' @param Mh - upper constraints for sample sizes in strata.
+#' @inheritParams SimpleGreedy
 #' @param lambda0 - initial parameter 'lambda' (optional).
 #' @param maxiter - maximal number of iterations for algorithm.
 #' @param tol - the desired accuracy (convergence tolerance).
@@ -202,9 +181,8 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 #'   *AStA Advances in Statistical Analysis*, 96(3), pp. 435-450.
 #'   \doi{10.1007/s10182-011-0176-z}
 #'
-fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100, tol = .Machine$double.eps * 1000) {
-  H <- seq_along(Nh)
-  Ah <- Sh * Nh
+fpia <- function(n, Ah, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100, tol = .Machine$double.eps * 1000) {
+  H <- seq_along(Ah)
   Ah2mh2 <- (Ah / mh)^2
   Ah2Mh2 <- (Ah / Mh)^2
 
@@ -242,16 +220,24 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
   nh[L] <- mh[L]
   nh[U] <- Mh[U]
 
-  # v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
   list(nh = nh, iter = iter)
+}
+
+#' @describeIn fpia
+#'
+#' @inheritParams fpia
+#'
+fpia2 <- function(v0, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100) {
+  Sh[Sh == 0] <- 1e-8
+  # if (is.null(lambda0)) lambda0 <- 1e-6
+  Ah <- Sh * Nh
+  nh <- fpia(v0 + sum(Ah * Sh), Ah, Ah^2 / Mh, Ah^2 / mh, lambda0 = lambda0, maxiter = maxiter)$nh
+  (Ah^2) / nh
 }
 
 # auxiliary functions
 
-glambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
-  H <- seq_along(Nh)
-  Ah <- Sh * Nh
-
+glambda <- function(lambda, n, Ah, mh = NULL, Mh = NULL) {
   L <- which((Ah / mh)^2 <= lambda)
   U <- which((Ah / Mh)^2 >= lambda)
 
@@ -262,9 +248,8 @@ glambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   sum(nh) - n
 }
 
-philambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
-  H <- seq_along(Nh)
-  Ah <- Sh * Nh
+philambda <- function(lambda, n, Ah, mh = NULL, Mh = NULL) {
+  H <- seq_along(Ah)
 
   L <- which((Ah / mh)^2 <= lambda)
   U <- which((Ah / Mh)^2 >= lambda)
@@ -273,25 +258,3 @@ philambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   # cat("L: ",L," U: ",U,"\n")
   (sum(Ah[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2 # lambda_n
 }
-
-
-#' @describeIn fpia
-#'
-#' @param v0 - upper limit for value of variance which must be attained for
-#'   computed optimal allocation.
-#'
-fpia2 <- function(v0, Nh, Sh, mh=NULL, Mh=NULL, lambda0=NULL, maxiter=100)
-{
-  Sh[Sh==0] <- 1e-8
-  #if (is.null(lambda0)) lambda0 <- 1e-6
-  Ah <- Sh*Nh
-  nh <- fpia(v0+sum(Nh*Sh*Sh), Nh, Sh, Ah*Ah/Mh, Ah*Ah/mh, lambda0=lambda0,maxiter=maxiter)$nh
-
-  nh <- (Ah^2)/nh
-  #v <- sum(Nh * (Nh - nh) * Sh^2 / nh)
-  
-  return(nh)
-  #return(list(nh = nh, v = v))
-
-}
-

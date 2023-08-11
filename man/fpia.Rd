@@ -2,36 +2,63 @@
 % Please edit documentation in R/algorithms_of_other_authors.R
 \name{fpia}
 \alias{fpia}
-\title{Integer-valued Optimal Univariate Allocation Under Constraints for Stratified
+\alias{fpia2}
+\title{Optimal Univariate Allocation Under Constraints for Stratified
 Sampling}
 \usage{
 fpia(
   n,
-  Nh,
-  Sh,
+  Ah,
   mh = NULL,
   Mh = NULL,
   lambda0 = NULL,
   maxiter = 100,
   tol = .Machine$double.eps * 1000
 )
+
+fpia2(v0, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100)
 }
 \arguments{
-\item{n}{target sample size for allocation.}
+\item{n}{\itemize{
+\item target sample size for allocation.
+}}
 
-\item{Nh}{population sizes in strata.}
+\item{Ah}{\itemize{
+\item population strata sizes * standard deviations of a given variable in strata.
+}}
 
-\item{Sh}{standard deviations for given variable in strata.}
+\item{mh}{\itemize{
+\item lower constraints for sample sizes in strata.
+}}
 
-\item{mh}{lower constraints for sample sizes in strata.}
+\item{Mh}{\itemize{
+\item upper constraints for sample sizes in strata.
+}}
 
-\item{Mh}{upper constraints for sample sizes in strata.}
+\item{lambda0}{\itemize{
+\item initial parameter 'lambda' (optional).
+}}
 
-\item{lambda0}{initial parameter 'lambda' (optional).}
+\item{maxiter}{\itemize{
+\item maximal number of iterations for algorithm.
+}}
 
-\item{maxiter}{maximal number of iterations for algorithm.}
+\item{tol}{\itemize{
+\item the desired accuracy (convergence tolerance).
+}}
 
-\item{tol}{the desired accuracy (convergence tolerance).}
+\item{v0}{\itemize{
+\item upper limit for value of variance which must be attained for
+computed optimal allocation.
+}}
+
+\item{Nh}{\itemize{
+\item population strata sizes.
+}}
+
+\item{Sh}{\itemize{
+\item standard deviations of a given variable in strata.
+}}
 }
 \value{
 A vector of optimal allocation sizes, and number of iterations.
@@ -42,6 +69,11 @@ A vector of optimal allocation sizes, and number of iterations.
 Algorithm for optimal allocation in stratified sampling with lower and upper
 constraints based on fixed point iteration.
 }
+\section{Functions}{
+\itemize{
+\item \code{fpia2()}: 
+
+}}
 \references{
 Münnich, R. T., Sachs, E.W. and Wagner, M. (2012)
 Numerical solution of optimal allocation problems in stratified sampling
