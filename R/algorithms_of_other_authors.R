@@ -176,7 +176,7 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 }
 
 
-#' Integer-valued Optimal Univariate Allocation Under Constraints for Stratified
+#' Optimal Univariate Allocation Under Constraints for Stratified
 #' Sampling
 #'
 #' @description `r lifecycle::badge("experimental")`
@@ -184,14 +184,14 @@ CapacityScaling2 <- function(v0, Nh, Sh,
 #' Algorithm for optimal allocation in stratified sampling with lower and upper
 #' constraints based on fixed point iteration.
 #'
-#' @param n target sample size for allocation.
-#' @param Nh population sizes in strata.
-#' @param Sh standard deviations for given variable in strata.
-#' @param mh lower constraints for sample sizes in strata.
-#' @param Mh upper constraints for sample sizes in strata.
-#' @param lambda0 initial parameter 'lambda' (optional).
-#' @param maxiter maximal number of iterations for algorithm.
-#' @param tol the desired accuracy (convergence tolerance).
+#' @param n - target sample size for allocation.
+#' @param Nh - population sizes in strata.
+#' @param Sh - standard deviations for given variable in strata.
+#' @param mh - lower constraints for sample sizes in strata.
+#' @param Mh - upper constraints for sample sizes in strata.
+#' @param lambda0 - initial parameter 'lambda' (optional).
+#' @param maxiter - maximal number of iterations for algorithm.
+#' @param tol - the desired accuracy (convergence tolerance).
 #'
 #' @return A vector of optimal allocation sizes, and number of iterations.
 #'
