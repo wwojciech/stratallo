@@ -55,9 +55,9 @@ NULL
 #'   Neyman allocation as:
 #'   \deqn{x_h = \frac{A_h}{\sqrt{c_h}} \frac{n}{\sum_{i=1}^H A_i \sqrt{c_i}},
 #'   \quad h = 1,\ldots,H.}
-#'   For \emph{stratified \eqn{\pi} estimator} of the population total and for
-#'   \emph{stratified simple random sampling without replacement} design, the
-#'   parameters of the objective function \eqn{f} are
+#'   For \emph{stratified \eqn{\pi} estimator} of the population total with
+#'   \emph{stratified simple random sampling without replacement} design in use,
+#'   the parameters of the objective function \eqn{f} are:
 #'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
 #'   where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 #'   standard deviation of a given study variable in stratum \eqn{h}.

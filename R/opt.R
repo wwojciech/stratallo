@@ -55,9 +55,9 @@
 #' @note If no inequality constraints are added, the allocation is given by the
 #'   Neyman allocation as:
 #'   \deqn{x_h = A_h \frac{n}{\sum_{i=1}^H A_i}, \quad h = 1,\ldots,H.}
-#'   For \emph{stratified \eqn{\pi} estimator} of the population total and for
-#'   \emph{stratified simple random sampling without replacement} design, the
-#'   parameters of the objective function \eqn{f} are
+#'   For \emph{stratified \eqn{\pi} estimator} of the population total with
+#'   \emph{stratified simple random sampling without replacement} design in use,
+#'   the parameters of the objective function \eqn{f} are:
 #'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
 #'   where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 #'   standard deviation of a given study variable in stratum \eqn{h}.
@@ -161,7 +161,7 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #'   described in Wójciak (2023). The allocation computed is valid for all
 #'   stratified sampling schemes for which the variance of the stratified
 #'   estimator is of the form:
-#'   \deqn{V(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+#'   \deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
 #'   where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are
 #'   strata sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, do not
 #'   depend on \eqn{x_h,\, h = 1,\ldots,H}.
@@ -170,6 +170,7 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #'   for \emph{stratified simple random sampling without replacement} design,
 #'   the population parameters are as follows:
 #'   \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+#'   \deqn{A_0 = \sum_{h=1}^H N_h S_h^2,}
 #'   where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 #'   standard deviation of a given study variable in stratum \eqn{h}.
 #'
@@ -179,6 +180,9 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #'   strictly positive scalar. If `M` is not `NULL`, it is then required that
 #'   `V >= sum(a^2/M) - a0`.
 #' @param a0 (`number`)\cr population constant \eqn{A_0}.
+#' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
+#'   optionally imposed on sample sizes in strata. If no upper bounds should be
+#'   imposed, then `M` must be set to `NULL`.
 #'
 #' @return Numeric vector with optimal sample allocations in strata.
 #'

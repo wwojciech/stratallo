@@ -18,8 +18,7 @@ positive numbers.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
 optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}. If \code{m} is not \code{NULL}, it is then
-required that \code{m < M}.}
+imposed, then \code{M} must be set to \code{NULL}.}
 
 \item{unit_costs}{(\code{numeric})\cr costs \eqn{c_1,\ldots,c_H}, of surveying one
 element in stratum. A strictly positive numbers. Can be also of length 1,
@@ -55,7 +54,7 @@ The algorithm that is used by \code{optcost()} is the \code{LRNA} and it is
 described in Wójciak (2023). The allocation computed is valid for all
 stratified sampling schemes for which the variance of the stratified
 estimator is of the form:
-\deqn{V(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+\deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
 where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are
 strata sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, do not
 depend on \eqn{x_h,\, h = 1,\ldots,H}.
@@ -65,6 +64,7 @@ For \emph{stratified \eqn{\pi} estimator} of the population total and
 for \emph{stratified simple random sampling without replacement} design,
 the population parameters are as follows:
 \deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+\deqn{A_0 = \sum_{h=1}^H N_h S_h^2,}
 where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 standard deviation of a given study variable in stratum \eqn{h}.
 }

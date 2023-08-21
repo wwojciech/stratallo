@@ -75,7 +75,7 @@ round_oric <- function(x) {
 #'
 #' Compute the value of the variance function \eqn{V} of the stratified
 #' estimator, which is of the following generic form:
-#' \deqn{V(x_1,\ldots,x_H) = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+#' \deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
 #' where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are strata
 #' sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, are population
 #' constants.
