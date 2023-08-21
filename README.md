@@ -14,7 +14,7 @@ is assumed that the variance of the stratified estimator is of the
 following generic form:
 
 $$
-  \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
+  V_{st} = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
 $$
 
 where $H$ denotes total number of strata, $(n_1,\ldots,n_H)$ is the
@@ -50,9 +50,9 @@ well as the following **helpers functions**:
 
 Functions `var_st()` and `var_st_tsi()` compute a value of the variance
 $V_{st}$. The `var_st_tsi()` is a simple wrapper of `var_st()` that is
-dedicated for the case of *stratified $\pi$ estimator* of the population
+dedicated for the case of *stratified* $\pi$ *estimator* of the population
 total with *stratified simple random sampling without replacement*
-design in strata. Helper `asummary()` creates a `data.frame` object with
+design in use. Helper `asummary()` creates a `data.frame` object with
 summary of the allocation. Functions `ran_round()` and `round_oric()`
 are the rounding functions that can be used to round non-integers
 allocations (see section Rounding, below). The package comes with three
