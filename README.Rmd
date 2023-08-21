@@ -31,7 +31,7 @@ sizes in strata. In particular, it is assumed that the variance of the
 stratified estimator is of the following generic form:
 
 $$
-  V_{st}(n_1,\ldots,n_H) = \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
+  \sum_{h=1}^{H} \frac{A_h^2}{n_h} - A_0,
 $$
 
 where $H$ denotes total number of strata, $(n_1,\ldots,n_H)$ is the allocation
