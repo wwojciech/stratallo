@@ -35,7 +35,7 @@
 #'
 #'   Wójciak, W. (2023).
 #'   Another Solution of Some Optimum Allocation Problem.
-#'   *Statistics in Transition new series* (in press).
+#'   *Statistics in Transition new series*, 24(5) (in press).
 #'   <https://arxiv.org/abs/2204.04035> \cr
 #'
 #'   Wójciak, W. (2019). Optimal Allocation in Stratified Sampling Schemes.

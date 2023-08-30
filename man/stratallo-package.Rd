@@ -34,7 +34,7 @@ Numerical Performance of the RNABOX Algorithm (Version 1.0.1).
 
 Wójciak, W. (2023).
 Another Solution of Some Optimum Allocation Problem.
-\emph{Statistics in Transition new series} (in press).
+\emph{Statistics in Transition new series}, 24(5) (in press).
 \url{https://arxiv.org/abs/2204.04035} \cr
 
 Wójciak, W. (2019). Optimal Allocation in Stratified Sampling Schemes.

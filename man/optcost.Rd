@@ -50,7 +50,7 @@ optional and can be skipped. In such a case, it is only required that
 \eqn{V > 0}.
 }
 \details{
-The algorithm that is used by \code{optcost()} is the \code{LRNA} and it is
+The algorithm that is used by \code{optcost()} is the \code{RNAL} and it is
 described in Wójciak (2023). The allocation computed is valid for all
 stratified sampling schemes for which the variance of the stratified
 estimator is of the form:
@@ -77,7 +77,7 @@ xopt
 \references{
 Wójciak, W. (2023).
 Another Solution of Some Optimum Allocation Problem.
-\emph{Statistics in Transition new series} (in press).
+\emph{Statistics in Transition new series}, 24(5) (in press).
 \url{https://arxiv.org/abs/2204.04035}
 }
 \seealso{

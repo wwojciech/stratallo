@@ -41,7 +41,7 @@ will be recycled to the length of \code{bounds}.}
 that allows the comparison of values in atomic vectors. It must either be
 set to \code{.Primitive("<=")} or \code{.Primitive(">=")}. The first of these choices
 causes that \code{bounds} are treated as lower bounds and then \code{rna()} function
-performs the \emph{LRNA} algorithm. The latter option causes that \code{bounds}
+performs the \emph{RNAL} algorithm. The latter option causes that \code{bounds}
 are treated as upper bounds, and then \code{rna()} function performs the
 \emph{RNA} algorithm. This argument is ignored when \code{bounds} is set to \code{NULL}.}
 }

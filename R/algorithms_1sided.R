@@ -28,13 +28,13 @@ NULL
 #' If one-sided upper bounds \eqn{M_h,\, h = 1,\ldots,H}, must be imposed, it
 #' is then required that \eqn{0 < c \leq \sum_{h=1}^H c_h M_h}.
 #' Lower bounds can be specified instead of the upper bounds only in case of the
-#' \emph{LRNA} algorithm. All other algorithms allow only for specification of
+#' \emph{RNAL} algorithm. All other algorithms allow only for specification of
 #' the upper bounds. For the sake of clarity, we emphasize that in the
 #' optimization problem consider here, the lower and upper bounds cannot be
 #' imposed jointly.
 #'
 #' Costs \eqn{c_h,\, h = 1,\ldots,H}, of surveying one element in stratum, can
-#' be specified by the user only in case of the \emph{RNA} and \emph{LRNA}
+#' be specified by the user only in case of the \emph{RNA} and \emph{RNAL}
 #' algorithms. For remaining algorithms, these costs are fixed at 1, i.e.
 #' \eqn{c_h = 1,\, h = 1,\ldots,H}.
 #'
@@ -43,7 +43,7 @@ NULL
 #' description of a specific function to find out more about the corresponding
 #' algorithm.
 #' * \emph{RNA} - `rna()`
-#' * \emph{LRNA}- `rna()`
+#' * \emph{RNAL}- `rna()`
 #' * \emph{SGA}- `sga()`
 #' * \emph{SGAPLUS} - `sgaplus()`
 #' * \emph{COMA} - `coma()`
@@ -80,7 +80,7 @@ NULL
 #' @references
 #'   Wójciak, W. (2023).
 #'   Another Solution of Some Optimum Allocation Problem.
-#'   *Statistics in Transition new series* (in press).
+#'   *Statistics in Transition new series*, 24(5) (in press).
 #'   <https://arxiv.org/abs/2204.04035> \cr
 #'
 #'   Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021).
@@ -110,9 +110,9 @@ NULL
 NULL
 
 #' @describeIn opt_1sided \emph{Recursive Neyman Algorithm} (\emph{RNA}) and its
-#'   twin version, \emph{Lower Recursive Neyman Algorithm} (\emph{LRNA})
+#'   twin version, \emph{Lower Recursive Neyman Algorithm} (\emph{RNAL})
 #'   dedicated to the allocation problem with one-sided lower-bounds constraints.
-#'   The \emph{RNA} is described in Wesołowski et al. (2021), while \emph{LRNA} is
+#'   The \emph{RNA} is described in Wesołowski et al. (2021), while \emph{RNAL} is
 #'   introduced in Wójciak (2023).
 #'
 #' @param bounds (`numeric` or `NULL`) \cr optional lower bounds
@@ -133,7 +133,7 @@ NULL
 #'   that allows the comparison of values in atomic vectors. It must either be
 #'   set to `.Primitive("<=")` or `.Primitive(">=")`. The first of these choices
 #'   causes that `bounds` are treated as lower bounds and then `rna()` function
-#'   performs the \emph{LRNA} algorithm. The latter option causes that `bounds`
+#'   performs the \emph{RNAL} algorithm. The latter option causes that `bounds`
 #'   are treated as upper bounds, and then `rna()` function performs the
 #'   \emph{RNA} algorithm. This argument is ignored when `bounds` is set to `NULL`.
 #' @param details (`flag`) \cr should detailed information about strata

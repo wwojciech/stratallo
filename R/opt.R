@@ -43,7 +43,7 @@
 #'   name of the function that implements a given algorithm. See the description
 #'   of a specific function to find out more about the corresponding algorithm.
 #'   * one-sided lower-bounds \eqn{m_h,\, h = 1,\ldots,H}:
-#'      * `LRNA` - [rna()]
+#'      * `RNAL` - [rna()]
 #'  * one-sided upper-bounds \eqn{M_h,\, h = 1,\ldots,H}:
 #'      * `RNA` - [rna()]
 #'      * `SGA` - [sga()]
@@ -157,7 +157,7 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #' optional and can be skipped. In such a case, it is only required that
 #' \eqn{V > 0}.
 #'
-#' @details The algorithm that is used by `optcost()` is the `LRNA` and it is
+#' @details The algorithm that is used by `optcost()` is the `RNAL` and it is
 #'   described in Wójciak (2023). The allocation computed is valid for all
 #'   stratified sampling schemes for which the variance of the stratified
 #'   estimator is of the form:
@@ -191,7 +191,7 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #' @references
 #'   Wójciak, W. (2023).
 #'   Another Solution of Some Optimum Allocation Problem.
-#'   *Statistics in Transition new series* (in press).
+#'   *Statistics in Transition new series*, 24(5) (in press).
 #'   <https://arxiv.org/abs/2204.04035>
 #'
 #' @export

@@ -52,7 +52,7 @@ will be recycled to the length of \code{bounds}.}
 that allows the comparison of values in atomic vectors. It must either be
 set to \code{.Primitive("<=")} or \code{.Primitive(">=")}. The first of these choices
 causes that \code{bounds} are treated as lower bounds and then \code{rna()} function
-performs the \emph{LRNA} algorithm. The latter option causes that \code{bounds}
+performs the \emph{RNAL} algorithm. The latter option causes that \code{bounds}
 are treated as upper bounds, and then \code{rna()} function performs the
 \emph{RNA} algorithm. This argument is ignored when \code{bounds} is set to \code{NULL}.}
 
@@ -96,13 +96,13 @@ is then required that \eqn{c \geq \sum_{h=1}^H c_h m_h}.
 If one-sided upper bounds \eqn{M_h,\, h = 1,\ldots,H}, must be imposed, it
 is then required that \eqn{0 < c \leq \sum_{h=1}^H c_h M_h}.
 Lower bounds can be specified instead of the upper bounds only in case of the
-\emph{LRNA} algorithm. All other algorithms allow only for specification of
+\emph{RNAL} algorithm. All other algorithms allow only for specification of
 the upper bounds. For the sake of clarity, we emphasize that in the
 optimization problem consider here, the lower and upper bounds cannot be
 imposed jointly.
 
 Costs \eqn{c_h,\, h = 1,\ldots,H}, of surveying one element in stratum, can
-be specified by the user only in case of the \emph{RNA} and \emph{LRNA}
+be specified by the user only in case of the \emph{RNA} and \emph{RNAL}
 algorithms. For remaining algorithms, these costs are fixed at 1, i.e.
 \eqn{c_h = 1,\, h = 1,\ldots,H}.
 
@@ -112,7 +112,7 @@ description of a specific function to find out more about the corresponding
 algorithm.
 \itemize{
 \item \emph{RNA} - \code{rna()}
-\item \emph{LRNA}- \code{rna()}
+\item \emph{RNAL}- \code{rna()}
 \item \emph{SGA}- \code{sga()}
 \item \emph{SGAPLUS} - \code{sgaplus()}
 \item \emph{COMA} - \code{coma()}
@@ -124,9 +124,9 @@ Functions in this family should not be called directly by the user. Use
 \section{Functions}{
 \itemize{
 \item \code{rna()}: \emph{Recursive Neyman Algorithm} (\emph{RNA}) and its
-twin version, \emph{Lower Recursive Neyman Algorithm} (\emph{LRNA})
+twin version, \emph{Lower Recursive Neyman Algorithm} (\emph{RNAL})
 dedicated to the allocation problem with one-sided lower-bounds constraints.
-The \emph{RNA} is described in Wesołowski et al. (2021), while \emph{LRNA} is
+The \emph{RNA} is described in Wesołowski et al. (2021), while \emph{RNAL} is
 introduced in Wójciak (2023).
 
 \item \code{sga()}: Stenger-Gabler type algorithm \emph{SGA}, described in
@@ -174,7 +174,7 @@ coma(total_cost = 190, a = a, M = M)
 \references{
 Wójciak, W. (2023).
 Another Solution of Some Optimum Allocation Problem.
-\emph{Statistics in Transition new series} (in press).
+\emph{Statistics in Transition new series}, 24(5) (in press).
 \url{https://arxiv.org/abs/2204.04035} \cr
 
 Wesołowski, J., Wieczorkowski, R., Wójciak, W. (2021).

@@ -50,7 +50,7 @@ NULL
 #'   that allows the comparison of values in atomic vectors. It must either be
 #'   set to `.Primitive("<=")` or `.Primitive(">=")`.
 #'   The first of these choices causes that `bounds1` are treated as lower
-#'   bounds and the `rnabox()` uses the \emph{LRNA} algorithm as in interim
+#'   bounds and the `rnabox()` uses the \emph{RNAL} algorithm as in interim
 #'   algorithm for the allocation problem with one-sided lower bounds `bounds1`.
 #'   The latter option causes that `bounds1` are treated as upper bounds and the
 #'   `rnabox()` uses the \emph{RNA} algorithm as in interim algorithm for the
@@ -62,7 +62,7 @@ NULL
 #'   that allows the comparison of values in atomic vectors. It must either be
 #'   set to `.Primitive("<=")` or `.Primitive(">=")`.
 #'   The first of these choices causes that `bounds2` are treated as lower
-#'   bounds and the `rnabox()` uses the \emph{LRNA} algorithm as in interim
+#'   bounds and the `rnabox()` uses the \emph{RNAL} algorithm as in interim
 #'   algorithm for the allocation problem with one-sided lower bounds `bounds2`.
 #'   The latter option causes that `bounds2` are treated as upper bounds and the
 #'   `rnabox()` uses the \emph{RNA} algorithm as in interim algorithm for the

@@ -86,7 +86,7 @@ of a specific function to find out more about the corresponding algorithm.
 \itemize{
 \item one-sided lower-bounds \eqn{m_h,\, h = 1,\ldots,H}:
 \itemize{
-\item \code{LRNA} - \code{\link[=rna]{rna()}}
+\item \code{RNAL} - \code{\link[=rna]{rna()}}
 }
 \item one-sided upper-bounds \eqn{M_h,\, h = 1,\ldots,H}:
 \itemize{
