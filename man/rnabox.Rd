@@ -45,7 +45,7 @@ as lower bounds) or \code{bounds1 > bounds2} (in the opposite case).}
 that allows the comparison of values in atomic vectors. It must either be
 set to \code{.Primitive("<=")} or \code{.Primitive(">=")}.
 The first of these choices causes that \code{bounds1} are treated as lower
-bounds and the \code{rnabox()} uses the \emph{RNAL} algorithm as in interim
+bounds and the \code{rnabox()} uses the \emph{LRNA} algorithm as in interim
 algorithm for the allocation problem with one-sided lower bounds \code{bounds1}.
 The latter option causes that \code{bounds1} are treated as upper bounds and the
 \code{rnabox()} uses the \emph{RNA} algorithm as in interim algorithm for the
@@ -58,7 +58,7 @@ arguments must be set against each other.
 that allows the comparison of values in atomic vectors. It must either be
 set to \code{.Primitive("<=")} or \code{.Primitive(">=")}.
 The first of these choices causes that \code{bounds2} are treated as lower
-bounds and the \code{rnabox()} uses the \emph{RNAL} algorithm as in interim
+bounds and the \code{rnabox()} uses the \emph{LRNA} algorithm as in interim
 algorithm for the allocation problem with one-sided lower bounds \code{bounds2}.
 The latter option causes that \code{bounds2} are treated as upper bounds and the
 \code{rnabox()} uses the \emph{RNA} algorithm as in interim algorithm for the

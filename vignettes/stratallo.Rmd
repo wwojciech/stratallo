@@ -233,7 +233,7 @@ $m_h \leq N_h,\, h = 1,\ldots,H$, and $n \geq \sum_{h=1}^H m_h$,
 \end{align*}
 where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
 
-The optimization **Problem 2** is solved by the *RNAL* that in principle is
+The optimization **Problem 2** is solved by the *LRNA* that in principle is
 based on the *RNA* and it is introduced in @wojciak2023.
 
 #### Examples
@@ -296,7 +296,7 @@ $M_h \leq N_h,\, h = 1,\ldots,H$, and $V \geq \sum_{h=1}^H \tfrac{A_h^2}{M_h} - 
 \end{align*}
 where $\x = (x_h)_{h \in \{1,\ldots,H\}}$.
 
-The algorithm that solves **Problem 4** is based on the *RNAL* and it is
+The algorithm that solves **Problem 4** is based on the *LRNA* and it is
 described in @wojciak2023.
 
 #### Examples
