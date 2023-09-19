@@ -6,10 +6,10 @@
 \usage{
 rna_prior(
   total_cost,
-  a,
+  A,
   bounds = NULL,
   check_violations = .Primitive(">="),
-  check,
+  check = NULL,
   details = FALSE
 )
 }
@@ -17,7 +17,7 @@ rna_prior(
 \item{total_cost}{(\code{number})\cr total cost \eqn{c} of the survey. A strictly
 positive scalar.}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{bounds}{(\code{numeric} or \code{NULL}) \cr optional lower bounds

@@ -89,13 +89,13 @@
 #' @export
 #' @example examples/opt.R
 #'
-opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
-  H <- length(a)
+opt <- function(n, A, m = NULL, M = NULL, M_algorithm = "rna") {
+  H <- length(A)
   assert_number(n, finite = TRUE)
-  assert_numeric(a, finite = TRUE, any.missing = FALSE, min.len = 1L)
+  assert_numeric(A, finite = TRUE, any.missing = FALSE, min.len = 1L)
   assert_numeric(m, finite = TRUE, any.missing = FALSE, len = H, null.ok = TRUE)
   assert_numeric(M, any.missing = FALSE, len = H, null.ok = TRUE)
-  assert_true(all(a > 0))
+  assert_true(all(A > 0))
   assert_true(all(m > 0))
   assert_true(all(M > 0))
   assert_true(all(m < M))
@@ -121,17 +121,17 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
   } else if (n == sum(M)) {
     M
   } else if (lwr_imposed && upr_imposed) {
-    rnabox(n = n, a = a, bounds1 = M, bounds2 = m)
+    rnabox(n = n, A = A, bounds1 = M, bounds2 = m)
   } else if (lwr_imposed) {
-    rna(total_cost = n, a = a, bounds = m, check_violations = .Primitive("<="))
+    rna(total_cost = n, A = A, bounds = m, check_violations = .Primitive("<="))
   } else if (upr_imposed) {
     if (M_algorithm == "rna") {
-      rna(total_cost = n, a = a, bounds = M)
+      rna(total_cost = n, A = A, bounds = M)
     } else {
-      do.call(M_algorithm, args = list(total_cost = n, a = a, M = M))
+      do.call(M_algorithm, args = list(total_cost = n, A = A, M = M))
     }
   } else {
-    (n / sum(a)) * a # Neyman allocation.
+    (n / sum(A)) * A # Neyman allocation.
   }
 }
 
@@ -178,8 +178,8 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #' @inheritParams rna
 #' @param V (`number`)\cr parameter \eqn{V} of the equality constraint. A
 #'   strictly positive scalar. If `M` is not `NULL`, it is then required that
-#'   `V >= sum(a^2/M) - a0`.
-#' @param a0 (`number`)\cr population constant \eqn{A_0}.
+#'   `V >= sum(A^2/M) - A0`.
+#' @param A0 (`number`)\cr population constant \eqn{A_0}.
 #' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
 #'   optionally imposed on sample sizes in strata. If no upper bounds should be
 #'   imposed, then `M` must be set to `NULL`.
@@ -196,46 +196,46 @@ opt <- function(n, a, m = NULL, M = NULL, M_algorithm = "rna") {
 #'
 #' @export
 #' @examples
-#' a <- c(3000, 4000, 5000, 2000)
+#' A <- c(3000, 4000, 5000, 2000)
 #' M <- c(100, 90, 70, 80)
-#' xopt <- optcost(1017579, a = a, a0 = 579, M = M)
+#' xopt <- optcost(1017579, A = A, A0 = 579, M = M)
 #' xopt
-optcost <- function(V, a, a0, M = NULL, unit_costs = 1) {
-  H <- length(a)
+optcost <- function(V, A, A0, M = NULL, unit_costs = 1) {
+  H <- length(A)
   assert_number(V, finite = TRUE)
-  assert_numeric(a, finite = TRUE, any.missing = FALSE, min.len = 1L)
-  assert_number(a0, finite = TRUE)
+  assert_numeric(A, finite = TRUE, any.missing = FALSE, min.len = 1L)
+  assert_number(A0, finite = TRUE)
   assert_numeric(M, any.missing = FALSE, len = H, null.ok = TRUE)
   assert_numeric(unit_costs, any.missing = FALSE, null.ok = TRUE)
-  assert_true(length(unit_costs) == 1L || length(unit_costs) == length(a))
-  assert_true(all(a > 0))
+  assert_true(length(unit_costs) == 1L || length(unit_costs) == length(A))
+  assert_true(all(A > 0))
   assert_true(all(M > 0))
   assert_true(all(unit_costs > 0))
 
+  A2 <- A^2
   upr_imposed <- !is.null(M)
   if (upr_imposed) {
-    assert_true(sum(a^2 / M) - a0 > 0)
-    assert_true(V >= sum(a^2 / M) - a0)
+    assert_true(sum(A2 / M) - A0 > 0)
+    assert_true(V >= sum(A2 / M) - A0)
   } else {
     assert_true(V > 0)
   }
 
-  a2 <- a^2
   if (H == 1L) {
-    a2 / (V + a0)
+    A2 / (V + A0)
   } else if (!upr_imposed) {
     c_sqrt <- sqrt(unit_costs)
-    (a / c_sqrt) * sum(a * c_sqrt) / (V + a0)
-  } else if (V == sum(a2 / M) - a0) {
+    (A / c_sqrt) * sum(A * c_sqrt) / (V + A0)
+  } else if (V == sum(A2 / M) - A0) {
     M
   } else {
     y <- rna(
-      total_cost = V + a0,
-      a = a,
-      bounds = a2 / (unit_costs * M),
+      total_cost = V + A0,
+      A = A,
+      bounds = A2 / (unit_costs * M),
       unit_costs = unit_costs,
       check_violations = .Primitive("<=")
     )
-    a2 / (unit_costs * y)
+    A2 / (unit_costs * y)
   }
 }

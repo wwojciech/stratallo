@@ -4,17 +4,17 @@
 \alias{optcost}
 \title{Minimum Cost Allocation in Stratified Sampling}
 \usage{
-optcost(V, a, a0, M = NULL, unit_costs = 1)
+optcost(V, A, A0, M = NULL, unit_costs = 1)
 }
 \arguments{
 \item{V}{(\code{number})\cr parameter \eqn{V} of the equality constraint. A
 strictly positive scalar. If \code{M} is not \code{NULL}, it is then required that
-\code{V >= sum(a^2/M) - a0}.}
+\code{V >= sum(A^2/M) - A0}.}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
-\item{a0}{(\code{number})\cr population constant \eqn{A_0}.}
+\item{A0}{(\code{number})\cr population constant \eqn{A_0}.}
 
 \item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
 optionally imposed on sample sizes in strata. If no upper bounds should be
@@ -69,9 +69,9 @@ where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 standard deviation of a given study variable in stratum \eqn{h}.
 }
 \examples{
-a <- c(3000, 4000, 5000, 2000)
+A <- c(3000, 4000, 5000, 2000)
 M <- c(100, 90, 70, 80)
-xopt <- optcost(1017579, a = a, a0 = 579, M = M)
+xopt <- optcost(1017579, A = A, A0 = 579, M = M)
 xopt
 }
 \references{

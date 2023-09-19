@@ -23,9 +23,9 @@ test_that("var_st works as expected)", {
   N <- c(300, 400, 500, 200)
   S <- c(2, 5, 3, 1)
   x <- c(27, 88, 66, 9)
-  a <- N * S
-  a0 <- sum(N * S^2)
-  result <- var_st(x, a, a0)
+  A <- N * S
+  A0 <- sum(N * S^2)
+  result <- var_st(x, A, A0)
   expect_equal(result, 81423.232)
 })
 
@@ -44,9 +44,9 @@ test_that("var_st_tsi works as expected)", {
 test_that("asummary works as expected when no bounds are specified", {
   x <- c(85, 114, 142, 57)
 
-  result <- asummary(x, a)
+  result <- asummary(x, A)
   expected <- data.frame(
-    a = c(a, NA),
+    A = c(A, NA),
     allocation = c(x, sum(x)),
     take_neyman = c(rep("*", 4), 4),
     row.names = c(paste0("Stratum_", 1:4), "SUM")
@@ -58,9 +58,9 @@ test_that("asummary works as expected when only m is specified", {
   m <- c(100, 90, 70, 80)
   x <- c(100, 98, 122, 80)
 
-  result <- asummary(x, a, m)
+  result <- asummary(x, A, m)
   expected <- data.frame(
-    a = c(a, NA),
+    A = c(A, NA),
     m = c(m, sum(m)),
     allocation = c(x, sum(x)),
     take_min = c("*", "", "", "*", "2"),
@@ -74,9 +74,9 @@ test_that("asummary works as expected when only M is specified", {
   M <- c(200, 150, 300, 210)
   x <- c(117, 150, 195, 78)
 
-  result <- asummary(x, a, M = M)
+  result <- asummary(x, A, M = M)
   expected <- data.frame(
-    a = c(a, NA),
+    A = c(A, NA),
     M = c(M, sum(M)),
     allocation = c(x, sum(x)),
     take_max = c("", "*", "", "", "1"),
@@ -91,9 +91,9 @@ test_that("asummary works as expected when only M is specified", {
   M <- c(200, 150, 300, 210)
   x <- c(117, 150, 194, 80)
 
-  result <- asummary(x, a, m, M)
+  result <- asummary(x, A, m, M)
   expected <- data.frame(
-    a = c(a, NA),
+    A = c(A, NA),
     m = c(m, sum(m)),
     M = c(M, sum(M)),
     allocation = c(x, sum(x)),

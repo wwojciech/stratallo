@@ -4,12 +4,12 @@
 \alias{asummary}
 \title{Summarizing the Allocation}
 \usage{
-asummary(x, a, m = NULL, M = NULL)
+asummary(x, A, m = NULL, M = NULL)
 }
 \arguments{
 \item{x}{(\code{numeric})\cr sample allocations \eqn{x_1,\ldots,x_H} in strata.}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}.}
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}.}
 
 \item{m}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
 optionally imposed on sample sizes in strata.}
@@ -25,7 +25,7 @@ numerical values from the above rows (wherever feasible).
 Summary table has the following columns (* indicates that the column may
 not be present):
 \describe{
-\item{a}{population constant \eqn{A_h}}
+\item{A}{population constant \eqn{A_h}}
 \item{m*}{lower bound imposed on sample size in stratum}
 \item{M*}{upper bound imposed on sample size in stratum}
 \item{allocation}{sample size for a given stratum}
@@ -33,7 +33,7 @@ not be present):
 i.e. \eqn{x_h = m_h}}
 \item{take_max*}{indication whether the allocation is of \code{take-max} type,
 i.e. \eqn{x_h = M_h}}
-\item{take_neyman}{indication whether the allocation is of \code{take-Neyman}
+\item{take_Neyman}{indication whether the allocation is of \code{take-Neyman}
 type, i.e. \eqn{m_h < x_h < M_h}}
 }
 }
@@ -45,15 +45,15 @@ allocation as returned by the \code{\link[=opt]{opt()}} or \code{\link[=optcost]
 example below.
 }
 \examples{
-a <- c(3000, 4000, 5000, 2000)
+A <- c(3000, 4000, 5000, 2000)
 m <- c(100, 90, 70, 80)
 M <- c(200, 150, 300, 210)
 
-xopt_1 <- opt(n = 400, a, m)
-asummary(xopt_1, a, m)
+xopt_1 <- opt(n = 400, A, m)
+asummary(xopt_1, A, m)
 
-xopt_2 <- opt(n = 540, a, m, M)
-asummary(xopt_2, a, m, M)
+xopt_2 <- opt(n = 540, A, m, M)
+asummary(xopt_2, A, m, M)
 }
 \seealso{
 \code{\link[=opt]{opt()}}, \code{\link[=optcost]{optcost()}}.

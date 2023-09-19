@@ -1,15 +1,15 @@
-sfun <- function(n, a, bounds = NULL, ucosts = 1, R = NULL) {
+sfun <- function(n, A, bounds = NULL, ucosts = 1, R = NULL) {
   if (!is.null(bounds)) {
-    assert_true(length(a) == length(bounds))
+    assert_true(length(A) == length(bounds))
   }
-  if (setequal(seq_along(a), R)) {
+  if (setequal(seq_along(A), R)) {
     bounds
   } else if (is.null(R)) {
-    Rc <- seq_along(a)
-    n / sum(a * sqrt(ucosts))
+    Rc <- seq_along(A)
+    n / sum(A * sqrt(ucosts))
   } else {
-    Rc <- seq_along(a)[-R]
-    (n - sum((ucosts * bounds)[R])) / sum((a * sqrt(ucosts))[Rc])
+    Rc <- seq_along(A)[-R]
+    (n - sum((ucosts * bounds)[R])) / sum((A * sqrt(ucosts))[Rc])
   }
 }
 

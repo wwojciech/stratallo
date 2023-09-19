@@ -1,9 +1,9 @@
-#' Optimal Sample Allocation in Stratified Sampling
+#' Optimum Sample Allocation in Stratified Sampling
 #'
 #' @name stratallo-package
 #' @aliases stratallo
 #' @docType package
-#' @title Functions for Optimal Sample Allocation in Stratified Sampling
+#' @title Functions for Optimum Sample Allocation in Stratified Sampling
 #' @author Wojciech Wójciak \email{wojciech.wojciak@@gmail.com}
 #' @import checkmate
 #' @importFrom lifecycle badge

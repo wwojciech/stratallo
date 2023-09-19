@@ -2,6 +2,8 @@
 
 # stratallo 2.2.1
 
+* Changed the name of two parameters: `a` to `A` and `a0` to `A0` for several
+  functions.
 * Updated `rnabox()` so that it can perform both versions of the RNABOX
   algorithm, i.e.: step 1 handles one-sided upper bounds whilst step 2 handles
   one-sided lower bounds, or conversely, depending on the user preferences.

@@ -10,7 +10,7 @@ survey methodology - an optimum sample allocation in stratified
 sampling. In this context, the optimal allocation is in the classical
 Tschuprow-Neyman’s sense and it satisfies additional lower or upper
 bounds restrictions imposed on sample sizes in strata. In particular, it
-is assumed that the variance of the stratified estimator is of the
+is assumed that the variance of the stratified $\pi$ estimator is of the
 following generic form:
 
 $$
@@ -50,15 +50,15 @@ well as the following **helpers functions**:
 
 Functions `var_st()` and `var_st_tsi()` compute a value of the variance
 $V_{st}$. The `var_st_tsi()` is a simple wrapper of `var_st()` that is
-dedicated for the case of *stratified* $\pi$ *estimator* of the population
-total with *stratified simple random sampling without replacement*
-design in use. Helper `asummary()` creates a `data.frame` object with
-summary of the allocation. Functions `ran_round()` and `round_oric()`
-are the rounding functions that can be used to round non-integers
-allocations (see section Rounding, below). The package comes with three
-predefined, artificial populations with 10, 507 and 969 strata. These
-are stored under `pop10_mM`, `pop507` and `pop969` objects,
-respectively.
+dedicated for the case of *stratified* $\pi$ *estimator* of the
+population total with *stratified simple random sampling without
+replacement* design in use. Helper `asummary()` creates a `data.frame`
+object with summary of the allocation. Functions `ran_round()` and
+`round_oric()` are the rounding functions that can be used to round
+non-integers allocations (see section Rounding, below). The package
+comes with three predefined, artificial populations with 10, 507 and 969
+strata. These are stored under `pop10_mM`, `pop507` and `pop969`
+objects, respectively.
 
 See package’s vignette for more details.
 
@@ -86,14 +86,14 @@ Define example population.
 ``` r
 N <- c(3000, 4000, 5000, 2000) # Strata sizes.
 S <- c(48, 79, 76, 16) # Standard deviations of a study variable in strata.
-a <- N * S
+A <- N * S
 n <- 190 # Total sample size.
 ```
 
 Tschuprow-Neyman allocation (no inequality constraints).
 
 ``` r
-xopt <- opt(n = n, a = a)
+xopt <- opt(n = n, A = A)
 xopt
 #> [1] 31.376147 68.853211 82.798165  6.972477
 sum(xopt) == n
@@ -112,7 +112,7 @@ all(M <= N)
 n <= sum(M)
 #> [1] TRUE
 
-xopt <- opt(n = n, a = a, M = M)
+xopt <- opt(n = n, A = A, M = M)
 xopt
 #> [1] 35.121951 77.073171 70.000000  7.804878
 sum(xopt) == n
@@ -131,7 +131,7 @@ m <- c(50, 120, 1, 2) # Lower bounds imposed on the sample sizes in strata.
 n >= sum(m)
 #> [1] TRUE
 
-xopt <- opt(n = n, a = a, m = m)
+xopt <- opt(n = n, A = A, m = m)
 xopt
 #> [1]  50 120  18   2
 sum(xopt) == n
@@ -152,7 +152,7 @@ n <- 1284
 n >= sum(m) && n <= sum(M)
 #> [1] TRUE
 
-xopt <- opt(n = n, a = a, m = m, M = M)
+xopt <- opt(n = n, A = A, m = m, M = M)
 xopt
 #> [1] 228.9496 400.0000 604.1727  50.8777
 sum(xopt) == n
@@ -167,18 +167,18 @@ var_st_tsi(xopt, N, S)
 Minimization of the total cost with `optcost()` function
 
 ``` r
-a <- c(3000, 4000, 5000, 2000)
-a0 <- 70000
+A <- c(3000, 4000, 5000, 2000)
+A0 <- 70000
 unit_costs <- c(0.5, 0.6, 0.6, 0.3) # c_h, h = 1,...4.
 M <- c(100, 90, 70, 80)
 V <- 1e6 # Variance constraint.
-V >= sum(a^2 / M) - a0
+V >= sum(A^2 / M) - A0
 #> [1] TRUE
 
-xopt <- optcost(V = V, a = a, a0 = a0, M = M, unit_costs = unit_costs)
+xopt <- optcost(V = V, A = A, A0 = A0, M = M, unit_costs = unit_costs)
 xopt
 #> [1] 40.39682 49.16944 61.46181 34.76805
-sum(a^2 / xopt) - a0 == V
+sum(A^2 / xopt) - A0 == V
 #> [1] TRUE
 all(xopt <= M)
 #> [1] TRUE
@@ -192,7 +192,7 @@ M <- c(300, 400, 800, 90)
 n <- 1284
 
 # Optimum, non-integer allocation under box constraints.
-xopt <- opt(n = n, a = a, m = m, M = M)
+xopt <- opt(n = n, A = A, m = m, M = M)
 xopt
 #> [1] 297.4286 396.5714 500.0000  90.0000
 

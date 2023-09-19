@@ -5,16 +5,16 @@
 \alias{var_st_tsi}
 \title{Variance of the Stratified Estimator}
 \usage{
-var_st(x, a, a0)
+var_st(x, A, A0)
 
 var_st_tsi(x, N, S)
 }
 \arguments{
 \item{x}{(\code{numeric})\cr sample allocations \eqn{x_1,\ldots,x_H} in strata.}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}.}
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}.}
 
-\item{a0}{(\code{number})\cr population constant \eqn{A_0}.}
+\item{A0}{(\code{number})\cr population constant \eqn{A_0}.}
 
 \item{N}{(\code{numeric})\cr strata sizes \eqn{N_1,\ldots,N_H}.}
 
@@ -51,7 +51,7 @@ standard deviation of a study variable, \eqn{h = 1,\ldots,H}.
 N <- c(3000, 4000, 5000, 2000)
 S <- rep(1, 4)
 M <- c(100, 90, 70, 80)
-xopt <- opt(n = 190, a = N * S, M = M)
+xopt <- opt(n = 190, A = N * S, M = M)
 var_st_tsi(x = xopt, N, S) # 1017579
 }
 \references{

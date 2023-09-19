@@ -4,7 +4,7 @@
 \alias{opt}
 \title{Optimum Sample Allocation in Stratified Sampling}
 \usage{
-opt(n, a, m = NULL, M = NULL, M_algorithm = "rna")
+opt(n, A, m = NULL, M = NULL, M_algorithm = "rna")
 }
 \arguments{
 \item{n}{(\code{number})\cr total sample size. A strictly positive scalar.
@@ -15,7 +15,7 @@ If \code{bounds2} is not \code{NULL}, it is then required that \code{n >= sum(bo
 (given that \code{bounds2} are treated as lower bounds) or \code{n <= sum(bounds2)}
 (given that \code{bounds2} are treated as upper bounds).}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{m}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
@@ -113,41 +113,41 @@ where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
 standard deviation of a given study variable in stratum \eqn{h}.
 }
 \examples{
-a <- c(3000, 4000, 5000, 2000)
+A <- c(3000, 4000, 5000, 2000)
 m <- c(100, 90, 70, 50)
 M <- c(300, 400, 200, 90)
 
 # One-sided lower bounds.
-opt(n = 340, a = a, m = m)
-opt(n = 400, a = a, m = m)
-opt(n = 700, a = a, m = m)
+opt(n = 340, A = A, m = m)
+opt(n = 400, A = A, m = m)
+opt(n = 700, A = A, m = m)
 
 # One-sided upper bounds.
-opt(n = 190, a = a, M = M)
-opt(n = 700, a = a, M = M)
+opt(n = 190, A = A, M = M)
+opt(n = 700, A = A, M = M)
 
 # Box-constraints.
-opt(n = 340, a = a, m = m, M = M)
-opt(n = 500, a = a, m = m, M = M)
-xopt <- opt(n = 800, a = a, m = m, M = M)
+opt(n = 340, A = A, m = m, M = M)
+opt(n = 500, A = A, m = m, M = M)
+xopt <- opt(n = 800, A = A, m = m, M = M)
 xopt
-var_st(x = xopt, a = a, a0 = 45000) # Value of the variance for allocation xopt.
+var_st(x = xopt, A = A, A0 = 45000) # Value of the variance for allocation xopt.
 
-# Execution-time comparisons of different algorithms with R package microbenchmark.
+# Execution-time comparisons of different algorithms with microbenchmark R package.
 \dontrun{
 N <- pop969[, "N"]
 S <- pop969[, "S"]
-a <- N * S
+A <- N * S
 nfrac <- c(0.005, seq(0.05, 0.95, 0.05))
 n <- setNames(as.integer(nfrac * sum(N)), nfrac)
 lapply(
   n,
   function(ni) {
     microbenchmark::microbenchmark(
-      RNA = opt(ni, a, M = N, M_algorithm = "rna"),
-      SGA = opt(ni, a, M = N, M_algorithm = "sga"),
-      SGAPLUS = opt(ni, a, M = N, M_algorithm = "sgaplus"),
-      COMA = opt(ni, a, M = N, M_algorithm = "coma"),
+      RNA = opt(ni, A, M = N, M_algorithm = "rna"),
+      SGA = opt(ni, A, M = N, M_algorithm = "sga"),
+      SGAPLUS = opt(ni, A, M = N, M_algorithm = "sgaplus"),
+      COMA = opt(ni, A, M = N, M_algorithm = "coma"),
       times = 200,
       unit = "us"
     )

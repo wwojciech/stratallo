@@ -81,8 +81,8 @@ round_oric <- function(x) {
 #' constants.
 #'
 #' @param x (`numeric`)\cr sample allocations \eqn{x_1,\ldots,x_H} in strata.
-#' @param a (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}.
-#' @param a0 (`number`)\cr population constant \eqn{A_0}.
+#' @param A (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}.
+#' @param A0 (`number`)\cr population constant \eqn{A_0}.
 #'
 #' @return Value of the variance \eqn{V} for a given allocation vector
 #'   \eqn{x_1,\ldots,x_H}.
@@ -95,8 +95,8 @@ round_oric <- function(x) {
 #'
 #' @export
 #'
-var_st <- function(x, a, a0) {
-  sum(a^2 / x) - a0
+var_st <- function(x, A, A0) {
+  sum(A^2 / x) - A0
 }
 
 #' @describeIn var_st computes value of variance \eqn{V} for the case of
@@ -117,12 +117,12 @@ var_st <- function(x, a, a0) {
 #' N <- c(3000, 4000, 5000, 2000)
 #' S <- rep(1, 4)
 #' M <- c(100, 90, 70, 80)
-#' xopt <- opt(n = 190, a = N * S, M = M)
+#' xopt <- opt(n = 190, A = N * S, M = M)
 #' var_st_tsi(x = xopt, N, S) # 1017579
 var_st_tsi <- function(x, N, S) {
-  a <- N * S
-  a0 <- sum(N * S^2)
-  var_st(x, a, a0)
+  A <- N * S
+  A0 <- sum(N * S^2)
+  var_st(x, A, A0)
 }
 
 #' Summarizing the Allocation
@@ -146,7 +146,7 @@ var_st_tsi <- function(x, N, S) {
 #'   Summary table has the following columns (* indicates that the column may
 #'   not be present):
 #' \describe{
-#'   \item{a}{population constant \eqn{A_h}}
+#'   \item{A}{population constant \eqn{A_h}}
 #'   \item{m*}{lower bound imposed on sample size in stratum}
 #'   \item{M*}{upper bound imposed on sample size in stratum}
 #'   \item{allocation}{sample size for a given stratum}
@@ -154,7 +154,7 @@ var_st_tsi <- function(x, N, S) {
 #'     i.e. \eqn{x_h = m_h}}
 #'   \item{take_max*}{indication whether the allocation is of `take-max` type,
 #'     i.e. \eqn{x_h = M_h}}
-#'   \item{take_neyman}{indication whether the allocation is of `take-Neyman`
+#'   \item{take_Neyman}{indication whether the allocation is of `take-Neyman`
 #'    type, i.e. \eqn{m_h < x_h < M_h}}
 #' }
 #'
@@ -162,26 +162,26 @@ var_st_tsi <- function(x, N, S) {
 #'
 #' @export
 #' @examples
-#' a <- c(3000, 4000, 5000, 2000)
+#' A <- c(3000, 4000, 5000, 2000)
 #' m <- c(100, 90, 70, 80)
 #' M <- c(200, 150, 300, 210)
 #'
-#' xopt_1 <- opt(n = 400, a, m)
-#' asummary(xopt_1, a, m)
+#' xopt_1 <- opt(n = 400, A, m)
+#' asummary(xopt_1, A, m)
 #'
-#' xopt_2 <- opt(n = 540, a, m, M)
-#' asummary(xopt_2, a, m, M)
-asummary <- function(x, a, m = NULL, M = NULL) {
-  assert_numeric(a, min.len = 1L)
-  H <- length(a)
+#' xopt_2 <- opt(n = 540, A, m, M)
+#' asummary(xopt_2, A, m, M)
+asummary <- function(x, A, m = NULL, M = NULL) {
+  assert_numeric(A, min.len = 1L)
+  H <- length(A)
   assert_numeric(x, len = H, any.missing = FALSE)
   assert_numeric(m, len = H, null.ok = TRUE)
   assert_numeric(M, len = H, null.ok = TRUE)
 
   d <- data.frame(
-    a = c(a, NA),
+    A = c(A, NA),
     allocation = c(x, sum(x)),
-    row.names = c(paste0("Stratum_", 1:length(a)), "SUM")
+    row.names = c(paste0("Stratum_", 1:length(A)), "SUM")
   )
 
   is_neyman <- rep(TRUE, H)
@@ -200,6 +200,6 @@ asummary <- function(x, a, m = NULL, M = NULL) {
 
   d <- cbind(d, take_neyman = c(ifelse(is_neyman, "*", ""), sum(is_neyman)))
 
-  cn_order <- c("a", "m", "M", "allocation", "take_min", "take_max", "take_neyman")
+  cn_order <- c("A", "m", "M", "allocation", "take_min", "take_max", "take_neyman")
   d[, intersect(cn_order, colnames(d))]
 }

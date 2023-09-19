@@ -6,7 +6,7 @@
 \usage{
 rnabox(
   n,
-  a,
+  A,
   bounds1 = NULL,
   bounds2 = NULL,
   check_violations1 = .Primitive(">="),
@@ -22,7 +22,7 @@ If \code{bounds2} is not \code{NULL}, it is then required that \code{n >= sum(bo
 (given that \code{bounds2} are treated as lower bounds) or \code{n <= sum(bounds2)}
 (given that \code{bounds2} are treated as upper bounds).}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{bounds1}{(\code{numeric} or \code{NULL})\cr lower bounds \eqn{m_1,\ldots,m_H},
@@ -94,17 +94,17 @@ instead.
 \examples{
 N <- c(454, 10, 116, 2500, 2240, 260, 39, 3000, 2500, 400)
 S <- c(0.9, 5000, 32, 0.1, 3, 5, 300, 13, 20, 7)
-a <- N * S
+A <- N * S
 m <- c(322, 3, 57, 207, 715, 121, 9, 1246, 1095, 294) # lower bounds
 M <- N # upper bounds
 
-# An example of a regular allocation.
+# Regular allocation.
 n <- 6000
-opt_regular <- rnabox(n, a, M, m)
+opt_regular <- rnabox(n, A, M, m)
 
-# An example of a vertex allocation.
+# Vertex allocation.
 n <- 4076
-opt_vertex <- rnabox(n, a, M, m)
+opt_vertex <- rnabox(n, A, M, m)
 }
 \references{
 To be added soon.

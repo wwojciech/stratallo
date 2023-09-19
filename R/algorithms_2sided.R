@@ -30,7 +30,7 @@ NULL
 #'   If `bounds2` is not `NULL`, it is then required that `n >= sum(bounds2)`
 #'   (given that `bounds2` are treated as lower bounds) or `n <= sum(bounds2)`
 #'   (given that `bounds2` are treated as upper bounds).
-#' @param a (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+#' @param A (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 #'   positive numbers.
 #' @param bounds1 (`numeric` or `NULL`)\cr lower bounds \eqn{m_1,\ldots,m_H},
 #'   or upper bounds \eqn{M_1,\ldots,M_H} optionally imposed on sample sizes in
@@ -82,35 +82,35 @@ NULL
 #' @examples
 #' N <- c(454, 10, 116, 2500, 2240, 260, 39, 3000, 2500, 400)
 #' S <- c(0.9, 5000, 32, 0.1, 3, 5, 300, 13, 20, 7)
-#' a <- N * S
+#' A <- N * S
 #' m <- c(322, 3, 57, 207, 715, 121, 9, 1246, 1095, 294) # lower bounds
 #' M <- N # upper bounds
 #'
-#' # An example of a regular allocation.
+#' # Regular allocation.
 #' n <- 6000
-#' opt_regular <- rnabox(n, a, M, m)
+#' opt_regular <- rnabox(n, A, M, m)
 #'
-#' # An example of a vertex allocation.
+#' # Vertex allocation.
 #' n <- 4076
-#' opt_vertex <- rnabox(n, a, M, m)
+#' opt_vertex <- rnabox(n, A, M, m)
 rnabox <- function(n,
-                   a,
+                   A,
                    bounds1 = NULL,
                    bounds2 = NULL,
                    check_violations1 = .Primitive(">="),
                    check_violations2 = .Primitive("<=")) {
-  x <- rna(n, a, bounds1, check_violations = check_violations1, details = TRUE)
+  x <- rna(n, A, bounds1, check_violations = check_violations1, details = TRUE)
   tN <- x$take_neyman # Strata original indices for which the allocation is of take-Neyman.
   tB2_rel_tN <- check_violations2(x$opt[tN], bounds2[tN]) # Strata (logical) indices,
   # relative to tN, for which the allocation is of take-bounds2.
 
   if (any(tB2_rel_tN)) {
-    W <- seq_along(a) # Set of strata original indices. To be shrunk in repeat loop.
+    W <- seq_along(A) # Set of strata original indices. To be shrunk in repeat loop.
     tN_rel_W <- tN
     repeat {
       n <- n - sum(bounds2[tN[tB2_rel_tN]])
       W <- W[-tN_rel_W[tB2_rel_tN]] # W = W \ tB2 (tB2 - original strata ind. with take-bounds2 alloc.).
-      x <- rna(n, a[W], bounds1[W], check_violations = check_violations1, details = TRUE)
+      x <- rna(n, A[W], bounds1[W], check_violations = check_violations1, details = TRUE)
       tN_rel_W <- x$take_neyman # Indices of W for which the allocation is of take-Neyman.
       tN <- W[tN_rel_W] # Strata original indices for which the allocation is of take-Neyman.
       tB2_rel_tN <- check_violations2(x$opt[tN_rel_W], bounds2[tN])
@@ -128,12 +128,12 @@ rnabox <- function(n,
 # Debug  ----
 
 rnabox_debug <- function(n,
-                         a,
+                         A,
                          bounds1 = NULL,
                          bounds2 = NULL,
                          check_violations1 = .Primitive(">="),
                          check_violations2 = .Primitive("<=")) {
-  x <- rna(n, a, bounds1, check_violations = check_violations1, details = TRUE)
+  x <- rna(n, A, bounds1, check_violations = check_violations1, details = TRUE)
   tN <- x$take_neyman # Strata original indices for which the allocation is of take-Neyman.
   tB2_rel_tN <- check_violations2(x$opt[tN], bounds2[tN]) # Strata (logical) indices,
   # relative to tN, for which the allocation is of take-bounds2.
@@ -152,12 +152,12 @@ rnabox_debug <- function(n,
   tB2 <- tN[tB2_rel_tN]
 
   xopt <- if (any(tB2_rel_tN)) {
-    W <- seq_along(a) # Set of strata original indices. To be shrunk in repeat loop.
+    W <- seq_along(A) # Set of strata original indices. To be shrunk in repeat loop.
     tN_rel_W <- tN
     repeat {
       n <- n - sum(bounds2[tN[tB2_rel_tN]])
       W <- W[-tN_rel_W[tB2_rel_tN]] # W = W \ tB2 (tB2 - original strata ind. with take-bounds2 alloc.).
-      x <- rna(n, a[W], bounds1[W], check_violations = check_violations1, details = TRUE)
+      x <- rna(n, A[W], bounds1[W], check_violations = check_violations1, details = TRUE)
       tN_rel_W <- x$take_neyman # Indices of W for which the allocation is of take-Neyman.
       tN <- W[tN_rel_W] # Strata original indices for which the allocation is of take-Neyman.
       tB2_rel_tN <- check_violations2(x$opt[tN_rel_W], bounds2[tN])
@@ -226,13 +226,13 @@ rnabox_debug_summary <- function(assignments, short = TRUE) {
   }
 }
 
-# rnabox_debug_old <- function(n, a, m, M) {
-#   W <- seq_along(a)
+# rnabox_debug_old <- function(n, A, m, M) {
+#   W <- seq_along(A)
 #
 #   debug_data <- list()
 #   L <- NULL
 #   repeat {
-#     x <- rna(n, a[W], M[W], details = TRUE) # step 1
+#     x <- rna(n, A[W], M[W], details = TRUE) # step 1
 #     Li <- x$opt <= m[W] # step 2
 #     debug_data <- c(
 #       debug_data,
@@ -288,11 +288,11 @@ rnabox_debug_summary <- function(assignments, short = TRUE) {
 # Test versions  ----
 
 # Wersja podstawowa.
-rnabox_v0 <- function(n, a, m, M) {
-  W <- seq_along(a)
+rnabox_v0 <- function(n, A, m, M) {
+  W <- seq_along(A)
 
   repeat {
-    x <- rna(n, a[W], M[W]) # step 1
+    x <- rna(n, A[W], M[W]) # step 1
     L <- x <= m[W] # step 2
     if (any(L)) { # step 3
       n <- n - sum(m[W[L]])
@@ -313,15 +313,15 @@ rnabox_v0 <- function(n, a, m, M) {
 
 # Taka sama logika jak rnabox_v0, sprytniejsze zakodowanie
 # (pierwsza pierwsza iteracja nie jest subsetowana przez W - tak jest szybciej)
-rnabox_v01 <- function(n, a, m, M) {
-  x <- rna(n, a, M) # step 1
+rnabox_v01 <- function(n, A, m, M) {
+  x <- rna(n, A, M) # step 1
   L <- x <= m # step 2
   if (any(L)) { # step 3
-    W <- seq_along(a)
+    W <- seq_along(A)
     repeat {
       n <- n - sum(m[W[L]])
       W <- W[!L]
-      x <- rna(n, a[W], M[W]) # step 1
+      x <- rna(n, A[W], M[W]) # step 1
       L <- x <= m[W] # step 2
       if (!any(L)) { # step 3
         m[W] <- x
@@ -335,11 +335,11 @@ rnabox_v01 <- function(n, a, m, M) {
 }
 
 # Wersja, ktora nie sprawdza w kroku 2: x_h >= m_h dla w: x_h = M_h.
-rnabox_v1 <- function(n, a, m, M) {
-  W <- seq_along(a)
+rnabox_v1 <- function(n, A, m, M) {
+  W <- seq_along(A)
 
   repeat {
-    x <- rna(n, a[W], M[W], details = TRUE) # step 1
+    x <- rna(n, A[W], M[W], details = TRUE) # step 1
     Uc_rel_W <- x$take_neyman
     Uc <- W[Uc_rel_W] # take-Neyman
 
@@ -364,18 +364,18 @@ rnabox_v1 <- function(n, a, m, M) {
 # Taka sama logika jak rnabox_v1, sprytniejsze zakodowanie
 # (pierwsza iteracja nie jest subsetowana przez W - tak jest szybciej)
 # Ta wersja jest aktualnie w pakiecie stratallo pod nazwa rnabox.
-rnabox_v11 <- function(n, a, m, M) {
-  x <- rna(n, a, M, details = TRUE) # step 1
+rnabox_v11 <- function(n, A, m, M) {
+  x <- rna(n, A, M, details = TRUE) # step 1
   Uc <- x$take_neyman
   L <- x$opt[Uc] <= m[Uc] # step 2
 
   if (any(L)) { # step 3
-    W <- seq_along(a)
+    W <- seq_along(A)
     Uc_rel_W <- Uc
     repeat {
       n <- n - sum(m[Uc[L]])
       W <- W[-Uc_rel_W[L]]
-      x <- rna(n, a[W], M[W], details = TRUE) # step 1
+      x <- rna(n, A[W], M[W], details = TRUE) # step 1
       Uc_rel_W <- x$take_neyman
       Uc <- W[Uc_rel_W]
       L <- x$opt[Uc_rel_W] <= m[Uc] # step 2
@@ -391,18 +391,18 @@ rnabox_v11 <- function(n, a, m, M) {
 }
 
 # TODO with prior information for RNA. Teraz nie dziala.
-rnabox_v2 <- function(n, a, m, M) {
-  x <- rna(n, a, M, details = TRUE) # step 1
+rnabox_v2 <- function(n, A, m, M) {
+  x <- rna(n, A, M, details = TRUE) # step 1
   Uc <- x$take_neyman
   L <- x$opt[Uc] <= m[Uc] # step 2
 
   if (any(L)) { # step 3
-    W <- seq_along(a)
+    W <- seq_along(A)
     Uc_rel_W <- Uc
     repeat {
       n <- n - sum(m[Uc[L]])
       W <- W[-Uc_rel_W[L]]
-      x <- rna_prior(n, a[W], M[W], check = "TODO", details = TRUE) # step 1
+      x <- rna_prior(n, A[W], M[W], check = "TODO", details = TRUE) # step 1
       Uc_rel_W <- x$take_neyman
       Uc <- W[Uc_rel_W]
       L <- x$opt[Uc_rel_W] <= m[Uc] # step 2
@@ -418,16 +418,16 @@ rnabox_v2 <- function(n, a, m, M) {
 }
 
 # w trakcie pisania
-rnabox_v3_sym <- function(n, a, m, M) {
-  W <- seq_along(a)
+rnabox_v3_sym <- function(n, A, m, M) {
+  W <- seq_along(A)
 
   repeat {
-    x <- rna(n, a[W], M[W]) # step 1
+    x <- rna(n, A[W], M[W]) # step 1
     L <- x <= m[W] # step 2
     if (length(L) == 0L) { # step 3
       break
     } else {
-      x <- rna(n, a[W], m[W], .Primitive(">=")) # step 1
+      x <- rna(n, A[W], m[W], .Primitive(">=")) # step 1
       n <- n - sum(m[W[L]])
       W <- W[!L]
     }

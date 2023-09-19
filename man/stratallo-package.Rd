@@ -4,9 +4,9 @@
 \name{stratallo-package}
 \alias{stratallo-package}
 \alias{stratallo}
-\title{Functions for Optimal Sample Allocation in Stratified Sampling}
+\title{Functions for Optimum Sample Allocation in Stratified Sampling}
 \description{
-Optimal Sample Allocation in Stratified Sampling
+Optimum Sample Allocation in Stratified Sampling
 }
 \references{
 Stenger, H., Gabler, S. (2005).

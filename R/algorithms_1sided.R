@@ -64,7 +64,7 @@ NULL
 #'
 #' @param total_cost (`number`)\cr total cost \eqn{c} of the survey. A strictly
 #'   positive scalar.
-#' @param a (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+#' @param A (`numeric`)\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 #'   positive numbers.
 #' @param M (`numeric` or `NULL`)\cr upper bounds \eqn{M_1,\ldots,M_H},
 #'   optionally imposed on sample sizes in strata. If no upper bounds should be
@@ -104,7 +104,7 @@ NULL
 #'
 #' @name opt_1sided
 #' @examples
-#' a <- c(3000, 4000, 5000, 2000)
+#' A <- c(3000, 4000, 5000, 2000)
 #' m <- c(50, 40, 10, 30) # lower bounds
 #' M <- c(100, 90, 70, 80) # upper bounds
 NULL
@@ -143,51 +143,51 @@ NULL
 #' @export
 #' @examples
 #'
-#' rna(total_cost = 190, a = a, bounds = M)
-#' rna(total_cost = 190, a = a, bounds = m, check_violations = .Primitive("<="))
+#' rna(total_cost = 190, A = A, bounds = M)
+#' rna(total_cost = 190, A = A, bounds = m, check_violations = .Primitive("<="))
 rna <- function(total_cost,
-                a,
+                A,
                 bounds = NULL,
                 unit_costs = 1,
                 check_violations = .Primitive(">="),
                 details = FALSE) {
   i <- 0L # Iteration index, for debugging purposes only.
   c_sqrt <- sqrt(unit_costs)
-  a_c <- a * c_sqrt
-  a_over_c <- a / c_sqrt
-  s0 <- s <- total_cost / sum(a_c)
-  x <- s * a_over_c # Neyman allocation.
-  Ri <- check_violations(x, bounds)
+  A_c <- A * c_sqrt
+  A_over_c <- A / c_sqrt
+  s0 <- s <- total_cost / sum(A_c)
+  x <- s * A_over_c # Neyman allocation.
+  V <- check_violations(x, bounds)
 
-  if (any(Ri)) {
-    W <- seq_along(a_c) # Set of strata original indices. To be shrunk in repeat loop.
+  if (any(V)) {
+    W <- seq_along(A_c) # Set of strata original indices. To be shrunk in repeat loop.
     bounds_c <- bounds * unit_costs
     for (i in W) {
-      total_cost <- total_cost - sum(bounds_c[W[Ri]])
-      W <- W[!Ri] # W <- W \ W[Ri]
+      total_cost <- total_cost - sum(bounds_c[W[V]])
+      W <- W[!V] # W <- W \ W[V]
       # Neyman allocation for W. Denominator could be accumulated (i.e.
-      # a_c_sum <- a_c_sum - sum(a_c[W[Ri]]), where first a_c_sum = a_c[1]+...+a_c[H]),
+      # A_c_sum <- A_c_sum - sum(A_c[W[V]]), where first A_c_sum = A_c[1]+...+A_c[H]),
       # but resigned from this version due to finite precision arithmetic issues.
-      s <- total_cost / sum(a_c[W])
-      x <- s * a_over_c[W]
-      Ri <- check_violations(x, bounds[W]) # Indices of W for which x violates bounds.
-      if (!any(Ri)) {
+      s <- total_cost / sum(A_c[W])
+      x <- s * A_over_c[W]
+      V <- check_violations(x, bounds[W]) # Indices of W for which x violates bounds.
+      if (!any(V)) {
         bounds[W] <- x
         break
       }
     }
     if (details) {
       take_bound <- if (length(W) == 0L) {
-        seq_along(a) # Vertex allocation.
+        seq_along(A) # Vertex allocation.
       } else {
-        seq_along(a)[-W]
+        seq_along(A)[-W]
       }
       list(opt = bounds, take_neyman = W, take_bound = take_bound, s0 = s0, s = s, iter = i + 1L)
     } else {
       bounds
     }
   } else if (details) {
-    list(opt = x, take_neyman = seq_along(a_c), take_bound = integer(0), s0 = s0, s = s, iter = i + 1L)
+    list(opt = x, take_neyman = seq_along(A_c), take_bound = integer(0), s0 = s0, s = s, iter = i + 1L)
   } else {
     x
   }
@@ -201,31 +201,31 @@ rna <- function(total_cost,
 #'
 #' @export
 #' @examples
-#' sga(total_cost = 190, a = a, M = M)
-sga <- function(total_cost, a, M) {
-  H <- length(a) # Number of strata.
-  aM <- a / M
+#' sga(total_cost = 190, A = A, M = M)
+sga <- function(total_cost, A, M) {
+  H <- length(A) # Number of strata.
+  AoM <- A / M
   # W - strata indices sorted with regard to non-increasing order of a/M.
   # The ordering preserves relative order of the elements with equivalent values.
-  W <- order(aM, decreasing = TRUE)
+  W <- order(AoM, decreasing = TRUE)
 
-  A <- sum(a)
+  Asum <- sum(A)
   for (i in 1:H) {
-    s_inv <- A / total_cost # Inverse of s function.
+    s_inv <- Asum / total_cost # Inverse of s function.
     h <- W[i]
-    if (aM[h] < s_inv) {
+    if (AoM[h] < s_inv) {
       break
     } else {
       total_cost <- total_cost - M[h]
-      A <- A - a[h]
+      Asum <- Asum - A[h]
     }
   }
 
   if (i == 1L) { # To improve the performance, otherwise, else block only.
-    a / s_inv
+    A / s_inv
   } else {
     V <- W[i:H]
-    M[V] <- a[V] / s_inv
+    M[V] <- A[V] / s_inv
     M
   }
 }
@@ -238,25 +238,25 @@ sga <- function(total_cost, a, M) {
 #'
 #' @export
 #' @examples
-#' sgaplus(total_cost = 190, a = a, M = M)
-sgaplus <- function(total_cost, a, M) {
-  H <- length(a) # Number of strata.
-  aM <- a / M
+#' sgaplus(total_cost = 190, A = A, M = M)
+sgaplus <- function(total_cost, A, M) {
+  H <- length(A) # Number of strata.
+  AoM <- A / M
   # W - strata indices sorted with regard to non-increasing order of a/M.
   # The ordering preserves relative order of the elements with equivalent values.
-  W <- order(aM, decreasing = TRUE)
+  W <- order(AoM, decreasing = TRUE)
 
-  A <- sum(a)
-  ksi_inv <- A / total_cost
+  Asum <- sum(A)
+  ksi_inv <- Asum / total_cost
   i <- 1L
   j <- 1L
   repeat {
-    if (aM[W[i]] < ksi_inv) { # Allocation for stratum W[i] does not exceed M.
+    if (AoM[W[i]] < ksi_inv) { # Allocation for stratum W[i] does not exceed M.
       if (j < i) { # It must not be exceeded also when W = W[-(1:(i-1))]
         Rj <- W[j:(i - 1L)]
         total_cost <- total_cost - sum(M[Rj])
-        A <- A - sum(a[Rj])
-        ksi_inv <- A / total_cost
+        Asum <- Asum - sum(A[Rj])
+        ksi_inv <- Asum / total_cost
         j <- i
       } else {
         break
@@ -269,10 +269,10 @@ sgaplus <- function(total_cost, a, M) {
   }
 
   if (i == 1L) { # To improve the performance, otherwise, else block only.
-    a / ksi_inv
+    A / ksi_inv
   } else {
     V <- W[i:H]
-    M[V] <- a[V] / ksi_inv
+    M[V] <- A[V] / ksi_inv
     M
   }
 }
@@ -285,23 +285,23 @@ sgaplus <- function(total_cost, a, M) {
 #'
 #' @export
 #' @examples
-#' coma(total_cost = 190, a = a, M = M)
-coma <- function(total_cost, a, M) {
-  H <- length(a) # Number of strata.
+#' coma(total_cost = 190, A = A, M = M)
+coma <- function(total_cost, A, M) {
+  H <- length(A) # Number of strata.
   if (H == 1L) {
     return(min(total_cost, M))
   }
   # W - strata indices sorted with regard to non-increasing order of a/M.
   # The ordering preserves relative order of the elements with equivalent values.
-  W <- order(a / M, decreasing = TRUE)
+  W <- order(A / M, decreasing = TRUE)
 
-  A <- sum(a)
-  s <- total_cost / A
+  Asum <- sum(A)
+  s <- total_cost / Asum
   for (i in 1:(H - 1)) {
     h <- W[i]
     total_cost <- total_cost - M[h]
-    A <- A - a[h]
-    s_next <- total_cost / A
+    Asum <- Asum - A[h]
+    s_next <- total_cost / Asum
 
     if (s > s_next) { # Change of monotonicity found.
       break
@@ -313,10 +313,10 @@ coma <- function(total_cost, a, M) {
   i <- ifelse(i == H - 1 && s <= s_next, H, i)
 
   if (i == 1) { # To improve the performance, otherwise, else block only.
-    a * s
+    A * s
   } else {
     V <- W[i:H]
-    M[V] <- a[V] * s
+    M[V] <- A[V] * s
     M
   }
 }
@@ -332,21 +332,21 @@ coma <- function(total_cost, a, M) {
 #'
 #' @export
 #' @examples
-#' a <- c(3000, 4000, 5000, 2000)
+#' A <- c(3000, 4000, 5000, 2000)
 #' M <- c(100, 90, 70, 80) # upper bounds.
-#' rna_rec(total_cost = 190, a = a, bounds = M)
-#' rna_rec(total_cost = 312, a = a, bounds = M)
-#' rna_rec(total_cost = 339, a = a, bounds = M)
-#' rna_rec(total_cost = 340, a = a, bounds = M)
-rna_rec <- function(total_cost, a, bounds = NULL, unit_costs = rep(1, length(a)), check_violations = .Primitive(">=")) {
-  x <- (total_cost / sum(a * sqrt(unit_costs))) * (a / sqrt(unit_costs)) # Neyman allocation.
+#' rna_rec(total_cost = 190, A = A, bounds = M)
+#' rna_rec(total_cost = 312, A = A, bounds = M)
+#' rna_rec(total_cost = 339, A = A, bounds = M)
+#' rna_rec(total_cost = 340, A = A, bounds = M)
+rna_rec <- function(total_cost, A, bounds = NULL, unit_costs = rep(1, length(A)), check_violations = .Primitive(">=")) {
+  x <- (total_cost / sum(A * sqrt(unit_costs))) * (A / sqrt(unit_costs)) # Neyman allocation.
   t_bound <- check_violations(x, bounds) # take-bound
 
   if (any(t_bound)) {
     total_cost <- total_cost - sum(unit_costs[t_bound] * bounds[t_bound])
     t_neyman <- !t_bound # take-Neyman
     bounds[t_neyman] <- rna_rec(
-      total_cost, a[t_neyman], bounds[t_neyman], unit_costs[t_neyman], check_violations
+      total_cost, A[t_neyman], bounds[t_neyman], unit_costs[t_neyman], check_violations
     )
     bounds
   } else {
@@ -362,43 +362,118 @@ rna_rec <- function(total_cost, a, bounds = NULL, unit_costs = rep(1, length(a))
 #' about strata for which the allocation can possibly be violated. For all other
 #' strata allocation will not be violated.
 #'
-#' @note this coded does not work yet
+#' @note this coded was not extensively tested.
 #'
 #' @inheritParams rna
 #' @param check (`integer`)\cr strata indices for which the allocation can
 #'   possible be violated. For other strata allocation cannot be violated.
 #'
-rna_prior <- function(total_cost, a, bounds = NULL, check_violations = .Primitive(">="), check, details = FALSE) {
-  x <- (total_cost / sum(a)) * a # Neyman allocation.
-  Ri <- check_violations(x[check], bounds[check]) # Check for violation in `check` only.
+rna_prior <- function(total_cost, A, bounds = NULL, check = NULL, check_violations = .Primitive(">="), details = FALSE) {
+  s <- total_cost / sum(A)
+  V <- check_violations(s * A[check], bounds[check])
 
-  if (any(Ri)) {
-    W <- seq_along(a)
+  if (any(V)) {
+    check_ind <- seq_along(check)
     repeat {
-      # TODO - ponizej nie sprawdzonny kod.
-      total_cost <- total_cost - sum(bounds[W[check[Ri]]])
-      W <- W[-check[Ri]] # W <- W \ R
-      x <- (total_cost / sum(a[W])) * a[W] # Neyman allocation for W.
-      Ri <- check_violations(x, bounds[W]) # Indices of W for which x violates bounds.
-      if (!any(Ri)) {
-        bounds[W] <- x
-        x <- bounds
+      total_cost <- total_cost - sum(bounds[check[check_ind[V]]])
+      check_ind <- check_ind[!V]
+      tN <- -check[-check_ind]
+      tB <- check[check_ind]
+      s <- total_cost / sum(A[tN])
+      V <- check_violations(s * A[tB], bounds[tB])
+      if (!any(V)) {
+        bounds[tN] <- s * A[tN]
+        break
+      } else if (sum(V) == length(check_ind)) {
+        bounds[-check] <- (total_cost - sum(bounds[check[check_ind[V]]])) / sum(A[-check]) * A[-check]
         break
       }
     }
-    if (details) {
-      take_bound <- if (length(W) == 0L) {
-        seq_along(a) # Vertex allocation.
-      } else {
-        seq_along(a)[-W]
-      }
-      list(opt = bounds, take_neyman = W, take_bound = take_bound)
-    } else {
-      bounds
-    }
-  } else if (details) {
-    list(opt = x, take_neyman = seq_along(a), take_bound = integer(0))
+    bounds
   } else {
-    x
+    s * A
   }
+}
+
+# Does not work when: check == take-bound or V is NULL.
+rna_prior1 <- function(total_cost, A, bounds = NULL, check = NULL, check_violations = .Primitive(">="), details = FALSE) {
+  s <- total_cost / sum(A)
+  V <- NULL
+  repeat {
+    Vi <- check_violations(s * A[check], bounds[check])
+    if (any(Vi)) {
+      total_cost <- total_cost - sum(bounds[check[Vi]])
+      V <- c(V, check[Vi])
+      check <- check[!Vi]
+      s <- total_cost / sum(A[-V])
+    } else {
+      bounds[-V] <- s * A[-V]
+      break
+    }
+  }
+  bounds
+}
+
+# Works well, the best out of all the options so far.
+rna_prior2 <- function(total_cost, A, bounds = NULL, check = NULL, check_violations = .Primitive(">="), details = FALSE) {
+  s <- total_cost / sum(A)
+  tN_map <- !logical(length = length(A)) # Map with strata to take-Neyman
+  repeat {
+    V <- check_violations(s * A[check], bounds[check])
+    if (any(V)) {
+      tB <- check[V]
+      tN_map[tB] <- FALSE
+      check <- check[!V]
+      total_cost <- total_cost - sum(bounds[tB])
+      A_tN <- A[tN_map]
+      s <- total_cost / sum(A_tN)
+    } else {
+      bounds[tN_map] <- s * A_tN
+      break
+    }
+  }
+  bounds
+}
+
+# Works well.
+rna_prior3 <- function(total_cost, A, bounds = NULL, check = NULL, check_violations = .Primitive(">="), details = FALSE) {
+  s <- total_cost / sum(A)
+  tN <- seq_along(A) # Strata indices for take-Neyman.
+  repeat {
+    V <- check_violations(s * A[check], bounds[check])
+    if (any(V)) {
+      tB <- check[V]
+      tN[tB] <- 0L
+      check <- check[!V]
+      total_cost <- total_cost - sum(bounds[tB])
+      A_tN <- A[tN]
+      s <- total_cost / sum(A_tN)
+    } else {
+      bounds[tN] <- s * A_tN
+      break
+    }
+  }
+  bounds
+}
+
+# Works well, the best out of all the options so far.
+rna_prior2a <- function(total_cost, A, bounds = NULL, check = seq_along(A), take_bound = NULL, check_violations = .Primitive(">="), details = FALSE) {
+  tN_map <- !logical(length = length(A)) # Map with strata to take-Neyman
+  tN_map[take_bound] <- FALSE
+  check <- setdiff(check, take_bound)
+  repeat {
+    A_tN <- A[tN_map]
+    s <- total_cost / sum(A_tN)
+    V <- check_violations(s * A[check], bounds[check])
+    if (any(V)) {
+      tB <- check[V]
+      tN_map[tB] <- FALSE
+      check <- check[!V]
+      total_cost <- total_cost - sum(bounds[tB])
+    } else {
+      bounds[tN_map] <- s * A_tN
+      break
+    }
+  }
+  bounds
 }

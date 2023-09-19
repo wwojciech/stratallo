@@ -6,9 +6,9 @@
 \usage{
 rna_rec(
   total_cost,
-  a,
+  A,
   bounds = NULL,
-  unit_costs = rep(1, length(a)),
+  unit_costs = rep(1, length(A)),
   check_violations = .Primitive(">=")
 )
 }
@@ -16,7 +16,7 @@ rna_rec(
 \item{total_cost}{(\code{number})\cr total cost \eqn{c} of the survey. A strictly
 positive scalar.}
 
-\item{a}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
 positive numbers.}
 
 \item{bounds}{(\code{numeric} or \code{NULL}) \cr optional lower bounds
@@ -52,10 +52,10 @@ are treated as upper bounds, and then \code{rna()} function performs the
 this coded was not extensively tested.
 }
 \examples{
-a <- c(3000, 4000, 5000, 2000)
+A <- c(3000, 4000, 5000, 2000)
 M <- c(100, 90, 70, 80) # upper bounds.
-rna_rec(total_cost = 190, a = a, bounds = M)
-rna_rec(total_cost = 312, a = a, bounds = M)
-rna_rec(total_cost = 339, a = a, bounds = M)
-rna_rec(total_cost = 340, a = a, bounds = M)
+rna_rec(total_cost = 190, A = A, bounds = M)
+rna_rec(total_cost = 312, A = A, bounds = M)
+rna_rec(total_cost = 339, A = A, bounds = M)
+rna_rec(total_cost = 340, A = A, bounds = M)
 }
