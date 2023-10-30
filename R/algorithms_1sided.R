@@ -456,7 +456,7 @@ rna_prior3 <- function(total_cost, A, bounds = NULL, check = NULL, check_violati
   bounds
 }
 
-# Works well, the best out of all the options so far.
+# with take_bound
 rna_prior2a <- function(total_cost, A, bounds = NULL, check = seq_along(A), take_bound = NULL, check_violations = .Primitive(">="), details = FALSE) {
   tN_map <- !logical(length = length(A)) # Map with strata to take-Neyman
   tN_map[take_bound] <- FALSE
