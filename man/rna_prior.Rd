@@ -8,8 +8,8 @@ rna_prior(
   total_cost,
   A,
   bounds = NULL,
-  check_violations = .Primitive(">="),
   check = NULL,
+  check_violations = .Primitive(">="),
   details = FALSE
 )
 }
@@ -33,6 +33,9 @@ or
 is required that \code{total_cost <= sum(unit_costs * bounds)}.
 }}
 
+\item{check}{(\code{integer})\cr strata indices for which the allocation can
+possible be violated. For other strata allocation cannot be violated.}
+
 \item{check_violations}{(\code{function}) \cr 2-arguments binary operator function
 that allows the comparison of values in atomic vectors. It must either be
 set to \code{.Primitive("<=")} or \code{.Primitive(">=")}. The first of these choices
@@ -40,9 +43,6 @@ causes that \code{bounds} are treated as lower bounds and then \code{rna()} func
 performs the \emph{LRNA} algorithm. The latter option causes that \code{bounds}
 are treated as upper bounds, and then \code{rna()} function performs the
 \emph{RNA} algorithm. This argument is ignored when \code{bounds} is set to \code{NULL}.}
-
-\item{check}{(\code{integer})\cr strata indices for which the allocation can
-possible be violated. For other strata allocation cannot be violated.}
 
 \item{details}{(\code{flag}) \cr should detailed information about strata
 assignments (either to take-Neyman or take-bound), values of set function
@@ -56,5 +56,5 @@ about strata for which the allocation can possibly be violated. For all other
 strata allocation will not be violated.
 }
 \note{
-this coded does not work yet
+this coded was not extensively tested.
 }
