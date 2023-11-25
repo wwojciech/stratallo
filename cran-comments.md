@@ -1,10 +1,7 @@
 ## Resubmission
 
-This is a quick re-submission of the previous major release. Please accept it
-even though it is the next submission after yesterday's version, but it contains
-some major typo corrections which I would like to get corrected. This is 
-particularly important as I will present this package on international 
-statistical conference very soon.
+This is a regular submission of the minor version of the package, where few minor
+issues were corrected.
 
 ## Test environments
 
@@ -13,35 +10,36 @@ statistical conference very soon.
 * https://mac.r-project.org/macbuilder/submit.html.
 * Rhub:
   - Windows Server 2022, R-release, 32/64 bit
-  - Debian Linux, R-release, GCC 
+  - Ubuntu Linux 20.04.1 LTS, R-release, GCC
+  - Fedora Linux, R-devel, clang, gfortran
 
 ## R CMD check results
 
 There were no ERRORs, WARNINGs. The following 4 NOTEs have been reported by
-`devtools::check_rhub`. The surname Tschuprow is correctly spelled. There is
-no any mistake here.
+`devtools::check_rhub`. The surname Tschuprow is correctly spelled and the URL
+is accessible.
 
 ```
-* checking CRAN incoming feasibility ... [13s] NOTE
-Maintainer: 'Wojciech Wójciak <wojciech.wojciak@gmail.com>'
-Days since last update: 1
+─  checking CRAN incoming feasibility ... [15s] NOTE
+   Maintainer: 'Wojciech Wójciak <wojciech.wojciak@gmail.com>'
+   
+   Possibly misspelled words in DESCRIPTION:
+     Tschuprow (10:60)
+   
+   Found the following (possibly) invalid URLs:
+     URL: https://www.sciencedirect.com/science/article/pii/S0167947315001413
+       From: man/CapacityScaling.Rd
+             man/SimpleGreedy.Rd
+       Status: 403
+       Message: Forbidden
 
-
-Possibly misspelled words in DESCRIPTION:
-  Tschuprow (10:60)
-
-Found the following (possibly) invalid URLs:
-  URL: https://www.sciencedirect.com/science/article/pii/S0167947315001413
-    From: man/CapacityScaling.Rd
-          man/SimpleGreedy.Rd
-    Status: 403
-    Message: Forbidden
-* checking HTML version of manual ... NOTE
-Skipping checking math rendering: package 'V8' unavailable
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  ''NULL''
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
+─  checking PDF version of manual ... [12s] OK
+N  checking HTML version of manual
+   Skipping checking math rendering: package 'V8' unavailable
+   Found the following files/directories:
+     ''NULL''
+N  checking for non-standard things in the check directory
+N  checking for detritus in the temp directory
+   Found the following files/directories:
+     'lastMiKTeXException'
 ```
