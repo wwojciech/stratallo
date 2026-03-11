@@ -9,3 +9,5 @@
 ^\.lintr$
 ^CRAN-SUBMISSION$
 ^CITATION.cff$
+^doc$
+^Meta$

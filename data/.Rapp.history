@@ -1,0 +1,33 @@
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop9d278s.rda")
+ls()
+pop9d278s
+pop9d278s$rho2
+identical(pop9d278s$rho2, pop9d278s$total^2 * pop9d278s$kappa)
+identical(pop2d4s$rho2, pop2d4s $total^2 * pop2d4s $kappa)
+identical(pop2d4s$rho2, pop2d4s $total^2 * pop2d4s$kappa)
+ls()
+exit
+quit()
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop2d4s.rda")
+ls()
+identical(pop2d4s$rho2, pop2d4s $total^2 * pop2d4s$kappa)
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop10s_bounds.rda")
+ls
+ls()
+head(pop10s_bounds)
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop969s_ucost.rda")
+ls()
+pop969s_ucost
+head(pop969s_ucost)
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop507s_ucost.rda")
+ls()
+head(pop507s_ucost)
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop10s_bounds_ucost.rda")
+ls()
+head(pop10s_bounds_ucost)
+pop10s_bounds_ucost
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop9d278s.rda")
+pop9d278s
+load("/Volumes/Dane/studia/doktoranckie/alokacja_optymalna/R_code/stratallo/data/pop2d4s.rda")
+ls()
+pop2d4s

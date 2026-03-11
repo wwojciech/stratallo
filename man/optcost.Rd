@@ -2,83 +2,77 @@
 % Please edit documentation in R/opt.R
 \name{optcost}
 \alias{optcost}
-\title{Minimum Cost Allocation in Stratified Sampling}
+\title{Minimum-Cost Allocation in Stratified Sampling}
 \usage{
 optcost(V, A, A0, M = NULL, unit_costs = 1)
 }
 \arguments{
-\item{V}{(\code{number})\cr parameter \eqn{V} of the equality constraint. A
-strictly positive scalar. If \code{M} is not \code{NULL}, it is then required that
-\code{V >= sum(A^2/M) - A0}.}
+\item{V}{(\code{number})\cr parameter \eqn{V} in the variance constraint.
+If upper bounds are imposed (\code{M} is not \code{NULL}), it must satisfy
+\code{V > sum(A^2/M) - A_0}. Otherwise, \code{V > 0}.}
 
-\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}. Strictly
-positive numbers.}
+\item{A}{(\code{numeric})\cr population constants \eqn{A_1,\ldots,A_H}.
+All values must be strictly positive.}
 
 \item{A0}{(\code{number})\cr population constant \eqn{A_0}.}
 
-\item{M}{(\code{numeric} or \code{NULL})\cr upper bounds \eqn{M_1,\ldots,M_H},
-optionally imposed on sample sizes in strata. If no upper bounds should be
-imposed, then \code{M} must be set to \code{NULL}.}
+\item{M}{(\code{numeric} or \code{NULL})\cr optional upper bounds \eqn{M_1,\ldots,M_H}
+on the stratum sample sizes.
+If no upper bounds are imposed, set \code{M = NULL}.}
 
-\item{unit_costs}{(\code{numeric})\cr costs \eqn{c_1,\ldots,c_H}, of surveying one
-element in stratum. A strictly positive numbers. Can be also of length 1,
-if all unit costs are the same for all strata. In this case, the elements
-will be recycled to the length of \code{bounds}.}
+\item{unit_costs}{(\code{numeric})\cr costs \eqn{c_1,\ldots,c_H} of surveying one
+element in each stratum. Strictly positive values. May also be of length 1,
+in which case the value is recycled to match the length of \code{bounds}.}
 }
 \value{
-Numeric vector with optimal sample allocations in strata.
+A numeric vector containing the optimal sample allocation for each stratum.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Function that determines fixed strata sample sizes that minimize total cost
-of the survey, under assumed level of the variance of the stratified
-estimator and under optional one-sided upper bounds imposed on strata sample
-sizes. Namely, the following optimization problem, formulated below in the
-language of mathematical optimization, is solved by \code{optcost()} function.
+Computes stratum sample sizes that minimize the total survey cost for a
+given target variance of a stratified estimator, optionally subject to
+one-sided upper bounds on the stratum sample sizes.
+Specifically, the function solves the following optimization problem:
 
 Minimize
 \deqn{c(x_1,\ldots,x_H) = \sum_{h=1}^H c_h x_h}
-subject to
-\deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0 = V}
-\deqn{x_h \leq M_h, \quad h = 1,\ldots,H,}
+over \eqn{\mathbb R_+^H}, subject to
+\deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0 = V,}
+\deqn{x_h \leq M_h, \qquad h = 1,\ldots,H,}
 where \eqn{A_0,\, A_h > 0,\, c_h > 0,\, M_h > 0,\, h = 1,\ldots,H},
-and \eqn{V > \sum_{h=1}^H \frac{A^2_h}{M_h} - A_0} are given numbers. The
-minimization is on \eqn{\mathbb R_+^H}.
-The upper-bounds constraints \eqn{x_h \leq M_h,\, h = 1,\ldots,H}, are
-optional and can be skipped. In such a case, it is only required that
-\eqn{V > 0}.
+and \eqn{V > \sum_{h=1}^H \frac{A^2_h}{M_h} - A_0}, are given numbers.
+
+The upper-bound constraints \eqn{x_h \leq M_h} are optional. If they are not
+imposed, it is only required that \eqn{V > 0}.
 }
 \details{
-The algorithm that is used by \code{optcost()} is the \code{LRNA} and it is
-described in Wójciak (2023). The allocation computed is valid for all
-stratified sampling schemes for which the variance of the stratified
-estimator is of the form:
-\deqn{\sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
-where \eqn{H} denotes total number of strata, \eqn{x_1,\ldots,x_H} are
-strata sample sizes and \eqn{A_0,\, A_h > 0,\, h = 1,\ldots,H}, do not
-depend on \eqn{x_h,\, h = 1,\ldots,H}.
+The allocation is computed using the \strong{LRNA algorithm}, described in
+\insertCite{WojciakLRNA;textual}{stratallo}.
+
+The solution is valid for stratified sampling designs in which the variance
+\eqn{V_{st}} of the stratified estimator can be expressed as
+\deqn{V_{st} = \sum_{h=1}^H \frac{A^2_h}{x_h} - A_0,}
+where \eqn{H} is the number of strata, \eqn{x_1,\ldots,x_H} are the stratum
+sample sizes, and \eqn{A_0,\, A_h > 0} do not depend on \eqn{x_h}.
 }
 \note{
-For \emph{stratified \eqn{\pi} estimator} of the population total and
-for \emph{stratified simple random sampling without replacement} design,
-the population parameters are as follows:
-\deqn{A_h = N_h S_h, \quad h = 1,\ldots,H,}
+For the \emph{stratified \eqn{\pi}-estimator} of the population total under
+\emph{stratified simple random sampling without replacement} design, the
+parameters take the form
+\deqn{A_h = N_h S_h, \qquad h = 1,\ldots,H,}
 \deqn{A_0 = \sum_{h=1}^H N_h S_h^2,}
-where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} denotes
-standard deviation of a given study variable in stratum \eqn{h}.
+where \eqn{N_h} is the size of stratum \eqn{h} and \eqn{S_h} is the
+standard deviation of the study variable in stratum \eqn{h}.
 }
 \examples{
 A <- c(3000, 4000, 5000, 2000)
 M <- c(100, 90, 70, 80)
-xopt <- optcost(1017579, A = A, A0 = 579, M = M)
-xopt
+x <- optcost(1017579, A = A, A0 = 579, M = M)
+x
 }
 \references{
-Wójciak, W. (2023).
-Another Solution of Some Optimum Allocation Problem.
-\emph{Statistics in Transition new series}, 24(5) (in press).
-\url{https://arxiv.org/abs/2204.04035}
+\insertRef{WojciakLRNA}{stratallo}
 }
 \seealso{
 \code{\link[=rna]{rna()}}, \code{\link[=opt]{opt()}}.

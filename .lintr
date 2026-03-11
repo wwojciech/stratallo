@@ -1,6 +1,7 @@
-linters: with_defaults(
+linters: linters_with_defaults(
   line_length_linter = line_length_linter(120),
-  object_name_linter = object_name_linter(c('CamelCase', 'camelCase', 'snake_case', 'dotted.case', 'lowercase', 'UPPERCASE'))
+  object_name_linter = object_name_linter(c('CamelCase', 'camelCase', 'snake_case', 'dotted.case', 'lowercase', 'UPPERCASE')),
+  commented_code_linter = NULL
  )
 cache: FALSE
 

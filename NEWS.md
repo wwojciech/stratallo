@@ -1,5 +1,19 @@
 # stratallo
 
+# stratallo 3.0.0
+
+* Added new functions for controlled-precision domain allocation, including `dopt()`.
+* Renamed argument in `rna()`:
+  - `check_violations` -> `cmp`.
+* Renamed arguments in `rnabox()`:
+  - `bounds1` -> `bounds_inner`,
+  - `bounds2` -> `bounds_outer`,
+  - `check_violations1` -> `cmp_inner`,
+  - `check_violations2` -> `cmp_outer`.
+* Renamed artificial population datasets.
+* Renamed `var_st_tsi()` function to `var_stsi()`.
+* Renamed `asummary()` function to `alloc_summary()`.
+
 # stratallo 2.2.1
 
 * Changed the name of two parameters: `a` to `A` and `a0` to `A0` for several
