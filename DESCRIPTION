@@ -1,51 +1,55 @@
 Package: stratallo
 Title: Optimum Sample Allocation in Stratified Sampling
-Version: 2.2.1
+Version: 3.0.0
 Authors@R: c(
-  person("Wojciech", "Wójciak", email = "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
-  person("Jacek", "Wesołowski", email = "jacek.wesolowski@pw.edu.pl", role = "sad"),
-  person("Robert", "Wieczorkowski", email = "R.Wieczorkowski@stat.gov.pl", role = "ctb"))
-Description: Functions in this package provide solution to classical problem in
-  survey methodology - an optimum sample allocation in stratified sampling. In
-  this context, the optimum allocation is in the classical Tschuprow-Neyman's
-  sense and it satisfies additional lower or upper bounds restrictions imposed
-  on sample sizes in strata. There are few different algorithms available to
-  use, and one them is based on popular sample allocation method that applies
-  Neyman allocation to recursively reduced set of strata.
-  This package also provides the function that computes a solution to the
-  minimum cost allocation problem, which is a minor modification of the
-  classical optimum sample allocation. This problem lies in the determination
-  of a vector of strata sample sizes that minimizes total cost of the survey,
-  under assumed fixed level of the stratified estimator's variance. As in the
-  case of the classical optimum allocation, the problem of minimum cost
-  allocation can be complemented by imposing upper-bounds constraints on sample
-  sizes in strata.
+    person("Wojciech", "Wójciak", , "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
+    person("Jacek", "Wesołowski", , "jacek.wesolowski@pw.edu.pl", role = "sad"),
+    person("Robert", "Wieczorkowski", , "R.Wieczorkowski@stat.gov.pl", role = "ctb")
+  )
+Description: Provides exact analytical algorithms for computing optimum sample
+  allocations in stratified sampling.
+  Supports classical Neyman-Tschuprow allocation, minimum-cost allocation under
+  a variance constraint, and multi-domain allocation with controlled precision.
+  Handles lower and upper bounds, cost constraints, and multiple domains.
+  Includes helper functions for variance computation, allocation summaries,
+  rounding, and example datasets for testing and benchmarking.
 License: GPL-2
 URL: https://github.com/wwojciech/stratallo
 BugReports: https://github.com/wwojciech/stratallo/issues
-Copyright: Wojciech Wójciak
-Language: en-US
-Encoding: UTF-8
-LazyData: true
+Depends: R (>= 3.5.0)
 Imports:
     checkmate,
-    lifecycle
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+    lifecycle,
+    Rdpack
 Suggests: 
-    rmarkdown,
     knitr,
+    rmarkdown,
     spelling,
     testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+RdMacros: 
+    Rdpack
 Config/testthat/edition: 3
+Copyright: Wojciech Wójciak
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
 Collate: 
-    'helpers.R'
-    'algorithms_1sided.R'
-    'algorithms_2sided.R'
-    'algorithms_of_other_authors.R'
+    'helpers_dca_rdca.R'
+    'utils.R'
+    'alg_dca.R'
+    'alg_other_authors.R'
+    'alg_rdca.R'
+    'alg_rna-sga-coma.R'
+    'alg_rnabox.R'
+    'alloc_summary.R'
+    'check_rdca.R'
     'data.R'
+    'dopt.R'
     'opt.R'
+    'rounding.R'
     'stratallo-package.R'
-VignetteBuilder: knitr
-Depends: 
-    R (>= 2.10)
+    'var.R'

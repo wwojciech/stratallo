@@ -1,45 +1,23 @@
 ## Resubmission
 
-This is a regular submission of the minor version of the package, where few minor
-issues were corrected.
+This is a submission of the new major version of the package.
 
 ## Test environments
 
-* macOS R 4.3.0
-* https://win-builder.r-project.org/
-* https://mac.r-project.org/macbuilder/submit.html.
-* Rhub:
-  - Windows Server 2022, R-release, 32/64 bit
-  - Ubuntu Linux 20.04.1 LTS, R-release, GCC
-  - Fedora Linux, R-devel, clang, gfortran
+* macOS R 4.5.0
+* Windows Server 2022 x64 (build 20348)
 
 ## R CMD check results
 
-There were no ERRORs, WARNINGs. The following 4 NOTEs have been reported by
-`devtools::check_rhub`. The surname Tschuprow is correctly spelled and the URL
-is accessible.
+There were no ERRORs, WARNINGs. The following 1 NOTE has been reported by
+`devtools::check()`.
 
 ```
-─  checking CRAN incoming feasibility ... [15s] NOTE
-   Maintainer: 'Wojciech Wójciak <wojciech.wojciak@gmail.com>'
-   
-   Possibly misspelled words in DESCRIPTION:
-     Tschuprow (10:60)
-   
-   Found the following (possibly) invalid URLs:
-     URL: https://www.sciencedirect.com/science/article/pii/S0167947315001413
-       From: man/CapacityScaling.Rd
-             man/SimpleGreedy.Rd
-       Status: 403
-       Message: Forbidden
+--- R CMD check results --- stratallo 3.0.0 ---
+Duration: 44.9s
 
-─  checking PDF version of manual ... [12s] OK
-N  checking HTML version of manual
-   Skipping checking math rendering: package 'V8' unavailable
-   Found the following files/directories:
-     ''NULL''
-N  checking for non-standard things in the check directory
-N  checking for detritus in the temp directory
-   Found the following files/directories:
-     'lastMiKTeXException'
+> checking for future file timestamps ... NOTE
+  unable to verify current time
+
+0 errors | 0 warnings | 1 note
 ```

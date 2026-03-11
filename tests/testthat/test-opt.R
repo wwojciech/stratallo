@@ -8,9 +8,9 @@ test_that("opt is valid function", {
   expect_function(opt, args = c("n", "A", "m", "M", "M_algorithm"))
 })
 
-## a ----
+## A ----
 
-test_that("opt throws error when a is not valid", {
+test_that("opt throws error when A is not valid", {
   expect_error(
     opt(350, c("1", "2")),
     "Assertion on 'A' failed: Must be of type 'numeric', not 'character'."

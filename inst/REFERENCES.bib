@@ -1,0 +1,276 @@
+@misc{rnabox_perf,
+	author = {Jacek Wesołowski and Robert Wieczorkowski and Wojciech Wójciak},
+	title = {{Numerical Performance of the RNABOX Algorithm}},
+	version = {2.0.0},
+	month = jun,
+	year = {2023},
+	url = {https://github.com/rwieczor/recursive_Neyman_rnabox}
+}
+
+@misc{stratallo_src,
+	author = {Jacek Wesołowski and Robert Wieczorkowski and Wojciech Wójciak},
+	title = {R package stratallo - source code},
+	version = {3.0.0},
+	month = jun,
+	year = {2026},
+	url = {https://github.com/wwojciech/stratallo},
+}
+
+@Book{Sarndal,
+	author = {Carl-Erik {S\"arndal} and Bengt Swensson and Jan Wretman},
+	title = "{Model Assisted Survey Sampling}",
+	year = {1992},
+	publisher = {Springer New York, NY},
+	isbn = {978-0-387-40620-6}
+}
+
+@mastersthesis{WojciakMsc,
+	author  = {Wojciech Wójciak},
+	title = "{Optimal Allocation in Stratified Sampling Schemes}",
+	school = {Warsaw University of Technology},
+	year = {2019},
+	month = {jul},
+	url = {http://home.elka.pw.edu.pl/~wwojciak/msc_wwojciech_optimum_alloc.pdf},
+}
+
+@phdthesis{WojciakPhD,
+	author = {Wojciech Wójciak},
+	title = {Multi-Domain Optimum Sample Allocation with Controlled-Precision under Upper-Bound Constraints},
+	school = {Warsaw University of Technology},
+	year = {2026},
+	url = {http://home.elka.pw.edu.pl/~wwojciak/phd_wwojciech_optimum_alloc.pdf},
+}
+
+@Manual{microbenchmark,
+	title = "{{\tt microbenchmark}: Accurate Timing Functions}",
+	author = {Olaf Mersmann},
+	year = {2021},
+	note = {R package version 1.4.9},
+	url = {https://CRAN.R-project.org/package=microbenchmark},
+}
+
+@Article{Choudhry,
+	author = {G. Hussain Choudhry and Mike Hidiroglou and J.N.K. Rao},
+	title = "{On sample allocation for efficient domain estimation}",
+	journal = {Survey Methodology},
+	year = {2012},
+	month = {jun},
+	volume = {38},
+	number = {1},
+	pages = {23--29},
+	publisher = {Statistics Canada},
+	url = {https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X201200111682},
+}
+
+@misc{Cont,
+	title={Optimal rounding under integer constraints},
+	author={Rama Cont and Massoud Heidari},
+	year={2014},
+	eprint={1501.00014},
+	archivePrefix={arXiv},
+	primaryClass={cs.DS},
+	url={https://arxiv.org/abs/1501.00014},
+}
+
+@Article{Friedrich,
+	author = {Ulf Friedrich and Ralf Münnich and Sven {de Vries} and Matthias Wagner},
+	title = "{Fast integer-valued algorithms for optimal allocations under constraints in stratified sampling}",
+	journal = {Computational Statistics \& Data Analysis},
+	volume = {92},
+	pages = {1-12},
+	year = {2015},
+	issn = {0167-9473},
+	doi = {10.1016/j.csda.2015.06.003},
+	url = {https://doi.org/10.1016/j.csda.2015.06.003},
+	keywords = {German Census 2011, Non-linear discrete optimization, Optimal allocation, Greedy algorithm, Polymatroid, Box
+	constraints},
+	abstract = {In stratified random sampling, minimizing the variance of a total estimate leads to the optimal allocation.
+	However, in practice, this original method is scarcely appropriate since in many applications additional constraints have to
+	be considered. Three optimization algorithms are presented that solve the integral allocation problem with upper and lower
+	bounds. All three algorithms exploit the fact that the feasible region is a polymatroid and share the important feature of
+	computing the globally optimal integral solution, which generally differs from a solution obtained by rounding. This is in
+	contrast to recent references which, in general, treat the continuous relaxation of the optimization problem. Two algorithms
+	are of polynomial complexity and all of them are fast enough to be applied to complex problems such as the German
+	Census 2011 allocation problem with almost 20,000 strata.},
+}
+
+@Article{GGM,
+	abstract = {In stratified random sampling without replacement boundary conditions, such as the sample sizes within strata
+	shall not exceed the population sizes in the respective strata, have to be considered. Stenger and Gabler (Metrika,
+	61:137--156, 2005) have shown a solution that satisfies upper boundaries of sample fractions within the strata. However, in
+	modern applications one may wish to guarantee also minimal sampling fractions within strata in order to allow for
+	reasonable separate estimations. Within this paper, an optimal allocation in the Neyman-Tschuprov sense is developed
+	which satisfies upper and lower bounds of the sample sizes within strata. Further, a stable algorithm is given which ensures
+	optimality. The resulting sample allocation enables users to bound design weights within stratified random sampling while
+	considering optimality in allocation.},
+	author = {Siegfried Gabler and Matthias Ganninger and Ralf Münnich},
+	date = {2012/02/01},
+	date-added = {2023-03-19 23:27:24 +0100},
+	date-modified = {2023-03-19 23:27:24 +0100},
+	doi = {10.1007/s00184-010-0319-3},
+	id = {Gabler2012},
+	isbn = {1435-926X},
+	journal = {Metrika},
+	number = {2},
+	pages = {151--161},
+	title = "{Optimal allocation of the sample size to strata under box constraints}",
+	url = {https://doi.org/10.1007/s00184-010-0319-3},
+	volume = {75},
+	year = {2012},
+}
+
+@Article{MSW,
+	abstract = {Modern sampling designs in survey statistics, in general, are constructed in order to optimize the accuracy of
+	estimators such as totals, means and proportions. In stratified random sampling a variance minimal solution was introduced
+	by Neyman and Tschuprov. However, practical constraints may lead to limitations of the domain of sampling fractions
+	which have to be considered within the optimization process. Special attention on the complexity of numerical solutions has
+	to be paid in cases with many strata or when the optimal allocation has to be applied repeatedly, such as in iterative
+	solutions of stratification problems. The present article gives an overview of recent numerical algorithms which allow
+	adequate inclusion of box constraints in the numerical optimization process. These box constraints may play an important
+	role in statistical modeling. Furthermore, a new approach through a fixed point iteration with a finite termination property is
+	presented.},
+	author = {Ralf T. Münnich and Ekkehard W. Sachs and Matthias Wagner},
+	date = {2012/07/01},
+	date-added = {2023-03-19 23:53:44 +0100},
+	date-modified = {2023-03-19 23:53:44 +0100},
+	doi = {10.1007/s10182-011-0176-z},
+	isbn = {1863-818X},
+	journal = {AStA Advances in Statistical Analysis},
+	number = {3},
+	pages = {435--450},
+	title = "{Numerical solution of optimal allocation problems in stratified sampling under box constraints}",
+	url = {https://doi.org/10.1007/s10182-011-0176-z},
+	volume = {96},
+	year = {2012},
+}
+
+@Article{Neyman,
+	author = {Jerzy Neyman},
+	title = "{On the Two Different Aspects of the Representative Method: the Method of Stratified Sampling and the Method of
+	Purposive Selection}",
+	journal = {Journal of the Royal Statistical Society},
+	year = {1934},
+	volume = {97},
+	number = {4},
+	pages = {558--625},
+	publisher = {Blackwell Publishing for the Royal Statistical Society},
+}
+
+@Article{SG,
+	abstract = {Very often values of a size variable are known for the elements of a population we want to sample. For example,
+	the elements may be clusters, the size variable denoting the number of units in a cluster. Then, it is quite usual to base the
+	selection of elements on inclusion probabilities which are proportionate to the size values. To estimate the total of all values
+	of an unknown variable for the units in the population of interest (i.e. for the units contained in the clusters) we may use
+	weights, e.g. inverse inclusion probabilities. We want to clarify these ideas by the minimax principle. Especially, we will
+	show that the use of inclusion probabilities equal to 1 is recommendable for units with high values of the size measure.},
+	author = {Horst Stenger and Siegfried Gabler},
+	date = {2005/04/01},
+	date-added = {2023-03-20 00:14:36 +0100},
+	date-modified = {2023-03-20 00:14:36 +0100},
+	doi = {10.1007/s001840400328},
+	id = {Stenger2005},
+	isbn = {1435-926X},
+	journal = {Metrika},
+	number = {2},
+	pages = {137--156},
+	title = "{Combining random sampling and census strategies - Justification of inclusion probabilities equal to 1}",
+	url = {https://doi.org/10.1007/s001840400328},
+	volume = {61},
+	year = {2005},
+}
+
+@Article{Tschuprow1923a,
+	author = {Alexander Alexandrovich Tschuprow},
+	title = "{On the mathematical expectation of the moments of frequency distributions in the case of correlated observation
+	(Chapters 1-3)}",
+	journal = {Metron},
+	year = {1923},
+	volume = {2},
+	number = {3},
+	pages = {461--493},
+}
+
+@Article{Tschuprow1923b,
+	author = {Alexander Alexandrovich Tschuprow},
+	title = "{On the mathematical expectation of the moments of frequency distributions in the case of correlated observation
+	(Chapters 4-6)}",
+	journal = {Metron},
+	year = {1923},
+	volume = {2},
+	number = {4},
+	pages = {636--680},
+}
+
+@Article{WJWR2017,
+	author = {Jacek Wesołowski and Robert Wieczorkowski},
+	title = {An eigenproblem approach to optimal equal-precision sample allocation in subpopulations},
+	journal = {Communications in Statistics - Theory and Methods},
+	volume = {46},
+	number = {5},
+	pages = {2212--2231},
+	year = {2017},
+	publisher = {Taylor \& Francis},
+	doi = {10.1080/03610926.2015.1040501},
+	url = {https://doi.org/10.1080/03610926.2015.1040501},
+}
+
+@Article{Wesolowski,
+	author = {Jacek Wesołowski},
+	title = "{Multi-domain Neyman-Tchuprov optimal allocation}",
+	journal = {Statistics in Transition new series},
+	year = {2019},
+	month = {dec},
+	volume = {20},
+	number = {4},
+	pages = {1--12},
+	publisher = {Polish Statistical Association and Statistics Poland},
+	doi = {10.21307/stattrans-2019-031},
+	url = {https://doi.org/10.21307/stattrans-2019-031},
+}
+
+@Article{WWW,
+	author = {Jacek Wesołowski and Robert Wieczorkowski and Wojciech Wójciak},
+	title = "{Optimality of the Recursive Neyman Allocation}",
+	journal = {Journal of Survey Statistics and Methodology},
+	volume = {10},
+	number = {5},
+	pages = {1263-1275},
+	year = {2022},
+	month = {nov},
+	abstract = {We derive a formula for the optimal sample allocation in a general stratified scheme under upper bounds on the
+	sample strata sizes. Such a general scheme includes SRSWOR within strata as a special case. The solution is given in terms
+	of V-allocation with V being the set of take-all strata. We use V-allocation to give a formal proof of optimality of the popular
+	recursive Neyman algorithm, rNa. We also propose a quick proof of optimality of the algorithm of Stenger and Gabler, SGa,
+	as well as of our proposed modification, coma. Finally, we compare running times of rNa, SGa, and coma. Ready-to-use
+	R-implementations of these algorithms are available on CRAN repository at
+	https://cran.r-project.org/web/packages/stratallo.},
+	issn = {2325-0984},
+	doi = {10.1093/jssam/smab018},
+	url = {https://doi.org/10.1093/jssam/smab018},
+}
+
+@Article{rnabox,
+	author = {Jacek Wesołowski and Robert Wieczorkowski and Wojciech Wójciak},
+	title = "{Recursive Neyman algorithm for optimum sample allocation under box constraints on sample sizes in strata}",
+	journal = {Survey Methodology},
+	volume = {50},
+	number = {2},
+	pages = {487--511},
+	year = {2024},
+	month = {dec},
+	issn = {1492-0921},
+	url = {https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X201200111682},
+}
+
+@Article{WojciakLRNA,
+	author = {Wojciech Wójciak},
+	title = "{Another Solution for Some Optimum Allocation Problem}",
+	journal = {Statistics in Transition new series},
+	year = {2023},
+	month = {dec},
+	volume = {24},
+	number = {5},
+	pages = {203-219},
+	publisher = {Polish Statistical Association and Statistics Poland},
+	doi = {10.59170/stattrans-2023-071},
+}
