@@ -97,6 +97,7 @@ x_int <- round_oric(x)
 x_int
 
 var_stsi(x, N, S)
+var_stsi(x_int, N, S)
 ```
 
 ### Multi-domain optimal allocation with controlled precision

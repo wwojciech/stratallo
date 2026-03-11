@@ -89,6 +89,8 @@ x_int
 
 var_stsi(x, N, S)
 #> [1] 538073357
+var_stsi(x_int, N, S)
+#> [1] 538073497
 ```
 
 ### Multi-domain optimal allocation with controlled precision

@@ -1,5 +1,6 @@
 ---
 title: "Optimum Sample Allocation in Stratified Sampling with stratallo"
+date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     mathjax: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
