@@ -80,7 +80,7 @@ test_that("rnabox works well for m and M (some population)", {
   result <- rnabox(80, N * S, M, m)
   result_twin <- rnabox(80, N * S, m, M, leq, geq)
   expect_identical(result, result_twin)
-  expect_equal(result, c(30, 26.6667, 10, 13.3333), tolerance = 10 - 9)
+  expect_equal(result, c(30, 26.666667, 10, 13.333333), tolerance = 10^-7)
 })
 
 ### M with Inf ----
@@ -328,7 +328,7 @@ test_that("rnabox works well for m (alloc: 2 bounds), H = 4", {
   )
   expected <- c(m[1], 100, 125, m[4])
   expect_identical(result, result_twin)
-  expect_equal(result, expected, tolerance = 1e-6)
+  expect_equal(result, expected)
 })
 
 ### alloc: 3 bounds----

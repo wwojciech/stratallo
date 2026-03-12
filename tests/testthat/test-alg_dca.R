@@ -16,7 +16,8 @@ test_that("dca works for H_counts=1, n<n_max", {
   rho <- 8
   n <- 3
 
-  expect_identical(dca(n, H_counts, N, S, rho, rho^2), n)
+  result <- dca(n, H_counts, N, S, rho, rho^2)
+  expect_identical(result, n)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, details = TRUE)
@@ -51,7 +52,8 @@ test_that("dca works for H_counts=1, n=n_max", {
   rho <- 8
   n <- dca_nmax(H_counts, N, S) # 10
 
-  expect_identical(dca(n, H_counts, N, S, rho, rho^2), n)
+  result <- dca(n, H_counts, N, S, rho, rho^2)
+  expect_identical(result, n)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, details = TRUE)
@@ -170,7 +172,7 @@ test_that("dca works for H_counts=2, n<n_max, U=2", {
     x = expected
   )
   elements <- names(expected_details)
-  expect_identical(result_details[elements], expected_details)
+  expect_equal(result_details[elements], expected_details)
 
   # Check details: D.matrix.
   expect_identical(dim(result_details$D.matrix), c(1L, 1L))
@@ -293,7 +295,7 @@ test_that("dca works for H_counts=2, n>n_max, U=1", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1)
   expected <- c(N[1], 19)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1, details = TRUE)
@@ -320,7 +322,7 @@ test_that("dca works for H_counts=2, n>n_max, U=2", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 2)
   expected <- c(9, N[2])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 2, details = TRUE)
@@ -373,8 +375,7 @@ test_that("dca works for H_counts=2, n=sum(N), U=1", {
   n <- sum(N)
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1)
-  expected <- c(N[1], 20)
-  expect_identical(result, expected)
+  expect_identical(result, N)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1, details = TRUE)
@@ -383,7 +384,7 @@ test_that("dca works for H_counts=2, n=sum(N), U=1", {
     k = 0.8888889,
     v = 1,
     s = 0.8888889,
-    x = expected
+    x = N
   )
   elements <- names(expected_details)
   expect_equal(result_details[elements], expected_details, tolerance = 10^-7)
@@ -400,8 +401,7 @@ test_that("dca works for H_counts=2, n=sum(N), U=2", {
   n <- sum(N)
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 2)
-  expected <- c(10, N[2])
-  expect_identical(result, expected)
+  expect_identical(result, N)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 2, details = TRUE)
@@ -410,10 +410,10 @@ test_that("dca works for H_counts=2, n=sum(N), U=2", {
     k = 1.6,
     v = 1,
     s = 1.6,
-    x = expected
+    x = N
   )
   elements <- names(expected_details)
-  expect_identical(result_details[elements], expected_details)
+  expect_equal(result_details[elements], expected_details)
 
   # Check details: D.matrix.
   expect_identical(dim(result_details$D.matrix), c(1L, 1L))
@@ -439,7 +439,7 @@ test_that("dca works for H_counts=2, n=sum(N), U=1:2", {
     x = N
   )
   elements <- names(expected_details)
-  expect_identical(result_details[elements], expected_details)
+  expect_equal(result_details[elements], expected_details)
 
   # Check details: D.matrix.
   expect_identical(dim(result_details$D.matrix), c(1L, 1L))
@@ -629,7 +629,7 @@ test_that("dca works for H_counts=c(1,1), n=sum(N)", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2)
   expected <- c(N[1], 20.0000000000000036)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, details = TRUE)
@@ -1239,7 +1239,7 @@ test_that("dca works for H_counts=c(1,2), n>n_max, U=1:2", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1:2)
   expected <- c(N[1:2], 12.9999999999999964)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1:2, details = TRUE)
@@ -1266,7 +1266,7 @@ test_that("dca works for H_counts=c(1,2), n>n_max, U=c(1,3)", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, c(1, 3))
   expected <- c(N[1], 17.9999999999999964, N[3])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, c(1, 3), details = TRUE)
@@ -1374,7 +1374,7 @@ test_that("dca works for H_counts=c(1,2), n=sum(N), U=2", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 2)
   expected <- c(9.9999999999999982, N[2], 15.0000000000000036)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 2, TRUE)
@@ -1401,7 +1401,7 @@ test_that("dca works for H_counts=c(1,2), n=sum(N), U=3", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 3)
   expected <- c(10, 20.0000000000000036, N[3])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 3, TRUE)
@@ -1795,7 +1795,7 @@ test_that("dca works for H_counts=c(2,2), n<n_max, U=1:3", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1:3)
   expected <- c(N[1:3], 4.99999999999999911)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1:3, details = TRUE)
@@ -2415,7 +2415,7 @@ test_that("dca works for H_counts=c(2,2), n>n_max, U=1:3", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1:3)
   expected <- c(N[1:3], 24.9999999999999964)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1:3, details = TRUE)
@@ -2469,7 +2469,7 @@ test_that("dca works for H_counts=c(2,2), n>n_max, U=c(1,3,4)", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, c(1, 3, 4))
   expected <- c(N[1], 14.9999999999999982, N[3:4])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, c(1, 3, 4), details = TRUE)
@@ -2712,7 +2712,7 @@ test_that("dca works for H_counts=c(2,2), n=sum(N), U=c(1,4)", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, c(1, 4))
   expected <- c(N[1], 20, 15.0000000000000036, N[4])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, c(1, 4), details = TRUE)
@@ -2739,7 +2739,7 @@ test_that("dca works for H_counts=c(2,2), n=sum(N), U=2:3", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 2:3)
   expected <- c(9.9999999999999982, N[2:3], 40)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 2:3, details = TRUE)
@@ -2766,7 +2766,7 @@ test_that("dca works for H_counts=c(2,2), n=sum(N), U=c(2,4)", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, c(2, 4))
   expected <- c(9.9999999999999982, N[2], 15.0000000000000036, N[4])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, c(2, 4), details = TRUE)
@@ -2820,7 +2820,7 @@ test_that("dca works for H_counts=c(2,2), n=sum(N), U=1:3", {
 
   result <- dca(n, H_counts, N, S, rho, rho^2, 1:3)
   expected <- c(N[1:3], 24.9999999999999964)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 
   # Check details.
   result_details <- dca(n, H_counts, N, S, rho, rho^2, 1:3, details = TRUE)

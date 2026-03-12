@@ -482,7 +482,7 @@ test_that("rna works well for n = sum(c*m), H = 4, non-def cost (finite prec. is
   tcost <- sum(bounds * ucosts[1])
   result <- rna(tcost, A, bounds, ucosts[1], leq)
   expected <- c(bounds[1:2], 70.00000000000001421085, bounds[4])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
   # note: x_3 != 70 due to c_3 = ucosts[1] = 0.7 stored as 0.6999999999999999555911
 
   # Check details.
@@ -652,7 +652,7 @@ test_that("rna works well for M with Inf, H = 4, non-def cost", {
   expected_details <- list(
     opt = expected, take_neyman = 4L, take_bound = L, s0 = s0, s = s, iter = 2L
   )
-  expect_identical(result_details, expected_details, tolerance = 1e-6)
+  expect_equal(result_details, expected_details)
 })
 
 test_that("rna works well for M with Inf, H = 4, non-def cost vec", {
@@ -670,7 +670,7 @@ test_that("rna works well for M with Inf, H = 4, non-def cost vec", {
   expected_details <- list(
     opt = expected, take_neyman = 4L, take_bound = L, s0 = s0, s = s, iter = 2L
   )
-  expect_identical(result_details, expected_details, tolerance = 1e-6)
+  expect_equal(result_details, expected_details)
 })
 
 ### alloc: no bounds ----

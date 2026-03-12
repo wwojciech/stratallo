@@ -1,6 +1,6 @@
 Package: stratallo
 Title: Optimum Sample Allocation in Stratified Sampling
-Version: 3.0.0
+Version: 3.0.1
 Authors@R: c(
     person("Wojciech", "Wójciak", , "wojciech.wojciak@gmail.com", role = c("aut", "cre")),
     person("Jacek", "Wesołowski", , "jacek.wesolowski@pw.edu.pl", role = "sad"),

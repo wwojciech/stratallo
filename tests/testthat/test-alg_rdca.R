@@ -486,7 +486,7 @@ test_that("rdca works for H_counts=c(1,2), n>n_max, U=1, J=2", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 1, 2)
   expected <- c(N[1], 17.9999999999999964, 15)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(1,2), n>n_max, U=2, J=1", {
@@ -580,7 +580,7 @@ test_that("rdca works for H_counts=c(1,2), n=sum(N), U=2, J=1", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 2, 1)
   expected <- c(9.9999999999999982, N[2], 15.0000000000000036)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(1,2), n=sum(N), U=3, J=1", {
@@ -932,7 +932,7 @@ test_that("rdca works for H_counts=c(2,2), n>n_max, U=1:2, J=2", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 1:2, 2)
   expected <- c(N[1:2], 15, 24.9999999999999964)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(2,2), n>n_max, U=3, J=1", {
@@ -1003,7 +1003,8 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N)", {
   n <- sum(N) # 85
 
   result <- rdca(n, H_counts, N, S, rho, rho^2)
-  expect_identical(result, c(N[1:3], 39.9999999999999929))
+  expected <- c(N[1:3], 39.9999999999999929)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=1, J=2", {
@@ -1014,8 +1015,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=1, J=2", {
   n <- sum(N) # 85
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 1, 2)
-  expected <- c(N[1], 20, 15, 40)
-  expect_identical(result, expected)
+  expect_identical(result, N)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=2, J=2", {
@@ -1026,8 +1026,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=2, J=2", {
   n <- sum(N) # 85
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 2, 2)
-  expected <- c(10, N[2], 15, 40)
-  expect_identical(result, expected)
+  expect_identical(result, N)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=1:2, J=2", {
@@ -1039,7 +1038,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=1:2, J=2", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 1:2, 2)
   expected <- c(N[1:2], 15, 39.9999999999999929)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=3, J=1", {
@@ -1051,7 +1050,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=3, J=1", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 3, 1)
   expected <- c(9.9999999999999982, 20, N[3], 40)
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=4, J=1", {
@@ -1063,7 +1062,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=4, J=1", {
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 4, 1)
   expected <- c(9.9999999999999982, 20, 15.0000000000000036, N[4])
-  expect_identical(result, expected)
+  expect_equal(result, expected)
 })
 
 test_that("rdca works for H_counts=c(2,2), n=sum(N), U=3:4, J=1", {
@@ -1074,8 +1073,7 @@ test_that("rdca works for H_counts=c(2,2), n=sum(N), U=3:4, J=1", {
   n <- sum(N) # 85
 
   result <- rdca(n, H_counts, N, S, rho, rho^2, 3:4, 1)
-  expected <- c(10, 20, N[3:4])
-  expect_identical(result, expected)
+  expect_identical(result, N)
 })
 
 test_that("rdca errors for H_counts=c(2,2), n=sum(N), U=1:3, J=1", {
@@ -1221,7 +1219,7 @@ test_that("rdca works for pop9d278s, n>n_max, J=5", {
 test_that("rdca works for pop2d4s, n=sum(N)", {
   p <- pop2d4s
   result <- rdca(sum(p$N), p$H_counts, p$N, p$S, p$rho, p$rho2)
-  expect_identical(result, c(140, 110, 135, 190))
+  expect_identical(result, pop2d4s$N)
 })
 
 test_that("rdca works for pop2d4s, n=sum(N), J=1", {

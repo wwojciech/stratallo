@@ -370,11 +370,10 @@ test_that("dopt works for pop2d4s, n=sum(N)", {
   p <- pop2d4s
 
   result <- dopt(n = sum(p$N), p$H_counts, p$N, p$S, p$total, p$kappa)
-  expected <- c(140, 110, 135, 190)
-  expect_identical(result, expected)
+  expect_identical(result, pop2d4s$N)
 
   # with return_T = TRUE
   result_T <- dopt(n = sum(p$N), p$H_counts, p$N, p$S, p$total, p$kappa, TRUE)
-  expect_identical(result_T$xopt, expected)
+  expect_identical(result_T$xopt, pop2d4s$N)
   expect_identical(result_T$Topt, 0)
 })
