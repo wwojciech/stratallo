@@ -11,3 +11,6 @@
 ^CITATION.cff$
 ^doc$
 ^Meta$
+^\.github$
+^README\.html$
+^docs$
