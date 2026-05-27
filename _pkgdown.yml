@@ -10,7 +10,7 @@ navbar:
     right: [search, github]
   components:
 authors:
-  before: "We define *authors* as those who are actively maintaining the code base, and *contributors* as those who made a significant contribution in the past. For all acknowledgements, see the eponymous section in the [Home Page](https://johnsonandjohnson.github.io/junco/)."
+  before: "We define *authors* as those who are actively maintaining the code base, and *contributors* as those who made a significant contribution in the past."
   footer:
     roles: [aut, ctb, cre, fnd, sad]
     text: "Developed by"
