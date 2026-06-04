@@ -1,0 +1,9 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  stratallo: stratallo.html
+last_built: 2026-06-04T20:55Z
+urls:
+  reference: https://wwojciech.github.io/junco/reference
+  article: https://wwojciech.github.io/junco/articles
