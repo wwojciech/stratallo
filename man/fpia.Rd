@@ -7,16 +7,6 @@
 \alias{philambda}
 \title{Fixed-Point Iteration Algorithm}
 \usage{
-fpia(
-  n,
-  Ah,
-  mh = NULL,
-  Mh = NULL,
-  lambda0 = NULL,
-  maxiter = 100,
-  tol = .Machine$double.eps * 1000
-)
-
 fpia2(v0, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100)
 
 glambda(lambda, n, Ah, mh = NULL, Mh = NULL)
@@ -24,10 +14,7 @@ glambda(lambda, n, Ah, mh = NULL, Mh = NULL)
 philambda(lambda, n, Ah, mh = NULL, Mh = NULL)
 }
 \arguments{
-\item{n}{(\code{integerish(1)})\cr total sample size.}
-
-\item{Ah}{(\code{numeric})\cr products of population stratum sizes and standard
-deviations of the study variable, \eqn{A_h = N_h S_h}.}
+\item{v0}{variance}
 
 \item{mh}{(\code{numeric} or \code{NULL})\cr lower bounds on stratum sample sizes (optional).}
 
@@ -37,15 +24,9 @@ deviations of the study variable, \eqn{A_h = N_h S_h}.}
 
 \item{maxiter}{(\code{integerish(1)})\cr maximum number of iterations.}
 
-\item{tol}{(\code{numeric(1)})\cr desired convergence tolerance.}
-
-\item{v0}{variance}
-
-\item{Nh}{(\code{numeric})\cr population sizes in strata.}
-
-\item{Sh}{(\code{numeric})\cr standard deviations of the study variable in strata.}
-
 \item{lambda}{(\code{numeric(1)})\cr \eqn{\lambda}.}
+
+\item{tol}{(\code{numeric(1)})\cr desired convergence tolerance.}
 }
 \value{
 A list with elements:
@@ -62,8 +43,6 @@ and upper-bound constraints, based on fixed-point iteration.
 }
 \section{Functions}{
 \itemize{
-\item \code{fpia()}: 
-
 \item \code{fpia2()}: Variant of \code{fpia()} using variance-based parametrization.
 
 \item \code{glambda()}: Helper function for the \code{fpia()}

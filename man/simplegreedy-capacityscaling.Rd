@@ -2,23 +2,11 @@
 % Please edit documentation in R/alg_other_authors.R
 \name{simplegreedy-capacityscaling}
 \alias{simplegreedy-capacityscaling}
-\alias{SimpleGreedy}
 \alias{SimpleGreedy2}
-\alias{CapacityScaling}
 \alias{CapacityScaling2}
 \title{SimpleGreedy and CapacityScaling Algorithms}
 \usage{
-SimpleGreedy(
-  n,
-  Ah,
-  mh = rep(1, length(Ah)),
-  Mh = rep(Inf, length(Ah)),
-  nh = mh
-)
-
 SimpleGreedy2(v0, Nh, Sh, mh = rep(1, length(Nh)), Mh = Nh, nh = mh)
-
-CapacityScaling(n, Ah, mh = rep(1, length(Ah)), Mh = rep(Inf, length(Ah)))
 
 CapacityScaling2(
   v0,
@@ -29,10 +17,11 @@ CapacityScaling2(
 )
 }
 \arguments{
-\item{n}{(\code{integerish(1)})\cr total sample size.}
+\item{v0}{(\code{numeric(1)})\cr upper bound on the variance of the estimator.}
 
-\item{Ah}{(\code{numeric})\cr products of population stratum sizes and standard
-deviations of the study variable, \eqn{A_h = N_h S_h}.}
+\item{Nh}{(\code{numeric})\cr population sizes in strata.}
+
+\item{Sh}{(\code{numeric})\cr standard deviations of the study variable in strata.}
 
 \item{mh}{(\code{integerish})\cr lower bounds on stratum sample sizes.}
 
@@ -40,11 +29,10 @@ deviations of the study variable, \eqn{A_h = N_h S_h}.}
 
 \item{nh}{(\code{integerish})\cr initial allocation. Defaults to \code{mh}.}
 
-\item{v0}{(\code{numeric(1)})\cr upper bound on the variance of the estimator.}
+\item{n}{(\code{integerish(1)})\cr total sample size.}
 
-\item{Nh}{(\code{numeric})\cr population sizes in strata.}
-
-\item{Sh}{(\code{numeric})\cr standard deviations of the study variable in strata.}
+\item{Ah}{(\code{numeric})\cr products of population stratum sizes and standard
+deviations of the study variable, \eqn{A_h = N_h S_h}.}
 }
 \value{
 For the \code{fpia()} - an integer vector of optimum sample sizes allocated to
@@ -58,12 +46,8 @@ in stratified sampling proposed in \insertCite{Friedrich;textual}{stratallo}.
 }
 \section{Functions}{
 \itemize{
-\item \code{SimpleGreedy()}: 
-
 \item \code{SimpleGreedy2()}: Variant of the \emph{SimpleGreedy} algorithm based on a variance stopping
 rule.
-
-\item \code{CapacityScaling()}: 
 
 \item \code{CapacityScaling2()}: Variant of the \emph{CapacityScaling} algorithm based on a variance stopping
 rule.
