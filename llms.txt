@@ -1,4 +1,4 @@
-# wwojciech
+# stratallo
 
 # Optimum Sample Allocation in Stratified Sampling with stratallo
 
