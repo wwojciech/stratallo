@@ -1,5 +1,5 @@
 
-# wwojciech <a href='https://github.com/wwojciech/stratallo'><img src="man/figures/logo.png" align="right" width="200"/></a>
+# stratallo <a href='https://github.com/wwojciech/stratallo'><img src="man/figures/logo.png" align="right" width="200"/></a>
 
 
 # Optimum Sample Allocation in Stratified Sampling with stratallo
